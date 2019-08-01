@@ -20,9 +20,7 @@ describe('constructor', () => {
 
   it('extracts pictureUrl if it has data when creating object', () => {
     const pictureUrlWithData = {
-      data: {
-        url: 'https://example.com/image2.jpeg',
-      },
+      source: 'https://example.com/image2.jpeg',
     };
 
     const sl = new ServiceLocation(id, name, pictureUrlWithData, checkins, address);
