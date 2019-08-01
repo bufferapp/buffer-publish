@@ -61,6 +61,7 @@
     margin-left: 5px;
     overflow: auto;
     width: 220%;
+    max-width: 600px;
     z-index: 100;
     font-size: 12px;
 }
@@ -93,13 +94,31 @@
 }
 
 .optionImage {
+    position: relative;
     float: left;
     margin-top: 5px;
-    width: 32px;
     padding-left: 15px;
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.optionImage:after { 
+    position: absolute;
+    content: ".";
+    display: block;
+    color: #E6EBEF;
+    background-color: #E6EBEF;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 15px;
+    text-align: center;
 }
 
 .optionRow {
+    display: flex;
+    align-items: center;
     float: left;
     width: 100%;
     cursor: pointer;

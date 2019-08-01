@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Autocomplete from 'react-autocomplete';
 import debounce from 'lodash.debounce';
 import LocationFinder from '../utils/LocationFinder';
+import { resizeImageIfNeeded } from '../utils/DOMUtils';
 import styles from './css/LocationComposerBar.css';
 
 import ComposerActionCreators from '../action-creators/ComposerActionCreators';
@@ -92,7 +93,7 @@ class LocationComposerBar extends React.Component {
           <span className={styles.locationFieldLabel}>Location </span>
           <span className={styles.locationAutocompleteContainer}>
             {this.isLocationSet() &&
-            <span className={styles.locationFieldRemoveInput} onClick={this.removeLocation}/>
+            <span className={styles.locationFieldRemoveInput} onClick={this.removeLocation} />
             }
             <Autocomplete
               wrapperStyle={{ width: '100%' }}
@@ -102,28 +103,30 @@ class LocationComposerBar extends React.Component {
                 className: styles.locationFieldInput,
                 placeholder: 'Start typing a location...',
               }}
-              getItemValue={(item) => item.name}
+              getItemValue={item => item.name}
               onSelect={(value, place) => {
                 this.saveLocation(place);
               }}
               onChange={this.onChange}
               onMenuVisibilityChange={this.onMenuVisibilityChange}
-              renderMenu={(children) => (
+              renderMenu={children => (
                 <div className={styles.locationMenu}>
                   {children}
                 </div>
               )}
               renderItem={(item, highlighted) => {
                 const classHighlighted = highlighted ? styles.optionRowHighlighted : '';
-                return (<div key={item.id} className={`${styles.optionRow} ${classHighlighted}`}>
-                  <img className={styles.optionImage} alt={item.name} src={item.pictureUrl} />
-                  <div className={styles.optionTextDescription}>
-                    <p className={styles.optionTitle}>{item.name}</p>
-                    <p>
-                      {item.formattedAddressWithCheckins}
-                    </p>
+                return (
+                  <div key={item.id} className={`${styles.optionRow} ${classHighlighted}`}>
+                    <img className={styles.optionImage} alt="" src={item.pictureUrl} />
+                    <div className={styles.optionTextDescription}>
+                      <p className={styles.optionTitle}>{item.name}</p>
+                      <p>
+                        {item.formattedAddressWithCheckins}
+                      </p>
+                    </div>
                   </div>
-                </div>);
+                );
               }}
             />
           </span>

@@ -3,8 +3,8 @@ class ServiceLocation {
     this.id = id;
     this.name = name;
 
-    if (pictureUrl.data && pictureUrl.data.url) {
-      this.pictureUrl = pictureUrl.data.url;
+    if (pictureUrl && pictureUrl.source) {
+      this.pictureUrl = pictureUrl.source;
     } else {
       this.pictureUrl = pictureUrl;
     }
