@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: PR Comment
     steps:
-      - uses: bufferapp/github-action-bufferbot-helper@v1
+      - uses: bufferapp/test-github-action@v1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           staging-url-template: "https://{{placeholder}}-publish.dev.buffer.com"
