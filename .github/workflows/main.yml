@@ -15,3 +15,4 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           staging-url-template: "https://{{placeholder}}-publish.dev.buffer.com"
           service-name: "buffer-publish"
+
