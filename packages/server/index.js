@@ -44,7 +44,7 @@ if (isStandalone) {
 
   // Read any overrides
   const envOverrides = fs.readFileSync(
-    join(__dirname, '.standalone.env'),
+    join(__dirname, 'standalone.env'),
     'utf8'
   );
 
@@ -54,7 +54,6 @@ if (isStandalone) {
 
   // Load env
   dotenv.config({ path: pathToEnv });
-  console.log(process.env);
 }
 
 let logMiddleware;
