@@ -22,6 +22,7 @@ Welcome to the Buffer Publish monorepo.
 - [Adding New Dependencies](#adding-new-dependencies)
 - [How Packages Communicate](#how-packages-communicate)
 - [External Packages](#external-packages)
+- [Standalone Mode](#standalone-mode) 🆕
 
 ## What is Buffer Publish?
 
@@ -45,7 +46,7 @@ To get started on local development and testing:
 2. **Install the latest version of `yarn`**
   → [Installing Yarn](https://yarnpkg.com/en/docs/install)
 
-3. **Make sure you have node with version <= 9 (Node v10 is not compatible)**
+3. **Make sure you have node with version >= 12**
     ```
     $ node -v
     ```
@@ -59,17 +60,14 @@ To get started on local development and testing:
 5. **Start up the publish docker containers**
     ```bash
     $ cd ../buffer-dev
-    $ ./dev up session-service authentication-service login publish
+    $ ./dev up publish
    ```
-
-   Publish relies on both the **session** and **account** services, so it's important to include them in our _up_ command. The order is important, since this relates to the way docker-compose starts up containers.
 
 6. **Start bundling the frontend with webpack**
     ```bash
     # in buffer-publish/
     $ yarn run watch
    ```
-     While you're waiting for the bundle to finish, head on over to https://local.buffer.com to login. (We're not quite ready to view Publish yet.)
 
 7. **Give yourself the correct feature flip**
   In order to view Buffer Publish your user (usually admin@bufferapp.com for local dev)
@@ -84,32 +82,21 @@ To get started on local development and testing:
 
 ### Troubleshooting Dev Environment Issues
 
-1. **Fixing gRPC error on Dev Environment** 
+If after running the `./dev up` command you get an error specifying Publish was not able to start, try running the `doctor` tool:
+
+```bash
+# in ~/buffer-dev
+$ ./dev doctor
+```
   
-  If after running the `./dev up` command you get an error specifying Publish was not able to start, it might be due to gRPC, to confirm, first:
-  
-   ```bash
-   # in ~/buffer-dev
-   $ ./dev doctor
-   ```
-   
-   That will generate a doctor.txt file in your `~/buffer-dev` directory, you can send the generated file in **#eng-local-dev** channel, or if you see is a gRPC related error in the output file, then run the following:
-   
-   ```bash
-   # in ~/buffer-dev
-   $ docker-compose -p bufferdev run --rm publish npm rebuild --update-binary
-   ```
- 
-And finally run `./dev up` again 🎉
+That will generate a doctor.txt file in your `~/buffer-dev` directory, you can send the generated file in **#eng-local-dev** Slack channel to ask for help!
 
 ## The Publish Server
 
 When you run the `./dev up` command from the [quick start](#quick-start) it spins up a number of containers on which Publish depends. It also spins up the `publish` container itself, which is [an Express server](/packages/server/index.js) with two purposes:
 
 1. **Serve [`index.html`](/packages/server/index.html) for all requests to https://publish.local.buffer.com**
-3. **Provide an `/rpc` endpoint/proxy** for making API calls in the front-end
-
-In the past the publish container's Express server also ran webpack and bundled the front-end code, **we decoupled this however when we started seeing instability and broken file watching within the container**. Webpack bundling now happens **on the host system**; which is why you run `yarn run watch` as a final step.
+3. **Provide an `/rpc/**` endpoint/proxy** for making API calls in the front-end
 
 ## Yarn Workspaces
 
@@ -295,9 +282,59 @@ https://github.com/bufferapp/buffer-js-environment
 
 Redux middleware for fetching the environment from the backend
 
+## Standalone Mode
+
+In standalone mode Publish runs directly on your machine, no `buffer-dev` or Docker containers required. 
+User authentication is bypassed (see below) and all requests are sent directly to the production Publish API.
+
+Some caveats:
+
+  * Only Publish is running; so no connecting social accounts, visiting Classic, or using services / APIs (i.e., Account, Login, Analyze, etc.)
+  * Depends on correct Node setup locally (though we already bundle outside the container - so this shouldn't be a problem)
+  * Other `buffer-dev` services cannot be running at the same time
+
+### Configuration
+
+#### Authentication
+
+When running in standalone mode Publish requires a `standalone-session.json` file to be present in the `packages/server` 
+directory. This file is a static representation of your logged in user/session.
+
+To generate this file for your own user (or for another user) visit the Buffer Admin and look for the _"Download Standalone Session JSON"_ link.
+
+#### Environment Variables
+
+The standalone server will automatically pull the environment vars from the [buffer-dev publish config](https://github.com/bufferapp/buffer-dev-config/blob/655827f8f9098a212e25bd91dded209aa9d6ae4c/config.yaml#L413). You can override any of those or add new ones by modifying the (`standalone.env` file in `packages/server`)[./packages/server/standalone.env]. 
+Right now it's used only to point to the external facing Publish API.
+
+### Starting
+
+Once you have created your configuration file, you're ready to start standalone mode. 
+
+First ensure you have stopped `buffer-dev`, if it's running.
+
+```bash
+# in buffer-dev
+./dev stop
+```
+
+Now, start the standalone Publish server.
+
+```bash
+# in buffer-publish
+yarn run start:standalone
+```
+
+You should also ensure that you are watching/bundling the React app, as usual:
+
+```bash
+# in buffer-publish
+yarn run watch
+```
+
 ## Copyright
 
-© 2018 Buffer Inc.
+© 2020 Buffer Inc.
 
 This project is open source as a way to transparently share our work with the
 community for the purpose of creating opportunities for learning. Buffer

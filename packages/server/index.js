@@ -2,7 +2,9 @@
  * Add Datadog APM in production
  */
 const isProduction = process.env.NODE_ENV === 'production';
-if (isProduction) {
+const isStandalone = process.env.STANDALONE === 'true';
+
+if (isProduction && !isStandalone) {
   // This line must come before importing any instrumented module.
   // eslint-disable-next-line
   require('dd-trace').init({
@@ -12,9 +14,8 @@ if (isProduction) {
   });
 }
 
-const http = require('http');
+const http = isStandalone ? require('https') : require('http');
 const express = require('express');
-const logMiddleware = require('@bufferapp/logger/middleware');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -27,6 +28,40 @@ const {
 const { errorMiddleware } = require('@bufferapp/buffer-rpc');
 const serialize = require('serialize-javascript');
 const helmet = require('helmet');
+const dotenv = require('dotenv');
+
+if (isStandalone) {
+  // Read ENV vars from the buffer-dev config
+  // eslint-disable-next-line global-require
+  const YAML = require('yaml');
+  const config = YAML.parse(
+    fs.readFileSync(
+      join(__dirname, '../../../buffer-dev-config/config.yaml'),
+      'utf8'
+    )
+  );
+  const envVars = config.services.publish.composeConfig.environment.join('\n');
+
+  // Read any overrides
+  const envOverrides = fs.readFileSync(
+    join(__dirname, '.standalone.env'),
+    'utf8'
+  );
+
+  // Write the combined env vars
+  const pathToEnv = '/tmp/buffer-publish-standalone.env';
+  fs.writeFileSync(pathToEnv, `${envVars}\n${envOverrides}`);
+
+  // Load env
+  dotenv.config({ path: pathToEnv });
+  console.log(process.env);
+}
+
+let logMiddleware;
+if (!isStandalone) {
+  // eslint-disable-next-line global-require
+  logMiddleware = require('@bufferapp/logger/middleware');
+}
 
 const { apiError } = require('./middleware');
 const controller = require('./lib/controller');
@@ -39,12 +74,36 @@ const pusher = require('./lib/pusher');
 const maintenanceHandler = require('./maintenanceHandler');
 const { getFaviconCode, setupFaviconRoutes } = require('./lib/favicon');
 const { getBugsnagClient, getBugsnagScript } = require('./lib/bugsnag');
-
-const app = express();
-const server = http.createServer(app);
 const verifyAccessToken = require('./middlewares/verifyAccessToken');
 
+const app = express();
+
+const server = isStandalone
+  ? http.createServer(
+      {
+        key: fs.readFileSync(
+          join(
+            __dirname,
+            '../../../reverseproxy/certs/local.buffer.com-wildcard.key'
+          )
+        ),
+        cert: fs.readFileSync(
+          join(
+            __dirname,
+            '../../../reverseproxy/certs/local.buffer.com-wildcard.crt'
+          )
+        ),
+      },
+      app
+    )
+  : http.createServer(app);
+
+if (logMiddleware) {
+  app.use(logMiddleware({ name: 'BufferPublish' }));
+}
+
 let segmentKey = 'qsP2UfgODyoJB3px9SDkGX5I6wDtdQ6a';
+
 // Favicon
 setupFaviconRoutes(app, isProduction);
 
@@ -57,7 +116,7 @@ let staticAssets = {
 
 app.set('isProduction', isProduction);
 
-if (isProduction) {
+if (isProduction && !isStandalone) {
   staticAssets = JSON.parse(
     // Load the `webpackAssets.json` file instead of `staticAssets.json` that the buffer-static-uploader
     // generates because the former keeps simple key names like 'bundle.js' that don't include the hash.
@@ -214,11 +273,11 @@ const getBufferData = ({ user, profiles }) => {
 
 const getFullstory = ({ includeFullstory }) => {
   const includedFullstoryScript = includeFullstory ? fullStoryScript : '';
-  return isProduction ? includedFullstoryScript : '';
+  return isProduction && !isStandalone ? includedFullstoryScript : '';
 };
 
 const getBugsnag = ({ userId }) => {
-  return isProduction ? getBugsnagScript(userId) : '';
+  return isProduction && !isStandalone ? getBugsnagScript(userId) : '';
 };
 
 // We are hard coding the planCode check to 1 for free users, but if we need more we should import constants instead
@@ -229,7 +288,7 @@ const canIncludeFullstory = user => (user ? user.planCode !== 1 : true);
  * https://survivejs.com/webpack/optimizing/separating-manifest/
  */
 const getRuntimeScript = () => {
-  if (isProduction) {
+  if (isProduction && !isStandalone) {
     const runtimeFilename = staticAssets['runtime.js'].split('/').pop();
     return `<script>${fs.readFileSync(
       join(__dirname, runtimeFilename),
@@ -259,16 +318,21 @@ const getHtml = ({
     .replace('{{{bugsnagScript}}}', getBugsnag({ userId }))
     .replace('{{{notificationScript}}}', notificationScript(notification))
     .replace('{{{showModalScript}}}', showModalScript(modalKey, modalValue))
-    .replace('{{{appcues}}}', isProduction ? appcuesScript : '')
+    .replace(
+      '{{{appcues}}}',
+      isProduction && !isStandalone ? appcuesScript : ''
+    )
     .replace('{{{intercomScript}}}', intercomScript)
-    .replace('{{{iterateScript}}}', isProduction ? iterateScript : '')
+    .replace(
+      '{{{iterateScript}}}',
+      isProduction && !isStandalone ? iterateScript : ''
+    )
     .replace('{{{userScript}}}', getUserScript({ id: userId }))
     .replace('{{{favicon}}}', getFaviconCode({ cacheBust: 'v1' }))
     .replace('{{{segmentScript}}}', segmentScript)
     .replace('{{{bufferData}}}', getBufferData({ user, profiles }));
 };
 
-// app.use(logMiddleware({ name: 'BufferPublish' }));
 app.use(cookieParser());
 app.use(helmet.frameguard({ action: 'sameorigin' }));
 
@@ -284,12 +348,33 @@ app.use('*', (req, res, next) => {
 app.use(bodyParser.json());
 
 // All routes after this have access to the user session
-app.use(
-  setRequestSessionMiddleware({
-    production: isProduction,
-    sessionKeys: ['publish', 'global'],
-  })
-);
+if (isStandalone) {
+  let standaloneSessionData;
+  try {
+    standaloneSessionData = JSON.parse(
+      fs.readFileSync(join(__dirname, 'standalone-session.json'))
+    );
+  } catch (error) {
+    console.log(
+      `
+🚧 Please ensure you have created a \`standalone-session.json\` file in the packages/server directory.
+`,
+      error
+    );
+    process.exit();
+  }
+  app.use((req, res, next) => {
+    req.session = standaloneSessionData;
+    return next();
+  });
+} else {
+  app.use(
+    setRequestSessionMiddleware({
+      production: isProduction,
+      sessionKeys: ['publish', 'global'],
+    })
+  );
+}
 
 // Setup our RPC handler
 (async () => {
@@ -300,12 +385,14 @@ app.use(
 app.get('/health-check', controller.healthCheck);
 
 // make sure we have a valid session
-app.use(
-  validateSessionMiddleware({
-    production: isProduction,
-    requiredSessionKeys: ['publish.accessToken', 'publish.foreignKey'],
-  })
-);
+if (!isStandalone) {
+  app.use(
+    validateSessionMiddleware({
+      production: isProduction,
+      requiredSessionKeys: ['publish.accessToken', 'publish.foreignKey'],
+    })
+  );
+}
 
 app.use(verifyAccessToken);
 
@@ -368,7 +455,10 @@ app.get('*', (req, res) => {
 
 app.use(apiError);
 
-server.listen(80, () => console.log('listening on port 80')); // eslint-disable-line
+server.listen(isStandalone ? 443 : 80, () =>
+  console.log('listening on port 80')
+); // eslint-disable-line
+
 server.keepAliveTimeout = 61 * 1000;
 server.headersTimeout = 65 * 1000;
 

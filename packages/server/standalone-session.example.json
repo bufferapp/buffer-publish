@@ -1,0 +1,10 @@
+{
+  "publish": {
+    "foreignKey": "publish-user-id",
+    "accessToken": "publish-access-token"
+  },
+  "global": {
+    "accountId": "global-account-id",
+    "publishKey": "publish-user-id"
+  }
+}

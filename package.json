@@ -12,6 +12,7 @@
     "test-package": "bash ./scripts/test-package.sh",
     "init": "yarn",
     "start": "cd ./packages/server/ && yarn run start",
+    "start:standalone": "cd ./packages/server/ && yarn run start:standalone",
     "storybook": "start-storybook -p 9001",
     "watch": "webpack-dev-server --config ./packages/server/webpack.config.dev.js --colors --display-error-details --progress",
     "build": "webpack --config ./packages/server/webpack.config.prod.js --output-path=`pwd`",
@@ -156,7 +157,10 @@
     "webpack-dev-server": "3.8.0",
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge": "4.2.2",
-    "xss": "1.0.6"
+    "xss": "1.0.6",
+    "nodemon": "^2.0.2",
+    "dotenv": "8.2.0",
+    "yaml": "1.8.2"
   },
   "workspaces": [
     "packages/*"

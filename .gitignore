@@ -15,3 +15,4 @@ vendor.css
 *.map
 *.vscode
 dist
+standalone-session.json
