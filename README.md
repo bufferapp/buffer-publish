@@ -304,7 +304,7 @@ To generate this file for your own user (or for another user) visit the Buffer A
 
 #### Environment Variables
 
-The standalone server will automatically pull the environment vars from the [buffer-dev publish config](https://github.com/bufferapp/buffer-dev-config/blob/655827f8f9098a212e25bd91dded209aa9d6ae4c/config.yaml#L413). You can override any of those or add new ones by modifying the (`standalone.env` file in `packages/server`)[./packages/server/standalone.env]. 
+The standalone server will automatically pull the environment vars from the [buffer-dev publish config](https://github.com/bufferapp/buffer-dev-config/blob/655827f8f9098a212e25bd91dded209aa9d6ae4c/config.yaml#L413). You can override any of those or add new ones by modifying the (`standalone.env` file in `packages/server`)[/packages/server/standalone.env]. 
 Right now it's used only to point to the external facing Publish API.
 
 ### Starting
