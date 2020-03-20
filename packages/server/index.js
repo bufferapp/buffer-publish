@@ -28,12 +28,12 @@ const {
 const { errorMiddleware } = require('@bufferapp/buffer-rpc');
 const serialize = require('serialize-javascript');
 const helmet = require('helmet');
-const dotenv = require('dotenv');
 
 if (isStandalone) {
   // Read ENV vars from the buffer-dev config
-  // eslint-disable-next-line global-require
-  const YAML = require('yaml');
+  const YAML = require('yaml'); // eslint-disable-line global-require
+  const dotenv = require('dotenv'); // eslint-disable-line global-require
+
   const config = YAML.parse(
     fs.readFileSync(
       join(__dirname, '../../../buffer-dev-config/config.yaml'),
