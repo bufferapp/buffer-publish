@@ -332,6 +332,10 @@ You should also ensure that you are watching/bundling the React app, as usual:
 yarn run watch
 ```
 
+Now visit https://publish.local.buffer.com – Publish should load. ✨
+
+Don't forget this is the production database you're interacting with now – but the cool part is you can still edit and work on the React app same as you do normally! 💪
+
 ## Copyright
 
 © 2020 Buffer Inc.
