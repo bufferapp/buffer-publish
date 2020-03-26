@@ -1,5 +1,6 @@
 const moment = require('moment-timezone');
 const postParser = require('./postParser');
+const { getDateString } = require('../../formatters/src/date');
 
 const parseLastUpdated = updatedAt => {
   const updatedDate = new Date(updatedAt * 1000);
@@ -49,6 +50,30 @@ const parseItem = item => {
     // We'd need to add the other parsers here (storyGroups)
     if (item.type === 'update') {
       itemContent.content = postParser(item.content);
+      const {
+        createdAt,
+        profileTimezone,
+        profile_service,
+        user,
+      } = itemContent.content;
+      // String with the date of the update creation
+      const createdAtString =
+        createdAt &&
+        getDateString(createdAt, profileTimezone, {
+          createdAt,
+          twentyFourHourTime: false,
+        });
+      // Header details to be used in the CardHeader
+      itemContent.content.headerDetails = {
+        channel: {
+          avatarUrl: item.service_avatar,
+          handle: item.service_username,
+          type: profile_service,
+        },
+        creatorName: user && user.name,
+        avatarUrl: user && user.avatar,
+        createdAt: createdAtString,
+      };
     }
   }
 

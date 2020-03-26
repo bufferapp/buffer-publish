@@ -65,6 +65,7 @@ const MultipleImagesPost = ({
   campaignDetails,
   onCampaignTagClick,
   hasCampaignsFeature,
+  ...props
 }) => {
   const images = imageUrls.map(url => ({ src: `${url}` }));
   const children = (
@@ -110,6 +111,7 @@ const MultipleImagesPost = ({
 
   return (
     <Post
+      {...props}
       postDetails={postDetails}
       isConfirmingDelete={isConfirmingDelete}
       isDeleting={isDeleting}

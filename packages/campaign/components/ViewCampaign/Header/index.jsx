@@ -22,8 +22,7 @@ import {
 const Header = ({
   translations,
   campaignDetails,
-  isUsingPublishAsTeamMember,
-  hasPosts,
+  hideAnalyzeReport,
   onCreatePostClick,
   onDeleteCampaignClick,
   onEditCampaignClick,
@@ -36,28 +35,32 @@ const Header = ({
         <Text type="h1">{campaignDetails.name}</Text>
       </Title>
       <SubText>
-        {hasPosts && (
-          <Details>
+        <Details>
+          {campaignDetails.dateRange && (
             <Group>
               <Icon>
                 <CalendarIcon size="medium" />
               </Icon>
               <Text type="p">{campaignDetails.dateRange}</Text>
             </Group>
-            <Group>
-              <Icon>
-                <ClockIcon size="medium" />
-              </Icon>
-              <Text type="p">{campaignDetails.scheduled}</Text>
-            </Group>
-            <Group>
-              <Icon>
-                <ListIcon size="medium" />
-              </Icon>
-              <Text type="p">{campaignDetails.sent}</Text>
-            </Group>
-          </Details>
-        )}
+          )}
+          <Group>
+            <Icon>
+              <ClockIcon size="medium" />
+            </Icon>
+            <Text type="p">
+              {campaignDetails.scheduled} {translations.scheduled}
+            </Text>
+          </Group>
+          <Group>
+            <Icon>
+              <ListIcon size="medium" />
+            </Icon>
+            <Text type="p">
+              {campaignDetails.sent} {translations.sent}
+            </Text>
+          </Group>
+        </Details>
         <Text type="p">
           <LastUpdated>{campaignDetails.lastUpdated}</LastUpdated>
         </Text>
@@ -82,7 +85,7 @@ const Header = ({
           },
           {
             title: translations.editCampaign,
-            selectedItemClick: onEditCampaignClick,
+            selectedItemClick: () => onEditCampaignClick(campaignDetails.id),
           },
           {
             title: translations.deleteCampaign,
@@ -92,7 +95,7 @@ const Header = ({
           },
         ]}
       />
-      {!isUsingPublishAsTeamMember && (
+      {!hideAnalyzeReport && (
         <Button
           type="secondary"
           icon={<ArrowRightIcon />}
@@ -100,7 +103,7 @@ const Header = ({
           onClick={() => {
             goToAnalyzeReport();
           }}
-          disabled={!hasPosts}
+          disabled={!campaignDetails.dateRange}
           label={translations.viewReport}
         />
       )}
@@ -114,8 +117,11 @@ Header.propTypes = {
     createPost: PropTypes.string,
     editCampaign: PropTypes.string,
     deleteCampaign: PropTypes.string,
+    sent: PropTypes.string,
+    scheduled: PropTypes.string,
   }).isRequired,
   campaignDetails: PropTypes.shape({
+    id: PropTypes.string,
     name: PropTypes.string,
     color: PropTypes.string,
     dateRange: PropTypes.string,
@@ -123,8 +129,7 @@ Header.propTypes = {
     sent: PropTypes.number,
     lastUpdated: PropTypes.string,
   }).isRequired,
-  hasPosts: PropTypes.bool.isRequired,
-  isUsingPublishAsTeamMember: PropTypes.bool.isRequired,
+  hideAnalyzeReport: PropTypes.bool.isRequired,
   onCreatePostClick: PropTypes.func.isRequired,
   onDeleteCampaignClick: PropTypes.func.isRequired,
   onEditCampaignClick: PropTypes.func.isRequired,

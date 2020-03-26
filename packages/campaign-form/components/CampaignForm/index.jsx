@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Text, Input, Button, Link } from '@bufferapp/ui';
@@ -6,7 +6,6 @@ import { SimpleColorPicker } from '@bufferapp/publish-shared-components';
 import { borderRadius } from '@bufferapp/ui/style/borders';
 import { View } from '@bufferapp/ui/Icon';
 import {
-  gray,
   grayLight,
   grayLighter,
   grayDark,
@@ -19,13 +18,13 @@ import {
   green,
   teal,
   blueDark,
+  grayShadow
 } from '@bufferapp/ui/style/colors';
 
 /* Styles */
 const Wrapper = styled.div`
   background-color: ${grayLighter};
   height: 100%;
-  text-align: center;
 `;
 
 const Content = styled.div`
@@ -37,20 +36,25 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   background: ${white};
-  border: 1px solid ${gray};
+  border: 1px solid ${grayLight};
   box-sizing: border-box;
   border-radius: ${borderRadius};
+  box-shadow: ${grayShadow};
   width: 100%;
   padding: 0 16px;
-  text-align: left;
+`;
+
+const Headline = styled(Text)`
+  text-align: center;
 `;
 
 const NoticeCard = styled(Card)`
   flex-direction: row;
   border: 1px solid ${grayLight};
   background: none;
+  box-shadow: none;
   margin: 16px 0 24px;
-  padding: 24px 16px;
+  padding: 16px;
 `;
 
 const Notice = styled.div`
@@ -77,15 +81,33 @@ const colors = [
 
 /* Component */
 const CampaignForm = ({
+  campaignId,
   translations,
-  onCreateCampaignClick,
+  onCreateOrUpdateCampaignClick,
   onCancelClick,
-  isSaving,
+  isLoading,
+  editMode,
+  campaign,
+  fetchCampaign,
 }) => {
+  // Fetch Data
+  useEffect(() => {
+    if (editMode) {
+      fetchCampaign({ campaignId });
+    }
+  }, [campaignId]);
+
   // State
   const [campaignName, setName] = useState('');
   const [colorSelected, setColor] = useState(purple);
   const [isSubmitButtonDisabled, disableSubmit] = useState(true);
+
+  useEffect(() => {
+    if (editMode) {
+      setName(campaign?.name);
+      setColor(campaign?.color);
+    }
+  }, [campaign]);
 
   // State modifiers
   const disableCampaignSubmitButton = ({ name, color }) => {
@@ -108,9 +130,10 @@ const CampaignForm = ({
   return (
     <Wrapper>
       <Content>
-        <Text type="h1">{translations.title}</Text>
         <Card>
-          <Text type="h3">{translations.subtitle}</Text>
+          <Headline type="h2">
+            {editMode ? translations.editTitle : translations.createTitle}
+          </Headline>
           <Input
             type="input"
             value={campaignName}
@@ -130,36 +153,42 @@ const CampaignForm = ({
             colorSelected={colorSelected}
             onColorClick={setCampaignColor}
           />
+          <Button
+            type="primary"
+            size="large"
+            label={translations.saveCampaign}
+            onClick={() =>
+              onCreateOrUpdateCampaignClick({
+                campaignId,
+                colorSelected,
+                campaignName,
+                orgId: campaign?.globalOrganizationId,
+              })
+            }
+            disabled={isSubmitButtonDisabled || isLoading}
+            fullWidth
+          />
+          <Button
+            type="text"
+            size="large"
+            label={translations.cancel}
+            onClick={onCancelClick}
+            fullWidth
+          />
         </Card>
         <NoticeCard>
           <View color={grayDark} />
           <Notice>
             <NoticeText type="p" color={grayDark}>
-              <b>{translations.notice1}</b>
-              {translations.notice2}
+              {translations.notice1}
               {/* FAQ link has to be replaced */}
               <Link href="https://faq.buffer.com/" newTab>
-                {translations.notice3}
+                {translations.notice2}
               </Link>
-              {translations.notice4}
+              {translations.notice3}
             </NoticeText>
           </Notice>
         </NoticeCard>
-        <Button
-          type="primary"
-          size="large"
-          label={translations.saveCampaign}
-          onClick={() => onCreateCampaignClick({ colorSelected, campaignName })}
-          disabled={isSubmitButtonDisabled || isSaving}
-          fullWidth
-        />
-        <Button
-          type="text"
-          size="large"
-          label={translations.cancel}
-          onClick={onCancelClick}
-          fullWidth
-        />
       </Content>
     </Wrapper>
   );
@@ -167,7 +196,8 @@ const CampaignForm = ({
 
 CampaignForm.propTypes = {
   translations: PropTypes.shape({
-    title: PropTypes.string.isRequired,
+    editTitle: PropTypes.string.isRequired,
+    createTitle: PropTypes.string.isRequired,
     subtitle: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string.isRequired,
@@ -175,13 +205,27 @@ CampaignForm.propTypes = {
     notice1: PropTypes.string.isRequired,
     notice2: PropTypes.string.isRequired,
     notice3: PropTypes.string.isRequired,
-    notice4: PropTypes.string.isRequired,
     saveCampaign: PropTypes.string.isRequired,
     cancel: PropTypes.string.isRequired,
   }).isRequired,
-  onCreateCampaignClick: PropTypes.func.isRequired,
+  campaignId: PropTypes.string,
+  fetchCampaign: PropTypes.func.isRequired,
+  onCreateOrUpdateCampaignClick: PropTypes.func.isRequired,
   onCancelClick: PropTypes.func.isRequired,
-  isSaving: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  editMode: PropTypes.bool,
+  campaign: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    color: PropTypes.string,
+    globalOrganizationId: PropTypes.string,
+  }),
+};
+
+CampaignForm.defaultProps = {
+  campaignId: '',
+  editMode: false,
+  campaign: {},
 };
 
 export default CampaignForm;

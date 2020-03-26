@@ -8,27 +8,43 @@ export default connect(
   (state, ownProps) => {
     return {
       campaign: state.campaignForm.campaign,
-      translations: state.i18n.translations.campaigns.createCampaign,
+      translations: state.i18n.translations.campaigns.campaignForm,
       isLoading: state.campaignForm.isLoading,
       editMode: ownProps.editMode,
       campaignId:
-        state?.campaignForm?.campaignId || ownProps?.match?.params?.id,
+        ownProps?.match?.params?.id || state?.campaignForm?.campaignId,
       hasCampaignsFlip: state.appSidebar.user.features
         ? state.appSidebar.user.features.includes('campaigns')
         : false,
     };
   },
   dispatch => ({
-    onCancelCreateCampaignClick: () => {
+    onCancelClick: () => {
       dispatch(campaignsPage.goTo());
     },
-    onCreateCampaignClick: ({ colorSelected, campaignName }) => {
-      dispatch(
-        actions.handleCreateCampaignClick({
-          name: campaignName,
-          color: colorSelected,
-        })
-      );
+    onCreateOrUpdateCampaignClick: ({
+      campaignId,
+      colorSelected,
+      campaignName,
+      orgId,
+    }) => {
+      if (campaignId) {
+        dispatch(
+          actions.handleEditCampaignClick({
+            id: campaignId,
+            name: campaignName,
+            color: colorSelected,
+            orgId,
+          })
+        );
+      } else {
+        dispatch(
+          actions.handleCreateCampaignClick({
+            name: campaignName,
+            color: colorSelected,
+          })
+        );
+      }
     },
     fetchCampaign: ({ campaignId }) => {
       dispatch(campaignActions.fetchCampaign({ campaignId }));

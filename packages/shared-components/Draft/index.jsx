@@ -38,9 +38,11 @@ const Draft = ({
 }) => (
   <Card>
     <CardHeader
-      creatorName={draftDetails.creatorName}
-      avatarUrl={draftDetails.avatarUrl}
-      createdAt={draftDetails.createdAt}
+      headerDetails={{
+        creatorName: draftDetails.creatorName,
+        avatarUrl: draftDetails.avatarUrl,
+        createdAt: draftDetails.createdAt,
+      }}
     />
     {/* Draft Content */}
     <div style={postContentStyle}>

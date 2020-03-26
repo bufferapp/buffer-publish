@@ -12,7 +12,8 @@ export const getReadableDateFormat = ({
 };
 
 export const getMomentTime = ({ scheduledAt, timezone }) => {
-  let scheduledAtMoment = moment.unix(scheduledAt);
+  const scheduledAtTime = scheduledAt || Date.now();
+  let scheduledAtMoment = moment.unix(scheduledAtTime);
   if (timezone) {
     scheduledAtMoment = scheduledAtMoment.tz(timezone);
   }

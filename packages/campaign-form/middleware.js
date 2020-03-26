@@ -25,6 +25,21 @@ export default ({ dispatch }) => next => action => {
       );
       break;
     }
+    case actionTypes.EDIT_CAMPAIGN: {
+      const { id, name, color } = action;
+
+      dispatch(
+        dataFetchActions.fetch({
+          name: 'updateCampaign',
+          args: {
+            campaignId: id,
+            name,
+            color,
+          },
+        })
+      );
+      break;
+    }
     // Complete once changes to the backend endpoint are made:
     case `createCampaign_${dataFetchActionTypes.FETCH_SUCCESS}`: {
       const { id, name, color, globalOrganizationId } = action.result || {};
@@ -49,7 +64,24 @@ export default ({ dispatch }) => next => action => {
       break;
     }
 
+    case `updateCampaign_${dataFetchActionTypes.FETCH_SUCCESS}`: {
+      const { id, name, color, organizationId } = action.result || {};
+      const metadata = {
+        campaignId: id,
+        campaignName: name,
+        campaignColor: color,
+        organizationId,
+      };
+      dispatch(analyticsActions.trackEvent('Campaign Edited', metadata));
+
+      if (id) {
+        dispatch(campaignScheduled.goTo({ campaignId: id }));
+      }
+      break;
+    }
+
     case `createCampaign_${dataFetchActionTypes.FETCH_FAIL}`:
+    case `updateCampaign_${dataFetchActionTypes.FETCH_FAIL}`:
       dispatch(
         notificationActions.createNotification({
           notificationType: 'error',

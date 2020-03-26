@@ -69,17 +69,19 @@ const Story = ({
           <PostErrorBanner error={errorMessage} errorLink={errorLink} />
         )}
         <CardHeader
-          avatarUrl={avatarUrl}
-          createdAt={createdAt}
-          onPreviewClick={() =>
-            onPreviewClick({
-              stories,
-              profileId,
-              id,
-              scheduledAt,
-              serviceId,
-            })
-          }
+          headerDetails={{
+            avatarUrl,
+            createdAt,
+            onPreviewClick: () => {
+              onPreviewClick({
+                stories,
+                profileId,
+                id,
+                scheduledAt,
+                serviceId,
+              });
+            },
+          }}
         />
         <Carousel
           editMode={false}

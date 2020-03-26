@@ -75,6 +75,7 @@ const LinkPost = ({
   campaignDetails,
   onCampaignTagClick,
   hasCampaignsFeature,
+  ...props
 }) => {
   const children = (
     <div style={postContentStyle}>
@@ -131,6 +132,7 @@ const LinkPost = ({
 
   return (
     <Post
+      {...props}
       isConfirmingDelete={isConfirmingDelete}
       isDeleting={isDeleting}
       isWorking={isWorking}

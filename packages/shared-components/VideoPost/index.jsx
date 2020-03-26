@@ -49,8 +49,10 @@ const VideoPost = ({
   campaignDetails,
   onCampaignTagClick,
   hasCampaignsFeature,
+  ...props
 }) => (
   <ImagePost
+    {...props}
     isConfirmingDelete={isConfirmingDelete}
     isDeleting={isDeleting}
     isWorking={isWorking}

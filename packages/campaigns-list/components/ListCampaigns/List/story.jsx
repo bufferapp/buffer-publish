@@ -55,6 +55,6 @@ storiesOf('Campaigns|ListCampaigns', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      isUsingPublishAsTeamMember={false}
+      hideAnalyzeReport={false}
     />
   ));

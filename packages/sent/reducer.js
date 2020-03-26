@@ -1,6 +1,9 @@
 import { actionTypes as dataFetchActionTypes } from '@bufferapp/async-data-fetch';
 import { actionTypes as profileSidebarActionTypes } from '@bufferapp/publish-profile-sidebar/reducer';
-import { actionTypes as queueActionTypes } from '@bufferapp/publish-queue/reducer';
+import {
+  actionTypes as queueActionTypes,
+  sortCampaignsByUpdatedAt,
+} from '@bufferapp/publish-queue/reducer';
 import keyWrapper from '@bufferapp/keywrapper';
 
 export const actionTypes = keyWrapper('SENT', {
@@ -222,7 +225,7 @@ export default (state = initialState, action) => {
     case `getCampaignsList_${dataFetchActionTypes.FETCH_SUCCESS}`:
       return {
         ...state,
-        campaigns: action.result,
+        campaigns: sortCampaignsByUpdatedAt(action.result),
       };
     default:
       return state;

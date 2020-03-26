@@ -29,9 +29,10 @@ const LoadingContainer = styled.div`
 /* Component */
 const ViewCampaign = ({
   campaign,
+  campaignPosts,
   showComposer,
   isLoading,
-  isUsingPublishAsTeamMember,
+  hideAnalyzeReport,
   translations,
   onCreatePostClick,
   onDeleteCampaignClick,
@@ -70,8 +71,7 @@ const ViewCampaign = ({
     <Container>
       <Header
         campaignDetails={campaign}
-        hasPosts={campaignHasPosts}
-        isUsingPublishAsTeamMember={isUsingPublishAsTeamMember}
+        hideAnalyzeReport={hideAnalyzeReport}
         translations={translations}
         onCreatePostClick={onCreatePostClick}
         onDeleteCampaignClick={onDeleteCampaignClick}
@@ -98,7 +98,7 @@ const ViewCampaign = ({
             </Tabs>
           </nav>
           <QueueItems
-            items={campaign.items}
+            items={campaignPosts}
             onDeleteConfirmClick={null}
             onEditClick={null}
             onShareNowClick={null}
@@ -129,7 +129,7 @@ ViewCampaign.propTypes = {
   translations: PropTypes.object.isRequired, // eslint-disable-line
   campaign: PropTypes.object.isRequired, // eslint-disable-line
   campaignPosts: PropTypes.array, // eslint-disable-line
-  isUsingPublishAsTeamMember: PropTypes.bool.isRequired,
+  hideAnalyzeReport: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   onCreatePostClick: PropTypes.func.isRequired,
   onDeleteCampaignClick: PropTypes.func.isRequired,

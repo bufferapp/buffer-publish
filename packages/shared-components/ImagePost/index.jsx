@@ -93,6 +93,7 @@ const ImagePost = ({
   campaignDetails,
   onCampaignTagClick,
   hasCampaignsFeature,
+  ...props
 }) => {
   const children = (
     <div style={postContentStyle}>
@@ -143,6 +144,7 @@ const ImagePost = ({
 
   return (
     <Post
+      {...props}
       isConfirmingDelete={isConfirmingDelete}
       isDeleting={isDeleting}
       isWorking={isWorking}

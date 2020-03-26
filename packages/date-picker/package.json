@@ -12,7 +12,7 @@
     "@bufferapp/async-data-fetch": "2.0.0",
     "@bufferapp/components": "3.2.1",
     "moment": "2.22.2",
-    "react-tooltip": "^3.3.0"
+    "react-tooltip": "4.1.2"
   },
   "publishConfig": {
     "access": "public"

@@ -37,7 +37,7 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      isUsingPublishAsTeamMember={false}
+      hideAnalyzeReport={false}
     />
   ))
   .add('Team member view of campaign list item', () => (
@@ -49,7 +49,7 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      isUsingPublishAsTeamMember
+      hideAnalyzeReport
     />
   ))
   .add('Campaign list item with gray background', () => (
@@ -61,7 +61,7 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      isUsingPublishAsTeamMember={false}
+      hideAnalyzeReport={false}
     />
   ))
   .add('Campaign list item without any posts', () => (
@@ -73,6 +73,6 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      isUsingPublishAsTeamMember={false}
+      hideAnalyzeReport={false}
     />
   ));

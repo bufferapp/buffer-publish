@@ -3,13 +3,27 @@ import PropTypes from 'prop-types';
 import { Text, Button } from '@bufferapp/ui';
 import { BufferLoading } from '@bufferapp/publish-shared-components';
 import { getURL } from '@bufferapp/publish-server/formatters/src';
+import { borderRadius } from '@bufferapp/ui/style/borders';
+import {
+  grayLighter,
+  gray,
+  white,
+  grayShadow,
+} from '@bufferapp/ui/style/colors';
 import styled from 'styled-components';
 import EmptyState from './EmptyState';
 import List from './List';
 
+/* Styles */
+const Wrapper = styled.div`
+  background-color: ${grayLighter};
+  height: 100%;
+`;
+
 const Header = styled.header`
   display: flex;
   align-items: center;
+  padding: 0 16px;
   button {
     margin-left: auto;
   }
@@ -17,7 +31,12 @@ const Header = styled.header`
 
 const Container = styled.div`
   margin: 13px;
-  max-width: 864px;
+  min-width: 750px;
+  max-width: 1008px;
+  border-radius: ${borderRadius};
+  border: 1px solid ${gray};
+  background-color: ${white};
+  box-shadow: ${grayShadow};
 `;
 
 const LoadingContainer = styled.div`
@@ -35,7 +54,7 @@ const ListCampaigns = ({
   onViewCampaignClick,
   goToAnalyzeReport,
   onOpenCreateCampaignClick,
-  isUsingPublishAsTeamMember,
+  hideAnalyzeReport,
   hasCampaignsFlip,
   fetchCampaigns,
   isLoading,
@@ -69,25 +88,27 @@ const ListCampaigns = ({
   }
 
   return (
-    <Container>
-      <Header>
-        <Text type="h2">Campaigns</Text>
-        <Button
-          type="primary"
-          label="Create Campaign"
-          onClick={onOpenCreateCampaignClick}
+    <Wrapper>
+      <Container>
+        <Header>
+          <Text type="h2">Campaigns</Text>
+          <Button
+            type="primary"
+            label="Create Campaign"
+            onClick={onOpenCreateCampaignClick}
+          />
+        </Header>
+        <List
+          campaigns={campaigns}
+          onEditCampaignClick={onEditCampaignClick}
+          onDeleteCampaignClick={onDeleteCampaignClick}
+          onViewCampaignClick={onViewCampaignClick}
+          goToAnalyzeReport={goToAnalyzeReport}
+          translations={translations.viewCampaign}
+          hideAnalyzeReport={hideAnalyzeReport}
         />
-      </Header>
-      <List
-        campaigns={campaigns}
-        onEditCampaignClick={onEditCampaignClick}
-        onDeleteCampaignClick={onDeleteCampaignClick}
-        onViewCampaignClick={onViewCampaignClick}
-        goToAnalyzeReport={goToAnalyzeReport}
-        translations={translations.viewCampaign}
-        isUsingPublishAsTeamMember={isUsingPublishAsTeamMember}
-      />
-    </Container>
+      </Container>
+    </Wrapper>
   );
 };
 
@@ -99,7 +120,7 @@ ListCampaigns.propTypes = {
   onDeleteCampaignClick: PropTypes.func,
   onViewCampaignClick: PropTypes.func,
   goToAnalyzeReport: PropTypes.func,
-  isUsingPublishAsTeamMember: PropTypes.bool.isRequired,
+  hideAnalyzeReport: PropTypes.bool.isRequired,
   hasCampaignsFlip: PropTypes.bool.isRequired,
   fetchCampaigns: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,

@@ -17,28 +17,30 @@ const channel = {
   type: 'instagram',
 };
 
+const preview = action('preview-click');
+
 storiesOf('Cards|Basic Elements/CardHeader', module)
   .addDecorator(withA11y)
   .add('default', () => (
     <CardHeader
-      creatorName={details.creatorName}
-      avatarUrl={details.avatarUrl}
-      createdAt={details.createdAt}
+      headerDetails={{
+        ...details,
+      }}
     />
   ))
   .add('with preview button', () => (
     <CardHeader
-      creatorName={details.creatorName}
-      avatarUrl={details.avatarUrl}
-      createdAt={details.createdAt}
-      onPreviewClick={action('preview-click')}
+      headerDetails={{
+        ...details,
+        onPreviewClick: preview,
+      }}
     />
   ))
   .add('with channel details', () => (
     <CardHeader
-      creatorName={details.creatorName}
-      avatarUrl={details.avatarUrl}
-      createdAt={details.createdAt}
-      channel={channel}
+      headerDetails={{
+        ...details,
+        channel,
+      }}
     />
   ));

@@ -9,12 +9,15 @@ const TagButton = styled(Button)`
   margin-left: 16px;
   margin-bottom: 16px;
   padding: 8px;
+  height: initial;
   opacity: ${props => (props.dragging ? 0 : 1)};
   background-color: ${props => props.color};
   border-color: ${props => props.color};
   :hover {
     background-color: ${props => props.color};
     color: ${props => props.textColor};
+    border-color: ${props => props.color};
+    opacity: 0.9;
   }
   color: ${props => props.textColor};
 `;

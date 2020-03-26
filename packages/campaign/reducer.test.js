@@ -142,5 +142,13 @@ describe('reducer', () => {
       };
       expect(actions.handleCloseComposer()).toEqual(expectedAction);
     });
+    it('creates a GO_TO_ANALYZE_REPORT action', () => {
+      const campaign = {};
+      const expectedAction = {
+        type: actionTypes.GO_TO_ANALYZE_REPORT,
+        campaign,
+      };
+      expect(actions.goToAnalyzeReport(campaign)).toEqual(expectedAction);
+    });
   });
 });

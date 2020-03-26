@@ -131,6 +131,9 @@ const handlePostsReordered = (posts, { order: newOrder }) => {
   return newPostsMap;
 };
 
+export const sortCampaignsByUpdatedAt = campaigns =>
+  campaigns?.sort((first, second) => second.updatedAt - first.updatedAt);
+
 /**
  * Reducers
  */
@@ -441,7 +444,7 @@ export default (state = initialState, action) => {
     case `getCampaignsList_${dataFetchActionTypes.FETCH_SUCCESS}`:
       return {
         ...state,
-        campaigns: action.result,
+        campaigns: sortCampaignsByUpdatedAt(action.result),
       };
 
     default:

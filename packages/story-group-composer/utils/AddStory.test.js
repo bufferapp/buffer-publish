@@ -41,5 +41,19 @@ describe('Add Story Utils', () => {
       const unixDate = moment.unix(objToSend.scheduledAt);
       expect(format).toEqual(unixDate);
     });
+    it('returns today unix date when scheduledAt is undefined', () => {
+      const format = getMomentTime({
+        scheduledAt: undefined,
+      });
+      const unixDate = moment.unix(Date.now());
+      expect(format).toEqual(unixDate);
+    });
+    it('returns today unix date when scheduledAt is null', () => {
+      const format = getMomentTime({
+        scheduledAt: null,
+      });
+      const unixDate = moment.unix(Date.now());
+      expect(format).toEqual(unixDate);
+    });
   });
 });

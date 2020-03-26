@@ -4,8 +4,14 @@ import { action } from '@storybook/addon-actions';
 import { withA11y } from '@storybook/addon-a11y';
 import translations from '@bufferapp/publish-i18n/translations/en-us.json';
 import campaignDetails from '../story';
-
 import Header from './index';
+
+const campaignWithoutDaterange = {
+  ...campaignDetails,
+  dateRange: null,
+  sent: 0,
+  scheduled: 0,
+};
 
 storiesOf('Campaigns|ViewCampaignHeader', module)
   .addDecorator(withA11y)
@@ -17,20 +23,18 @@ storiesOf('Campaigns|ViewCampaignHeader', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      hasPosts
-      isUsingPublishAsTeamMember
+      hideAnalyzeReport={false}
     />
   ))
-  .add('Campaign view header without posts', () => (
+  .add('Campaign view header without a date range', () => (
     <Header
-      campaignDetails={campaignDetails}
+      campaignDetails={campaignWithoutDaterange}
       translations={translations.campaigns.viewCampaign}
       onCreatePostClick={action('create post')}
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      hasPosts={false}
-      isUsingPublishAsTeamMember
+      hideAnalyzeReport={false}
     />
   ))
   .add('Campaign view header as team member', () => (
@@ -41,7 +45,6 @@ storiesOf('Campaigns|ViewCampaignHeader', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      hasPosts={false}
-      isUsingPublishAsTeamMember={false}
+      hideAnalyzeReport
     />
   ));

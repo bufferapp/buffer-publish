@@ -8,6 +8,7 @@ import PostStats from '../PostStats';
 import RenderPostMetaBar from './RenderPostMetaBar';
 import PostErrorBanner from '../PostErrorBanner';
 import RetweetPanel from '../RetweetPanel';
+import CardHeader from '../CardHeader';
 import Card from '../Card';
 
 const PostContainer = styled.div`
@@ -69,6 +70,7 @@ const Post = ({
   campaignDetails,
   onCampaignTagClick,
   hasCampaignsFeature,
+  headerDetails,
 }) => {
   const hasError =
     postDetails && postDetails.error && postDetails.error.length > 0;
@@ -103,6 +105,7 @@ const Post = ({
               errorLink={postDetails.errorLink}
             />
           )}
+          {headerDetails && <CardHeader headerDetails={headerDetails} />}
           <PostContent draggable={draggable} dragging={dragging}>
             {retweetProfile ? (
               <RetweetPanel

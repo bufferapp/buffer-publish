@@ -20,7 +20,7 @@ import {
 const ListItem = ({
   campaign,
   isEvenItem,
-  isUsingPublishAsTeamMember,
+  hideAnalyzeReport,
   onEditCampaignClick,
   onDeleteCampaignClick,
   onViewCampaignClick,
@@ -92,14 +92,16 @@ const ListItem = ({
       <ButtonWrapper>
         <Button
           onClick={
-            isUsingPublishAsTeamMember
+            hideAnalyzeReport
               ? viewCampaignSelectItem.selectedItemClick
-              : goToAnalyzeReport
+              : () => {
+                  goToAnalyzeReport(campaign);
+                }
           }
           type="secondary"
           isSplit
           label={
-            isUsingPublishAsTeamMember
+            hideAnalyzeReport
               ? translations.viewCampaign
               : translations.viewReport
           }
@@ -110,7 +112,7 @@ const ListItem = ({
             return false;
           }}
           items={
-            isUsingPublishAsTeamMember
+            hideAnalyzeReport
               ? selectItems
               : [viewCampaignSelectItem, ...selectItems]
           }
@@ -142,7 +144,7 @@ ListItem.propTypes = {
   onDeleteCampaignClick: PropTypes.func.isRequired,
   onEditCampaignClick: PropTypes.func.isRequired,
   goToAnalyzeReport: PropTypes.func.isRequired,
-  isUsingPublishAsTeamMember: PropTypes.bool.isRequired,
+  hideAnalyzeReport: PropTypes.bool.isRequired,
   isEvenItem: PropTypes.bool.isRequired,
 };
 

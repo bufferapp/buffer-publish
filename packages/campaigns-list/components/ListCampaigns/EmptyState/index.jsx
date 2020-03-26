@@ -30,6 +30,7 @@ const EmptyState = ({ translations, onOpenCreateCampaignClick }) => {
     step3,
     createCampaign,
     title,
+    subtext,
     learnMore,
     imageTag,
   } = translations;
@@ -39,6 +40,7 @@ const EmptyState = ({ translations, onOpenCreateCampaignClick }) => {
     <EmptyStateContainer>
       <Content>
         <Text type="h1">{title}</Text>
+        <Text type="p">{subtext}</Text>
         <StepList steps={stepsArray} />
         <div style={{ alignSelf: 'flex-end', paddingTop: '30px' }}>
           <Button

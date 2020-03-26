@@ -5,6 +5,7 @@ export const actionTypes = keyWrapper('CAMPAIGN_VIEW', {
   FETCH_CAMPAIGN: 0,
   OPEN_COMPOSER: 0,
   CLOSE_COMPOSER: 0,
+  GO_TO_ANALYZE_REPORT: 0,
 });
 
 export const initialState = {
@@ -61,9 +62,14 @@ export const actions = {
   handleCloseComposer: () => ({
     type: actionTypes.CLOSE_COMPOSER,
   }),
-  fetchCampaign: ({ campaignId, past }) => ({
+  fetchCampaign: ({ campaignId, past, fullItems }) => ({
     type: actionTypes.FETCH_CAMPAIGN,
     campaignId,
     past,
+    fullItems,
+  }),
+  goToAnalyzeReport: campaign => ({
+    type: actionTypes.GO_TO_ANALYZE_REPORT,
+    campaign,
   }),
 };

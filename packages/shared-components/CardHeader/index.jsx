@@ -49,16 +49,18 @@ const TextWithStyles = styled(Text)`
 const getCreatedText = creatorName =>
   creatorName ? `${creatorName} created this ` : 'Created ';
 
-const CardHeader = ({
-  channel,
-  creatorName,
-  avatarUrl,
-  createdAt,
-  onPreviewClick,
-}) => {
+const CardHeader = ({ headerDetails }) => {
+  const {
+    channel,
+    creatorName,
+    avatarUrl,
+    createdAt,
+    onPreviewClick,
+  } = headerDetails;
   const WrapperComponent = onPreviewClick
     ? CardHeaderWrapperWithButton
     : CardHeaderWrapper;
+
   const hasChannelDetails = channel?.handle && channel?.type;
 
   return (
@@ -109,21 +111,17 @@ const CardHeader = ({
 };
 
 CardHeader.propTypes = {
-  creatorName: PropTypes.string,
-  avatarUrl: PropTypes.string.isRequired,
-  createdAt: PropTypes.string.isRequired,
-  onPreviewClick: PropTypes.func,
-  channel: PropTypes.shape({
-    avatarUrl: PropTypes.string,
-    handle: PropTypes.string,
-    type: PropTypes.string,
-  }),
-};
-
-CardHeader.defaultProps = {
-  onPreviewClick: null,
-  creatorName: null,
-  channel: null,
+  headerDetails: PropTypes.shape({
+    creatorName: PropTypes.string,
+    avatarUrl: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    onPreviewClick: PropTypes.func,
+    channel: PropTypes.shape({
+      avatarUrl: PropTypes.string,
+      handle: PropTypes.string,
+      type: PropTypes.string,
+    }),
+  }).isRequired,
 };
 
 export default CardHeader;

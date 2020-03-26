@@ -49,7 +49,7 @@ storiesOf('Campaigns|ViewCampaign', module)
       onComposerCreateSuccess={action('composer create success')}
       onComposerOverlayClick={action('composer overlay')}
       campaignId="id"
-      isUsingPublishAsTeamMember
+      hideAnalyzeReport
       hasCampaignsFlip
       isLoading={false}
       showComposer={false}
@@ -67,7 +67,7 @@ storiesOf('Campaigns|ViewCampaign', module)
       onComposerCreateSuccess={action('composer create success')}
       onComposerOverlayClick={action('composer overlay')}
       campaignId="id"
-      isUsingPublishAsTeamMember
+      hideAnalyzeReport
       hasCampaignsFlip
       isLoading={false}
       showComposer={false}

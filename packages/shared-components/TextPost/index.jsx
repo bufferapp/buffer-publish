@@ -57,6 +57,7 @@ const TextPost = ({
   basic,
   campaignDetails,
   hasCampaignsFeature,
+  ...props
 }) => {
   const children = (
     <div style={postContentStyle}>
@@ -84,6 +85,7 @@ const TextPost = ({
 
   return (
     <Post
+      {...props}
       isConfirmingDelete={isConfirmingDelete}
       isDeleting={isDeleting}
       isWorking={isWorking}

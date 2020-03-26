@@ -2155,10 +2155,10 @@
     "@bufferapp/nav-sidebar" "^1.11.0"
     numeral "2.0.6"
 
-"@bufferapp/ui@5.27.0":
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/@bufferapp/ui/-/ui-5.27.0.tgz#790e166dc14dc0ade6901a955aafd71d265e0768"
-  integrity sha512-Ybpqt3jU6+6Vq6lAhGyDKjP2fy65CXDBQBvodwGJLkg0VtpHFM6qwiudM5dO44G7ELsENz2mk36QeVU+jRM/fA==
+"@bufferapp/ui@5.32.0":
+  version "5.32.0"
+  resolved "https://registry.yarnpkg.com/@bufferapp/ui/-/ui-5.32.0.tgz#c13b061e632af2e5ee06975f09089cc7af965ccf"
+  integrity sha512-p3QXrOhjUS+YmBmU7MlmR+z4+noTa27rWbHNMX+rO3/uTTOSv/sqelTWwiOHwKlq8hsQ0yEwwEvK7NwYbFgcvA==
   dependencies:
     "@reach/tooltip" "0.6.2"
     immutability-helper "^2.9.0"
@@ -6470,7 +6470,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.1.2, classnames@^2.2.0, classnames@^2.2.5:
+classnames@^2.1.2, classnames@^2.2.5:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
@@ -15687,13 +15687,12 @@ react-textarea-autosize@7.1.0, react-textarea-autosize@^7.1.0:
     "@babel/runtime" "^7.1.2"
     prop-types "^15.6.0"
 
-react-tooltip@3.3.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.3.0.tgz#51c08ae0221075e2c43d83cd47fc78466612df7d"
-  integrity sha1-UcCK4CIQdeLEPYPNR/x4RmYS330=
+react-tooltip@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-4.1.2.tgz#bc9f8620759518f6ef294198d082097e968d549c"
+  integrity sha512-AXQ5uumN/ZpPO6mlPrV52S1As1OOHhyp3pinWFEtTlpKojS8+CL5r/n0oiO8GR5hWqrvEONU34NEF01N2ODwqg==
   dependencies:
-    classnames "^2.2.0"
-    prop-types "^15.5.8"
+    prop-types "^15.7.2"
 
 react-tooltip@^3.3.0:
   version "3.11.1"
