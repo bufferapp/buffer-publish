@@ -23,7 +23,7 @@ describe('RPC | Get list of campaigns', () => {
       response.forEach(campaign => {
         expect(campaign.globalOrganizationId).toBe('123');
         expect(campaign.dateRange).not.toBeUndefined();
-        expect(campaign.lastUpdated).toContain('Last updated ');
+        expect(campaign.lastUpdated).toContain('Updated ');
       });
     });
   });

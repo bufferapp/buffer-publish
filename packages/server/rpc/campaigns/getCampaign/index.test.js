@@ -154,7 +154,7 @@ describe('RPC | Get campaign', () => {
       expect(response.globalOrganizationId).toBe('000111');
       expect(response.name).toBe('My campaign');
       expect(response.color).toBe('#BD3381');
-      expect(response.lastUpdated).toContain('Last updated ');
+      expect(response.lastUpdated).toContain('Updated ');
       expect(response.dateRange).toBeNull();
       expect(response.items).toBeNull();
     });
@@ -167,7 +167,7 @@ describe('RPC | Get campaign', () => {
       expect(response.globalOrganizationId).toBe('000111');
       expect(response.name).toBe('My campaign');
       expect(response.color).toBe('#BD3381');
-      expect(response.lastUpdated).toContain('Last updated ');
+      expect(response.lastUpdated).toContain('Updated ');
       expect(response.dateRange).not.toBeUndefined();
       expect(response.items).not.toBeNull();
       response.items.forEach(item => {
@@ -185,7 +185,7 @@ describe('RPC | Get campaign', () => {
       expect(response.name).toBe('My campaign');
       expect(response.color).toBe('#BD3381');
       expect(response.dateRange).not.toBeUndefined();
-      expect(response.lastUpdated).toContain('Last updated ');
+      expect(response.lastUpdated).toContain('Updated ');
       expect(response.items.length).toBe(2);
       response.items.forEach(item => {
         itemParams.forEach(p => {
@@ -226,7 +226,7 @@ describe('RPC | Get campaign', () => {
       expect(response.name).toBe('My campaign');
       expect(response.color).toBe('#BD3381');
       expect(response.dateRange).not.toBeUndefined();
-      expect(response.lastUpdated).toContain('Last updated ');
+      expect(response.lastUpdated).toContain('Updated ');
       expect(response.items.length).toBe(1);
       response.items.forEach(item => {
         const sentItemParams = [...itemParams, 'sentAt', 'servicePostId'];

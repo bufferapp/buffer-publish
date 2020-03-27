@@ -31,7 +31,7 @@ const campaignDetails = {
   dateRange: 'Jan 5-18, 2020',
   scheduled: 5,
   sent: 2,
-  lastUpdated: 'Last updated 3 hours ago',
+  lastUpdated: 'Updated 3 hours ago',
 };
 
 storiesOf('Campaigns|ViewCampaign', module)

@@ -6,7 +6,7 @@ const parseLastUpdated = updatedAt => {
   const updatedDate = new Date(updatedAt * 1000);
   const diff = moment(updatedDate).fromNow(true);
 
-  return `Last updated ${diff} ago`;
+  return `Updated ${diff} ago`;
 };
 
 const getYear = momentDate => momentDate.format('YYYY');

@@ -64,7 +64,18 @@ class UploadZone extends React.Component {
     this.dropzone.open();
   };
 
-  onDrop = files => {
+  onDrop = (files, rejected, event) => {
+    /*
+     * Stop event propagation.
+     * If we dont' do this, file drops may propogate up from Dropzone to `react-dnd`
+     * and throw errors in the console; https://github.com/react-dnd/react-dnd/issues/457
+     *
+     * This was happening with the story groups composer when dropping a file on
+     * one of the cards. (Though the error wasn't crashing the app; it just added
+     * noise to our Bugsnag reporting.)
+     */
+    event.stopPropagation();
+
     const { disabled } = this.props;
     if (disabled) return;
 
@@ -215,6 +226,7 @@ class UploadZone extends React.Component {
     return (
       <div>
         <DropzoneWithStyles
+          onDragOver={event => event.stopPropagation()}
           onDrop={this.onDrop}
           activeClassName={classNames && classNames.uploadZoneActive}
           disabledClassName={classNames && classNames.uploadZoneDisabled}

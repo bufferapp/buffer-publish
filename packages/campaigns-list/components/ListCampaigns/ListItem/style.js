@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { grayDark, grayLight, grayLighter } from '@bufferapp/ui/style/colors';
+import { grayDarker, grayDark, grayLight, grayLighter } from '@bufferapp/ui/style/colors';
 import { fontWeightMedium } from '@bufferapp/ui/style/fonts';
 
 export const Color = styled.div`
@@ -14,8 +14,8 @@ export const Color = styled.div`
 // using grid layout to align the campaign list details
 export const Container = styled.li`
   display: grid;
-  grid-template-columns: 1.5fr 1.2fr 1fr 0.7fr 1fr;
-  grid-column-gap: 20px;
+  grid-template-columns: 2fr 1.2fr 1fr 0.7fr 1fr;
+  grid-column-gap: 24px;
   padding: 16px;
   border-top: 1px solid ${grayLight};
   align-items: center;
@@ -46,16 +46,17 @@ export const Group = styled.div`
 `;
 
 export const Icon = styled.span`
-  margin-right: 7px;
+  margin-right: 8px;
   svg {
     align-items: center;
     display: flex;
+    color: ${grayDarker};
   }
 `;
 
 export const LeftWrapper = styled.div`
   p {
-    margin: 6px 0px 0px 20px;
+    margin: 4px 0px 0px 22px;
   }
 `;
 
