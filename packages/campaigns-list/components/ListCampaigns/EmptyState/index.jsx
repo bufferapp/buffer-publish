@@ -68,6 +68,7 @@ const EmptyState = ({ translations, onOpenCreateCampaignClick }) => {
 EmptyState.propTypes = {
   translations: PropTypes.shape({
     title: PropTypes.string.isRequired,
+    subtext: PropTypes.string.isRequired,
     step1: PropTypes.string.isRequired,
     step2: PropTypes.string.isRequired,
     step3: PropTypes.string.isRequired,

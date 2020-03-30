@@ -1,4 +1,6 @@
 import deepFreeze from 'deep-freeze';
+import { actionTypes as dataFetchActionTypes } from '@bufferapp/async-data-fetch';
+import { actionTypes as queueActionTypes } from '@bufferapp/publish-queue/reducer';
 import reducer, { actions, initialState, actionTypes } from './reducer';
 
 describe('reducer', () => {
@@ -118,6 +120,291 @@ describe('reducer', () => {
     expect(reducer(stateBefore, action)).toEqual(stateAfter);
   });
 
+  it('handles POST_IMAGE_CLICKED action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [
+        { id: 'id1', content: { isLightboxOpen: true, currentImage: 0 } },
+      ],
+    };
+    const action = {
+      type: actionTypes.POST_IMAGE_CLICKED,
+      updateId: 'id1',
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_IMAGE_CLOSED action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: { isLightboxOpen: false } }],
+    };
+    const action = {
+      type: actionTypes.POST_IMAGE_CLOSED,
+      updateId: 'id1',
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_IMAGE_CLICKED_NEXT action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: { currentImage: 2 } }],
+    };
+    const action = {
+      type: actionTypes.POST_IMAGE_CLICKED_NEXT,
+      updateId: 'id1',
+      post: { currentImage: 1 },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_IMAGE_CLICKED_PREV action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: { currentImage: 1 } }],
+    };
+    const action = {
+      type: actionTypes.POST_IMAGE_CLICKED_PREV,
+      updateId: 'id1',
+      post: { currentImage: 2 },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_CONFIRMED_DELETE action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [
+        { id: 'id1', content: { isConfirmingDelete: false, isDeleting: true } },
+      ],
+    };
+    const action = {
+      type: actionTypes.POST_CONFIRMED_DELETE,
+      updateId: 'id1',
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles deletePost failed action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: { isDeleting: false } }],
+    };
+    const action = {
+      type: `deletePost_${dataFetchActionTypes.FETCH_FAIL}`,
+      updateId: 'id1',
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_SHARE_NOW action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: { isWorking: true } }],
+    };
+    const action = {
+      type: actionTypes.POST_SHARE_NOW,
+      updateId: 'id1',
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles sharePostNow failed action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: {} }],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaignPosts: [{ id: 'id1', content: { isWorking: false } }],
+    };
+    const action = {
+      type: `sharePostNow_${dataFetchActionTypes.FETCH_FAIL}`,
+      updateId: 'id1',
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_CREATED action if post created belongs to the current campaign', () => {
+    const stateBefore = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 0, sent: 0 },
+      campaignPosts: [
+        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
+      ],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 1, sent: 0 },
+      campaignPosts: [
+        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
+        {
+          id: 'id2',
+          _id: 'id2',
+          dueAt: undefined,
+          type: undefined,
+          content: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+        },
+      ],
+    };
+    const action = {
+      type: queueActionTypes.POST_CREATED,
+      post: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_CREATED action if post created does not belong to the current campaign', () => {
+    const stateBefore = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 0, sent: 0 },
+      campaignPosts: [
+        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
+      ],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 0, sent: 0 },
+      campaignPosts: [
+        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
+      ],
+    };
+    const action = {
+      type: queueActionTypes.POST_CREATED,
+      post: { id: 'id2', campaignDetails: { id: 'campaignId2' } },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_UPDATED action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaign: { id: 'campaignId' },
+      campaignPosts: [
+        {
+          id: 'id1',
+          content: { text: 'Old Post', campaignDetails: { id: 'campaignId' } },
+        },
+      ],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaign: { id: 'campaignId' },
+      campaignPosts: [
+        {
+          id: 'id1',
+          content: {
+            id: 'id1',
+            text: 'Post',
+            campaignDetails: { id: 'campaignId' },
+          },
+        },
+      ],
+    };
+    const action = {
+      type: queueActionTypes.POST_UPDATED,
+      post: { id: 'id1', text: 'Post', campaignDetails: { id: 'campaignId' } },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_DELETED action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 1, sent: 0 },
+      campaignPosts: [
+        { id: 'id1', campaignDetails: { id: 'campaignId' } },
+        { id: 'id2', campaignDetails: { id: 'campaignId' } },
+      ],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 0, sent: 0 },
+      campaignPosts: [{ id: 'id1', campaignDetails: { id: 'campaignId' } }],
+    };
+    const action = {
+      type: queueActionTypes.POST_DELETED,
+      post: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
+  it('handles POST_SENT action', () => {
+    const stateBefore = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 1, sent: 0 },
+      campaignPosts: [
+        { id: 'id1', campaignDetails: { id: 'campaignId' } },
+        { id: 'id2', campaignDetails: { id: 'campaignId' } },
+      ],
+    };
+    const stateAfter = {
+      ...initialState,
+      campaign: { id: 'campaignId', scheduled: 0, sent: 1 },
+      campaignPosts: [{ id: 'id1', campaignDetails: { id: 'campaignId' } }],
+    };
+    const action = {
+      type: queueActionTypes.POST_SENT,
+      post: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
   // Test action creators:
   describe('action creators', () => {
     it('creates a FETCH_CAMPAIGN action', () => {
@@ -125,16 +412,26 @@ describe('reducer', () => {
       const expectedAction = {
         type: actionTypes.FETCH_CAMPAIGN,
         campaignId: 'id2',
+        past: false,
+        fullItems: false,
       };
-      expect(actions.fetchCampaign({ campaignId })).toEqual(expectedAction);
+      expect(
+        actions.fetchCampaign({ campaignId, past: false, fullItems: false })
+      ).toEqual(expectedAction);
     });
     it('creates a OPEN_COMPOSER action', () => {
-      const campaignId = 'id2';
+      const post = { id: 'id1' };
+      const profileId = 'id2';
       const expectedAction = {
         type: actionTypes.OPEN_COMPOSER,
-        campaignId: 'id2',
+        post,
+        profileId,
+        editMode: true,
+        updateId: 'id1',
       };
-      expect(actions.handleOpenComposer(campaignId)).toEqual(expectedAction);
+      expect(
+        actions.handleOpenComposer({ post, profileId, editMode: true })
+      ).toEqual(expectedAction);
     });
     it('creates a CLOSE_COMPOSER action', () => {
       const expectedAction = {
@@ -149,6 +446,76 @@ describe('reducer', () => {
         campaign,
       };
       expect(actions.goToAnalyzeReport(campaign)).toEqual(expectedAction);
+    });
+    it('creates a POST_CONFIRMED_DELETE action', () => {
+      const post = { id: 'id1' };
+      const expectedAction = {
+        type: actionTypes.POST_CONFIRMED_DELETE,
+        updateId: 'id1',
+      };
+      expect(actions.handleDeleteConfirmClick({ post })).toEqual(
+        expectedAction
+      );
+    });
+    it('creates a POST_SHARE_NOW action', () => {
+      const post = { id: 'id1' };
+      const expectedAction = {
+        type: actionTypes.POST_SHARE_NOW,
+        updateId: 'id1',
+      };
+      expect(actions.handleShareNowClick({ post })).toEqual(expectedAction);
+    });
+    it('creates a POST_IMAGE_CLICKED action', () => {
+      const post = { id: 'id1' };
+      const profileId = 'id2';
+      const expectedAction = {
+        type: actionTypes.POST_IMAGE_CLICKED,
+        updateId: 'id1',
+        post,
+        profileId,
+      };
+      expect(actions.handleImageClick({ post, profileId })).toEqual(
+        expectedAction
+      );
+    });
+    it('creates a POST_IMAGE_CLICKED_NEXT action', () => {
+      const post = { id: 'id1' };
+      const profileId = 'id2';
+      const expectedAction = {
+        type: actionTypes.POST_IMAGE_CLICKED_NEXT,
+        updateId: 'id1',
+        post,
+        profileId,
+      };
+      expect(actions.handleImageClickNext({ post, profileId })).toEqual(
+        expectedAction
+      );
+    });
+    it('creates a POST_IMAGE_CLICKED_PREV action', () => {
+      const post = { id: 'id1' };
+      const profileId = 'id2';
+      const expectedAction = {
+        type: actionTypes.POST_IMAGE_CLICKED_PREV,
+        updateId: 'id1',
+        post,
+        profileId,
+      };
+      expect(actions.handleImageClickPrev({ post, profileId })).toEqual(
+        expectedAction
+      );
+    });
+    it('creates a POST_IMAGE_CLOSED action', () => {
+      const post = { id: 'id1' };
+      const profileId = 'id2';
+      const expectedAction = {
+        type: actionTypes.POST_IMAGE_CLOSED,
+        updateId: 'id1',
+        post,
+        profileId,
+      };
+      expect(actions.handleImageClose({ post, profileId })).toEqual(
+        expectedAction
+      );
     });
   });
 });

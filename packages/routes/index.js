@@ -74,6 +74,7 @@ export const campaignEdit = {
 
 export const campaignScheduled = {
   route: '/campaigns/:id/scheduled/',
+  getRoute: ({ campaignId }) => `/campaigns/${campaignId}/scheduled`,
   goTo: ({ campaignId }) => push(`/campaigns/${campaignId}/scheduled`),
 };
 

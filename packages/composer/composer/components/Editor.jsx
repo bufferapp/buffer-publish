@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'immutable';
-import { RichUtils, Modifier, EditorState } from '@bufferapp/draft-js';
+import {
+  RichUtils,
+  Modifier,
+  EditorState,
+  SelectionState,
+} from '@bufferapp/draft-js';
 import DraftjsEditor from '@bufferapp/draft-js-plugins-editor';
 import createMentionPlugin from '@bufferapp/draft-js-mention-plugin';
 import createEmojiPlugin from '@bufferapp/draft-js-emoji-plugin';
@@ -412,6 +417,71 @@ class Editor extends React.Component {
     return 'handled';
   };
 
+  /**
+   * Move a selection state in one direction or another.
+   * See: https://draftjs.org/docs/api-reference-selection-state
+   */
+  moveSelection = (selection, move) => {
+    return new SelectionState({
+      anchorKey: selection.getAnchorKey(),
+      anchorOffset: selection.getAnchorOffset() + move,
+      focusKey: selection.getFocusKey(),
+      focusOffset: selection.getFocusOffset() + move,
+    });
+  };
+
+  /**
+   * Handle input before it's processed by draft-js or rendered in React.
+   * See: https://draftjs.org/docs/api-reference-editor#handlebeforeinput
+   */
+  handleBeforeInput = (chars, editorState) => {
+    /**
+     * On macOS pressing spacebar twice quickly adds a period and a space —
+     * if left 'undhandled' this change in the input can cause draft-js to crash.
+     * (One example is when this is done immediately after you type a link since
+     * that triggers shortening to happen and draft-js / React gets confused
+     * when trying to mutate the DOM since the sudden '.' is unexpected.)
+     *
+     * To solve this we look for when this 'double' character has been entered
+     * and manually add it to the editorState ourselves - thus preventing the
+     * unfortunate crashing.
+     */
+    const PERIOD_AND_SPACE = '. ';
+    const PERIOD = '.';
+    if (chars === PERIOD_AND_SPACE) {
+      // Create a new content state that inserts the period
+      const currentSelection = editorState.getSelection();
+      // Move the selection (cursor) back one to account for the double characters
+      const insertAt = this.moveSelection(currentSelection, -1);
+      const contentState = Modifier.insertText(
+        editorState.getCurrentContent(),
+        insertAt,
+        PERIOD,
+        editorState.getCurrentInlineStyle(),
+        null
+      );
+      // Create a new editor state with the period added
+      let newEditorState = EditorState.push(
+        editorState,
+        contentState,
+        'insert-fragment'
+      );
+      // Create a new editor state with the cursor at the right spot
+      // (Without this Safari on macOS moves the cursor back to the beginning of the text!)
+      newEditorState = EditorState.forceSelection(
+        newEditorState,
+        this.moveSelection(currentSelection, 1)
+      );
+
+      // Send the new state up the chain
+      this.onEditorStateChange(newEditorState);
+
+      // Tell draft-js we've taken care of this one
+      return 'handled';
+    }
+    return 'not-handled';
+  };
+
   parseDraftTextLinks = () =>
     setImmediate(() => {
       ComposerActionCreators.parseDraftTextLinks(this.props.draft.id);
@@ -642,6 +712,7 @@ class Editor extends React.Component {
             readOnly={readOnly}
             handleReturn={this.handleReturn}
             handlePastedText={this.handlePastedText}
+            handleBeforeInput={this.handleBeforeInput}
             ref="textZone"
           />
           <EmojiSuggestions

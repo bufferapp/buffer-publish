@@ -2,6 +2,11 @@ import moment from 'moment-timezone';
 import { getReadableDateFormat, getMomentTime } from './AddStory';
 
 describe('Add Story Utils', () => {
+  // Keep a fixed date
+  beforeAll(() => {
+    const dateSpy = jest.spyOn(Date, 'now');
+    dateSpy.mockReturnValue(1569261207);
+  });
   describe('getReadableDateFormat', () => {
     it('returns readable date with UTC timezone', () => {
       const objToSend = {

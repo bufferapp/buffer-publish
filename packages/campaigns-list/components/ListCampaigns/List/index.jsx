@@ -19,7 +19,7 @@ const List = ({
   onEditCampaignClick,
   hideAnalyzeReport,
 }) => {
-  const listItems = campaigns.map((campaign, index) => (
+  const listItems = campaigns.map(campaign => (
     <ListItem
       key={campaign.id}
       translations={translations}
@@ -29,7 +29,6 @@ const List = ({
       onEditCampaignClick={onEditCampaignClick}
       goToAnalyzeReport={goToAnalyzeReport}
       hideAnalyzeReport={hideAnalyzeReport}
-      isEvenItem={index % 2 === 0}
     />
   ));
   return <StyledList>{listItems}</StyledList>;

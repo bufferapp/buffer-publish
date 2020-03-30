@@ -10,6 +10,7 @@ if (isProduction && !isStandalone) {
   require('dd-trace').init({
     env: 'production',
     hostname: process.env.DD_AGENT_HOST,
+    service: process.env.DD_SERVICE_NAME,
     port: 8126,
   });
 }
@@ -244,7 +245,7 @@ const iterateScript = `<script>
     i.IterateObjectName=a;var z=function()
     {z.c(arguments)};
     z.q=[];z.c=function(args){z.q.push(args)};i[a]=z;var js,fjs=t.getElementsByTagName(e)[0];
-    function l() {js=t.createElement(e);js.id=r;js.async=1;js.src="https://platform.iteratehq.com/loader.js";fjs.parentNode.insertBefore(js,fjs)}; if(t.readyState==="complete") {l();} else 
+    function l() {js=t.createElement(e);js.id=r;js.async=1;js.src="https://platform.iteratehq.com/loader.js";fjs.parentNode.insertBefore(js,fjs)}; if(t.readyState==="complete") {l();} else
     if(i.attachEvent) {i.attachEvent('onload', l);} else{i.addEventListener('load', l, false);}}(window, document,'script','iterate-js','Iterate'));
   </script>`;
 

@@ -5,21 +5,21 @@ import { Text, Button } from '@bufferapp/ui';
 import ClockIcon from '@bufferapp/ui/Icon/Icons/Clock';
 import ListIcon from '@bufferapp/ui/Icon/Icons/List';
 import CalendarIcon from '@bufferapp/ui/Icon/Icons/Calendar';
+import { campaignScheduled } from '@bufferapp/publish-routes';
 
 import {
   ButtonWrapper,
   Color,
   Container,
-  Title,
   Group,
   Icon,
   LeftWrapper,
   LastUpdated,
+  StyledLink,
 } from './style';
 
 const ListItem = ({
   campaign,
-  isEvenItem,
   hideAnalyzeReport,
   onEditCampaignClick,
   onDeleteCampaignClick,
@@ -50,13 +50,17 @@ const ListItem = ({
     },
   };
 
+  const campaignRoute = campaignScheduled.getRoute({
+    campaignId: campaign.id,
+  });
+
   return (
-    <Container isEvenItem={isEvenItem}>
+    <Container>
       <LeftWrapper>
-        <Title>
+        <StyledLink to={campaignRoute}>
           <Color color={campaign.color} />
           <Text type="h3">{campaign.name}</Text>
-        </Title>
+        </StyledLink>
         <Text type="p">
           <LastUpdated>{campaign.lastUpdated}</LastUpdated>
         </Text>
@@ -145,7 +149,6 @@ ListItem.propTypes = {
   onEditCampaignClick: PropTypes.func.isRequired,
   goToAnalyzeReport: PropTypes.func.isRequired,
   hideAnalyzeReport: PropTypes.bool.isRequired,
-  isEvenItem: PropTypes.bool.isRequired,
 };
 
 export default ListItem;

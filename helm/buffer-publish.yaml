@@ -55,6 +55,8 @@ env:
     valueFrom:
       fieldRef:
         fieldPath: status.hostIP
+  - name: DD_SERVICE_NAME
+    value: "publish-server"
   - name: API_ADDR
     value: http://publish-api.buffer:443
   - name: ANALYZE_API_ADDR

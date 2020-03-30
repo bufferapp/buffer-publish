@@ -1,12 +1,20 @@
 import styled from 'styled-components';
-import { grayDarker, grayDark, grayLight, grayLighter } from '@bufferapp/ui/style/colors';
+import {
+  grayDark,
+  grayDarker,
+  grayLight,
+  grayLighter,
+  blue,
+} from '@bufferapp/ui/style/colors';
 import { fontWeightMedium } from '@bufferapp/ui/style/fonts';
+import { Link } from 'react-router-dom';
 
 export const Color = styled.div`
   height: 12px;
   max-width: 12px;
   width: 100%;
   border-radius: 50%;
+  position: fixed;
   background-color: ${props => props.color};
   margin: 7px 10px 0px 0px;
 `;
@@ -29,11 +37,18 @@ export const LastUpdated = styled.span`
   color: ${grayDark};
 `;
 
-export const Title = styled.div`
-  h3 {
-    margin: 0px;
+export const StyledLink = styled(Link)`
+  display: inline-flex;
+  text-decoration: none;
+  color: ${grayDarker};
+  :hover {
+    transition: color 150ms ease-in;
+    color: ${blue};
   }
-  display: flex;
+  h3 {
+    color: inherit;
+    margin: 0px 0px 0px 20px;
+  }
 `;
 
 export const Group = styled.div`

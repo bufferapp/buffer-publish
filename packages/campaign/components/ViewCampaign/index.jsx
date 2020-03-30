@@ -8,6 +8,7 @@ import {
   BufferLoading,
 } from '@bufferapp/publish-shared-components';
 import ComposerPopover from '@bufferapp/publish-composer-popover';
+import TabTag from '@bufferapp/publish-tabs/components/TabTag';
 import { getURL } from '@bufferapp/publish-server/formatters/src';
 import Header from './Header';
 import EmptyState from './EmptyState';
@@ -30,19 +31,15 @@ const LoadingContainer = styled.div`
 const ViewCampaign = ({
   campaign,
   campaignPosts,
-  showComposer,
   isLoading,
   hideAnalyzeReport,
   translations,
-  onCreatePostClick,
-  onDeleteCampaignClick,
-  onEditCampaignClick,
   campaignId,
-  fetchCampaign,
-  goToAnalyzeReport,
-  onComposerCreateSuccess,
-  onComposerOverlayClick,
   hasCampaignsFlip,
+  showComposer,
+  editMode,
+  actions,
+  postActions,
 }) => {
   if (!hasCampaignsFlip) {
     window.location = getURL.getPublishUrl();
@@ -50,12 +47,12 @@ const ViewCampaign = ({
   }
   // Fetch Data
   useEffect(() => {
-    fetchCampaign({ campaignId });
+    actions.fetchCampaign({ campaignId });
   }, [campaignId]);
   // State
   const [listView, toggleView] = useState('scheduled');
 
-  const campaignHasPosts = campaign?.items?.length > 0;
+  const campaignHasPosts = campaignPosts?.length > 0;
 
   if (isLoading) {
     return (
@@ -73,17 +70,17 @@ const ViewCampaign = ({
         campaignDetails={campaign}
         hideAnalyzeReport={hideAnalyzeReport}
         translations={translations}
-        onCreatePostClick={onCreatePostClick}
-        onDeleteCampaignClick={onDeleteCampaignClick}
-        onEditCampaignClick={onEditCampaignClick}
-        goToAnalyzeReport={goToAnalyzeReport}
+        onCreatePostClick={actions.onCreatePostClick}
+        onDeleteCampaignClick={actions.onDeleteCampaignClick}
+        onEditCampaignClick={actions.onEditCampaignClick}
+        goToAnalyzeReport={actions.goToAnalyzeReport}
       />
       {showComposer && (
         <ComposerPopover
-          onSave={onComposerCreateSuccess}
+          onSave={actions.onComposerCreateSuccess}
           type="queue"
-          onComposerOverlayClick={onComposerOverlayClick}
-          editMode={false}
+          onComposerOverlayClick={actions.onComposerOverlayClick}
+          editMode={editMode}
         />
       )}
       {campaignHasPosts ? (
@@ -94,28 +91,30 @@ const ViewCampaign = ({
               onTabClick={tabId => toggleView(tabId)}
             >
               <Tab tabId="scheduled">{translations.scheduled}</Tab>
-              <Tab tabId="sent">{translations.sent}</Tab>
+              <Tab tabId="sent">
+                {translations.sent}
+                <TabTag type="new" labelName="Coming Soon" />
+              </Tab>
             </Tabs>
           </nav>
           <QueueItems
             items={campaignPosts}
-            onDeleteConfirmClick={null}
-            onEditClick={null}
-            onShareNowClick={null}
-            draggable={false}
+            onDeleteConfirmClick={postActions.onDeleteConfirmClick}
+            onEditClick={postActions.onEditClick}
+            onShareNowClick={postActions.onShareNowClick}
+            onRequeueClick={postActions.onRequeueClick}
+            onImageClick={postActions.onImageClick}
+            onImageClickNext={postActions.onImageClickNext}
+            onImageClickPrev={postActions.onImageClickPrev}
+            onImageClose={postActions.onImageClose}
             type="post"
-            hasFirstCommentFlip={null}
-            isBusinessAccount={null}
-            onPreviewClick={null}
-            serviceId={null}
-            userData={null}
           />
         </React.Fragment>
       ) : (
         <React.Fragment>
           <EmptyState
             translations={translations}
-            onCreatePostClick={onCreatePostClick}
+            onCreatePostClick={actions.onCreatePostClick}
           />
           <ExamplePost />
           <ExamplePost />
@@ -131,16 +130,29 @@ ViewCampaign.propTypes = {
   campaignPosts: PropTypes.array, // eslint-disable-line
   hideAnalyzeReport: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
-  onCreatePostClick: PropTypes.func.isRequired,
-  onDeleteCampaignClick: PropTypes.func.isRequired,
-  onEditCampaignClick: PropTypes.func.isRequired,
-  fetchCampaign: PropTypes.func.isRequired,
-  goToAnalyzeReport: PropTypes.func.isRequired,
   campaignId: PropTypes.string.isRequired,
   showComposer: PropTypes.bool.isRequired,
-  onComposerCreateSuccess: PropTypes.func.isRequired,
-  onComposerOverlayClick: PropTypes.func.isRequired,
+  editMode: PropTypes.bool.isRequired,
   hasCampaignsFlip: PropTypes.bool.isRequired,
+  actions: PropTypes.shape({
+    onCreatePostClick: PropTypes.func.isRequired,
+    onDeleteCampaignClick: PropTypes.func.isRequired,
+    onEditCampaignClick: PropTypes.func.isRequired,
+    fetchCampaign: PropTypes.func.isRequired,
+    goToAnalyzeReport: PropTypes.func.isRequired,
+    onComposerCreateSuccess: PropTypes.func.isRequired,
+    onComposerOverlayClick: PropTypes.func.isRequired,
+  }).isRequired,
+  postActions: PropTypes.shape({
+    onEditClick: PropTypes.func.isRequired,
+    onDeleteConfirmClick: PropTypes.func.isRequired,
+    onShareNowClick: PropTypes.func.isRequired,
+    onRequeueClick: PropTypes.func.isRequired,
+    onImageClick: PropTypes.func.isRequired,
+    onImageClose: PropTypes.func.isRequired,
+    onImageClickPrev: PropTypes.func.isRequired,
+    onImageClickNext: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default ViewCampaign;

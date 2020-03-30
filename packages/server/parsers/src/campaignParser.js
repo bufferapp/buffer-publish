@@ -63,6 +63,8 @@ const parseItem = item => {
           createdAt,
           twentyFourHourTime: false,
         });
+      // Add isManager to each element
+      itemContent.content.isManager = item.is_manager;
       // Header details to be used in the CardHeader
       itemContent.content.headerDetails = {
         channel: {

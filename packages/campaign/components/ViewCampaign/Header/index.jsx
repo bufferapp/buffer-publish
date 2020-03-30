@@ -17,6 +17,7 @@ import {
   LastUpdated,
   SubText,
   Title,
+  Name,
 } from './style';
 
 const Header = ({
@@ -32,7 +33,7 @@ const Header = ({
     <CampaignDetails>
       <Title>
         <Color color={campaignDetails.color} />
-        <Text type="h1">{campaignDetails.name}</Text>
+        <Name type="h2">{campaignDetails.name}</Name>
       </Title>
       <SubText>
         <Details>
