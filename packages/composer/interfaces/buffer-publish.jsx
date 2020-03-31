@@ -33,6 +33,7 @@ const ComposerWrapper = ({
   selectedProfileId,
   tabId,
   campaigns,
+  initialCampaignId,
 }) => {
   const getSaveButtons = () => {
     if (editMode) return ['SAVE'];
@@ -73,6 +74,10 @@ const ComposerWrapper = ({
 
   const subprofileId = post ? post.subprofile_id : undefined;
 
+  const initialCampaignDetails = initialCampaignId
+    ? { id: initialCampaignId }
+    : undefined;
+
   const metaData = {
     application: 'WEB_DASHBOARD',
     environment: `${environment === 'development' ? 'local' : 'production'}`,
@@ -103,7 +108,7 @@ const ComposerWrapper = ({
     tabId,
     emptySlotMode,
     draftMode,
-    campaignDetails: post?.campaignDetails ?? undefined,
+    campaignDetails: post?.campaignDetails || initialCampaignDetails,
     campaigns: campaigns ?? undefined,
   };
   const formattedData = DataImportUtils.formatInputData({

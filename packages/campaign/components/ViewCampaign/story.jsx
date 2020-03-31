@@ -106,6 +106,7 @@ const actions = {
   onDeleteCampaignClick: action('delete campaign'),
   onEditCampaignClick: action('edit campaign'),
   fetchCampaign: action('fetch campaign'),
+  fetchCampaigns: action('fetch campaigns'),
   goToAnalyzeReport: action('go to analyze report'),
   onComposerCreateSuccess: action('composer sucess'),
   onComposerOverlayClick: action('composer overlay click'),

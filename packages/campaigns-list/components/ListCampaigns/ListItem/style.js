@@ -14,7 +14,7 @@ export const Color = styled.div`
   max-width: 12px;
   width: 100%;
   border-radius: 50%;
-  position: fixed;
+  position: absolute;
   background-color: ${props => props.color};
   margin: 7px 10px 0px 0px;
 `;
@@ -41,6 +41,7 @@ export const StyledLink = styled(Link)`
   display: inline-flex;
   text-decoration: none;
   color: ${grayDarker};
+  position: relative;
   :hover {
     transition: color 150ms ease-in;
     color: ${blue};

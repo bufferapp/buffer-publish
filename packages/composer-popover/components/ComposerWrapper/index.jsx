@@ -17,15 +17,27 @@ const ConnectedComposer = props => (
   </Suspense>
 );
 
+const getProfiles = (state, selectedProfileId) => {
+  let { profiles } = state.profileSidebar;
+
+  if (selectedProfileId) {
+    profiles = profiles.map(profile => ({
+      ...profile,
+      open: profile.id === selectedProfileId,
+    }));
+  }
+
+  return profiles;
+};
+
 export default connect(
   (state, ownProps) => {
     if (state.appSidebar && state.profileSidebar) {
       const { type } = ownProps;
-      const {
+      let {
         profileSidebar: { selectedProfileId },
       } = state;
       const postId = state[type].editingPostId;
-
       let options = {};
 
       switch (type) {
@@ -45,6 +57,18 @@ export default connect(
               : state.queue.byProfileId[selectedProfileId].posts[postId],
           };
           break;
+        case 'campaign': {
+          const posts = state.campaign.campaignPosts;
+          const post = posts.find(p => p.id === postId);
+          ({ selectedProfileId } = state.campaign);
+
+          options = {
+            editMode: state.campaign.editMode,
+            post: post?.content || {},
+            initialCampaignId: state.campaign.campaign?.id || null,
+          };
+          break;
+        }
         case 'sent':
           options = {
             editMode: state.sent.editMode,
@@ -68,7 +92,7 @@ export default connect(
       }
       return {
         userData: state.appSidebar.user,
-        profiles: state.profileSidebar.profiles,
+        profiles: getProfiles(state, selectedProfileId),
         enabledApplicationModes: state.temporaryBanner.enabledApplicationModes,
         environment: state.environment.environment,
         editMode: false,

@@ -27,8 +27,9 @@ export default connect(
       colorSelected,
       campaignName,
       orgId,
+      editMode,
     }) => {
-      if (campaignId) {
+      if (editMode) {
         dispatch(
           actions.handleEditCampaignClick({
             id: campaignId,

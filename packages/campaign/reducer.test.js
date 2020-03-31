@@ -72,6 +72,9 @@ describe('reducer', () => {
     };
     const action = {
       type: 'getCampaign_FETCH_SUCCESS',
+      args: {
+        fullItems: false,
+      },
       result: {
         id: 'id1',
         name: 'campaignA',

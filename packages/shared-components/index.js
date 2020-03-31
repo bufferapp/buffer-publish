@@ -42,3 +42,4 @@ export UserDetails from './UserDetails';
 export QueueHeader from './QueueHeader';
 export Notification from './Notification';
 export BitlyClickNotification from './BitlyClickNotification';
+export Checklist from './Checklist';

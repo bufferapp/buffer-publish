@@ -253,6 +253,7 @@ const DataImportUtils = {
 
         const isPrefillingExistingUpdate =
           update.id && Object.keys(update).length > 0;
+        const defaultCampaignDetails = metaData.campaignDetails || null;
 
         meta = Object.assign({}, metaData, {
           isPrefillingExistingUpdate,
@@ -303,7 +304,7 @@ const DataImportUtils = {
           locationId: update.service_geolocation_id || null,
           locationName: update.service_geolocation_name || null,
           userTags: update.service_user_tags || null,
-          campaignDetails: update.campaignDetails || null,
+          campaignDetails: update.campaignDetails || defaultCampaignDetails,
           facebookMentionEntities: update.entities || null,
           commentEnabled: update.commentEnabled,
           commentText: update.commentText || null,

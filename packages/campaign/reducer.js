@@ -1,6 +1,9 @@
 import keyWrapper from '@bufferapp/keywrapper';
 import { actionTypes as dataFetchActionTypes } from '@bufferapp/async-data-fetch';
-import { actionTypes as queueActionTypes } from '@bufferapp/publish-queue/reducer';
+import {
+  sortCampaignsByUpdatedAt,
+  actionTypes as queueActionTypes,
+} from '@bufferapp/publish-queue/reducer';
 
 export const actionTypes = keyWrapper('CAMPAIGN_VIEW', {
   FETCH_CAMPAIGN: 0,
@@ -23,6 +26,8 @@ export const initialState = {
   showComposer: false,
   editMode: false,
   editingPostId: null,
+  selectedProfileId: null,
+  campaigns: [],
 };
 
 const postReducer = ({ campaignPosts, action, newState }) => {
@@ -56,12 +61,13 @@ export default (state = initialState, action) => {
       };
     }
     case `getCampaign_${dataFetchActionTypes.FETCH_SUCCESS}`: {
+      const { fullItems } = action.args;
       const { items, ...campaign } = action.result;
       return {
         ...state,
         campaign,
         campaignId: campaign.id,
-        campaignPosts: items || [],
+        campaignPosts: (fullItems && items) || [],
         isLoading: false,
       };
     }
@@ -71,14 +77,21 @@ export default (state = initialState, action) => {
         showComposer: true,
         editMode: action.editMode || false,
         editingPostId: action.updateId || null,
+        selectedProfileId: action.profileId || null,
       };
     }
     case actionTypes.CLOSE_COMPOSER: {
       return {
         ...state,
         showComposer: false,
+        editMode: false,
       };
     }
+    case `getCampaignsList_${dataFetchActionTypes.FETCH_SUCCESS}`:
+      return {
+        ...state,
+        campaigns: sortCampaignsByUpdatedAt(action.result),
+      };
     // Pusher events
     case queueActionTypes.POST_UPDATED: {
       const postCampaignId = action?.post?.campaignDetails?.id;

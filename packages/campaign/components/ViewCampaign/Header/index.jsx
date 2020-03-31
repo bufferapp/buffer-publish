@@ -98,7 +98,7 @@ const Header = ({
       />
       {!hideAnalyzeReport && (
         <Button
-          type="secondary"
+          type="primary"
           icon={<ArrowRightIcon />}
           iconEnd
           onClick={() => {

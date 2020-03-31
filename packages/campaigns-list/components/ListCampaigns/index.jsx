@@ -32,7 +32,7 @@ const Container = styled.div`
   border: 1px solid ${gray};
   background-color: ${white};
   box-shadow: ${grayShadow};
-  
+
   @media (min-width: 1500px) {
     width: 75vw;
   }

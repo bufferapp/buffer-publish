@@ -6,6 +6,7 @@ import ViewCampaign from '@bufferapp/publish-campaign';
 import ListCampaigns from '@bufferapp/publish-campaigns-list';
 import {
   campaignScheduled,
+  campaignSent,
   campaignsPage,
   campaignCreate,
   campaignEdit,
@@ -31,6 +32,10 @@ const PagesWithSidebar = () => {
             render={props => <CampaignForm {...props} editMode />}
           />
           <Route path={campaignScheduled.route} component={ViewCampaign} />
+          <Route
+            path={campaignSent.route}
+            render={props => <ViewCampaign {...props} sentView />}
+          />
           <Route path={campaignsPage.route} component={ListCampaigns} />
         </Switch>
       </ScrollableContainer>

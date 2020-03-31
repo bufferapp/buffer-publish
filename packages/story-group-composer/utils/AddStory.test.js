@@ -2,11 +2,6 @@ import moment from 'moment-timezone';
 import { getReadableDateFormat, getMomentTime } from './AddStory';
 
 describe('Add Story Utils', () => {
-  // Keep a fixed date
-  beforeAll(() => {
-    const dateSpy = jest.spyOn(Date, 'now');
-    dateSpy.mockReturnValue(1569261207);
-  });
   describe('getReadableDateFormat', () => {
     it('returns readable date with UTC timezone', () => {
       const objToSend = {
@@ -45,6 +40,13 @@ describe('Add Story Utils', () => {
       const format = getMomentTime(objToSend);
       const unixDate = moment.unix(objToSend.scheduledAt);
       expect(format).toEqual(unixDate);
+    });
+  });
+  describe('getMomentTime when empty', () => {
+    // Keep a fixed date
+    beforeAll(() => {
+      const dateSpy = jest.spyOn(moment, 'unix');
+      dateSpy.mockReturnValue('+052207-02-16T12:57:35.000');
     });
     it('returns today unix date when scheduledAt is undefined', () => {
       const format = getMomentTime({

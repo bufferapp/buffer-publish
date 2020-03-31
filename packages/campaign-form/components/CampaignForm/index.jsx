@@ -162,6 +162,7 @@ const CampaignForm = ({
                 campaignId,
                 colorSelected,
                 campaignName,
+                editMode,
                 orgId: campaign?.globalOrganizationId,
               })
             }

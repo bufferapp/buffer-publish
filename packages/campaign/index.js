@@ -2,7 +2,12 @@ import { connect } from 'react-redux';
 import { actions as modalsActions } from '@bufferapp/publish-modals';
 import { actions as queueActions } from '@bufferapp/publish-queue';
 import { formatPostLists } from '@bufferapp/publish-queue/util';
-import { campaignEdit } from '@bufferapp/publish-routes';
+import {
+  campaignEdit,
+  campaignScheduled,
+  campaignSent,
+} from '@bufferapp/publish-routes';
+import { actions as dataFetchActions } from '@bufferapp/async-data-fetch';
 import { actions } from './reducer';
 import ViewCampaign from './components/ViewCampaign';
 
@@ -23,6 +28,7 @@ export default connect(
       hideAnalyzeReport: state.appSidebar.user.isUsingPublishAsTeamMember,
       isLoading: state.campaign.isLoading,
       campaignId: ownProps.match?.params?.id || state.campaign?.campaignId,
+      sentView: ownProps.sentView,
       hasCampaignsFlip: state.appSidebar.user.features
         ? state.appSidebar.user.features.includes('campaigns')
         : false,
@@ -51,8 +57,24 @@ export default connect(
           dispatch(campaignEdit.goTo({ campaignId }));
         }
       },
+      onTabClick: ({ tabId, campaignId }) => {
+        if (tabId === 'scheduled') {
+          dispatch(campaignScheduled.goTo({ campaignId }));
+        }
+        if (tabId === 'sent') {
+          dispatch(campaignSent.goTo({ campaignId }));
+        }
+      },
       fetchCampaign: ({ campaignId, past }) => {
         dispatch(actions.fetchCampaign({ campaignId, past, fullItems: true }));
+      },
+      fetchCampaigns: () => {
+        dispatch(
+          dataFetchActions.fetch({
+            name: 'getCampaignsList',
+            args: {},
+          })
+        );
       },
     },
     postActions: {

@@ -2,20 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Text, Button, Link } from '@bufferapp/ui';
-import { StepList } from '@bufferapp/publish-shared-components';
+import { Checklist } from '@bufferapp/publish-shared-components';
 
 const EmptyStateContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   margin-left: 48px;
 `;
 
 const Content = styled.div`
   margin-top: 43px;
+  flex: 1;
 `;
 
 const Image = styled.img`
-  object-fit: contain;
-  width: 100%;
+  max-width: 100%;
+  max-height: 89.5vh;
+  object-fit: cover;
+  object-position: 0 0;
+  flex: 2;
+  margin-left: 50px;
+  overflow: hidden;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.12);
+  margin-top: 34px;
+
+  @media (min-width: 1500px) {
+    flex: 1.5;
+  }
 `;
 
 const LinkWithStyles = styled(Link)`
@@ -25,23 +38,23 @@ const LinkWithStyles = styled(Link)`
 
 const EmptyState = ({ translations, onOpenCreateCampaignClick }) => {
   const {
-    step1,
-    step2,
-    step3,
+    item1,
+    item2,
+    item3,
     createCampaign,
     title,
     subtext,
     learnMore,
     imageTag,
   } = translations;
-  const stepsArray = [step1, step2, step3];
+  const itemsArray = [item1, item2, item3];
 
   return (
     <EmptyStateContainer>
       <Content>
         <Text type="h1">{title}</Text>
         <Text type="p">{subtext}</Text>
-        <StepList steps={stepsArray} />
+        <Checklist items={itemsArray} />
         <div style={{ alignSelf: 'flex-end', paddingTop: '30px' }}>
           <Button
             type="primary"
@@ -58,7 +71,7 @@ const EmptyState = ({ translations, onOpenCreateCampaignClick }) => {
         </div>
       </Content>
       <Image
-        src="https://buffer-publish.s3.amazonaws.com/images/campaigns-screenshot.jpg"
+        src="https://buffer-publish.s3.amazonaws.com/images/campaigns-empty-state-screenshot.png"
         alt={imageTag}
       />
     </EmptyStateContainer>
@@ -68,13 +81,13 @@ const EmptyState = ({ translations, onOpenCreateCampaignClick }) => {
 EmptyState.propTypes = {
   translations: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    subtext: PropTypes.string.isRequired,
-    step1: PropTypes.string.isRequired,
-    step2: PropTypes.string.isRequired,
-    step3: PropTypes.string.isRequired,
+    item1: PropTypes.string.isRequired,
+    item2: PropTypes.string.isRequired,
+    item3: PropTypes.string.isRequired,
     createCampaign: PropTypes.string.isRequired,
     learnMore: PropTypes.string.isRequired,
     imageTag: PropTypes.string.isRequired,
+    subtext: PropTypes.string.isRequired,
   }).isRequired,
   onOpenCreateCampaignClick: PropTypes.func.isRequired,
 };
