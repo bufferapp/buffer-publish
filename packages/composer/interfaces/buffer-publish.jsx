@@ -60,14 +60,15 @@ const ComposerWrapper = ({
     bootstrappedListener = true;
   }
 
+  // Get the 'preserve state' setting from the last time the composer was open
   const prevPreserveStateOnClose = AppStore.getOptions().preserveStateOnClose;
-  if (prevPreserveStateOnClose === false) AppInitActionCreators.resetData();
 
   const options = {
     canSelectProfiles: !editMode && !emptySlotMode,
     saveButtons,
     position: { margin: '0 auto' },
     onSave,
+    prevPreserveStateOnClose,
     preserveStateOnClose: emptySlotMode ? false : preserveStateOnClose,
     sentPost,
   };

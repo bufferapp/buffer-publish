@@ -200,6 +200,7 @@ class App extends React.Component {
     onNewPublish: PropTypes.bool,
     options: PropTypes.shape({
       canSelectProfiles: PropTypes.bool.isRequired,
+      prevPreserveStateOnClose: PropTypes.bool.isRequired,
       preserveStateOnClose: PropTypes.bool.isRequired,
       saveButtons: PropTypes.arrayOf(
         PropTypes.oneOf(Object.keys(SaveButtonTypes))
@@ -327,19 +328,15 @@ class App extends React.Component {
       onNewPublish,
     } = this.props;
 
-    const { preserveStateOnClose } = options;
-    const {
-      preserveStateOnClose: prevPreserveStateOnClose = false,
-    } = AppStore.getOptions();
+    const { preserveStateOnClose, prevPreserveStateOnClose = false } = options;
 
     /**
-     * options.preserveStateOnClose is used to reset the composers' state on close.
-     * However, if options.preserveStateOnClose is true in a previous app instance,
-     * since stores are singletons, we'll need to reset the composers' state on load
-     * if the new instance has `options.preserveStateOnClose === false`
+     * When `options.prevPreserveStateOnClose === false` let's reset the data.
+     * (This ensures the state from editing a post doesn't remain when clicking
+     * to compose a new one.)
      */
     if (
-      preserveStateOnClose === false &&
+      prevPreserveStateOnClose === false &&
       preserveStateOnClose !== prevPreserveStateOnClose
     ) {
       AppInitActionCreators.resetData();
