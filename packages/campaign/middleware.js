@@ -4,7 +4,6 @@ import {
 } from '@bufferapp/async-data-fetch';
 import { actions as analyticsActions } from '@bufferapp/publish-analytics-middleware';
 import { actions as notificationActions } from '@bufferapp/notifications';
-import { actions as profileSidebarActions } from '@bufferapp/publish-profile-sidebar/reducer';
 import { getURL } from '@bufferapp/publish-server/formatters/src';
 import { campaignsPage } from '@bufferapp/publish-routes';
 import { actionTypes } from './reducer';

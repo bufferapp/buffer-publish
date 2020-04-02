@@ -1,6 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, Image } from '@bufferapp/components';
+import styled from 'styled-components';
+import { Text, Button } from '@bufferapp/ui';
+import { Image } from '@bufferapp/components';
+
+const Wrapper = styled.div`
+  height: ${props => (props.height ? props.height : '70vh')};
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+`;
+const Emoji = styled(Text)`
+  font-size: 24px;
+`;
+
+const TextContainer = styled.div`
+  width: 400px;
+`;
+
+const Subtitle = styled(Text)`
+  margin: 0;
+`;
+
+const Title = styled(Text)`
+  margin: 0 0 8px;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  margin-top: 24px;
+
+  button:nth-of-type(2n) {
+    margin-left: 8px;
+  }
+`;
 
 const EmptyState = ({
   title,
@@ -9,56 +44,46 @@ const EmptyState = ({
   heroImg,
   heroImgSize,
   height,
+  primaryAction,
+  secondaryAction,
 }) => {
-  const containerStyle = {
-    textAlign: 'center',
-    width: '700px',
-    alignSelf: 'center',
-  };
-
-  const wrapperStyle = {
-    display: 'flex',
-    justifyContent: 'center',
-    height: `${height || '70vh'}`,
-  };
-
-  const headerStyle = {
-    marginBottom: '1.5rem',
-    width: '100%',
-  };
-
-  const subtitleStyle = {
-    display: 'inline-block',
-    width: '500px',
-  };
-
   return (
-    <div style={wrapperStyle}>
-      <div style={containerStyle}>
-        {emoji && <Text size={'extra-large'}>{emoji}</Text>}
-        {heroImg && (
-          <Image
-            marginBottom="1.5rem"
-            alt=""
-            src={heroImg}
-            width={heroImgSize.width}
-            height={heroImgSize.height}
+    <Wrapper height={height}>
+      {emoji && <Emoji type="h3">{emoji}</Emoji>}
+      {heroImg && (
+        <Image
+          marginBottom="24px"
+          alt=""
+          src={heroImg}
+          width={heroImgSize?.width}
+          height={heroImgSize?.height}
+        />
+      )}
+      <TextContainer>
+        {title && <Title type="h3">{title}</Title>}
+        {subtitle && <Subtitle type="p">{subtitle}</Subtitle>}
+      </TextContainer>
+      <ButtonWrapper>
+        {secondaryAction && (
+          <Button
+            type="secondary"
+            size="large"
+            onClick={secondaryAction.onClick}
+            label={secondaryAction.label}
           />
         )}
-        {title && (
-          <div style={headerStyle}>
-            <Text size="large" weight="bold">
-              {title}
-            </Text>
-          </div>
+        {primaryAction && (
+          <Button
+            type="primary"
+            icon={primaryAction.icon ?? null}
+            iconEnd={primaryAction.iconEnd ?? null}
+            size="large"
+            onClick={primaryAction.onClick}
+            label={primaryAction.label}
+          />
         )}
-        {subtitle && (
-          <div style={subtitleStyle}>
-            <Text>{subtitle}</Text>
-          </div>
-        )}
-      </div>
-    </div>
+      </ButtonWrapper>
+    </Wrapper>
   );
 };
 
@@ -72,6 +97,16 @@ EmptyState.propTypes = {
   }),
   height: PropTypes.string,
   emoji: PropTypes.string,
+  primaryAction: PropTypes.shape({
+    onClick: PropTypes.func,
+    label: PropTypes.string,
+    icon: PropTypes.node,
+    iconEnd: PropTypes.bool,
+  }),
+  secondaryAction: PropTypes.shape({
+    onClick: PropTypes.func,
+    label: PropTypes.string,
+  }),
 };
 
 export default EmptyState;

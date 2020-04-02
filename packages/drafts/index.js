@@ -240,7 +240,11 @@ export default connect(
       );
     },
     onComposerOverlayClick: () => {
-      dispatch(modalsActions.showCloseComposerConfirmationModal());
+      dispatch(
+        modalsActions.showCloseComposerConfirmationModal({
+          page: ownProps.tabId || 'drafts',
+        })
+      );
     },
   })
 )(DraftList);

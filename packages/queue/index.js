@@ -204,7 +204,9 @@ export default connect(
       );
     },
     onComposerOverlayClick: () => {
-      dispatch(modalsActions.showCloseComposerConfirmationModal());
+      dispatch(
+        modalsActions.showCloseComposerConfirmationModal({ page: 'queue' })
+      );
     },
     onCheckInstagramBusinessClick: () => {
       dispatch(

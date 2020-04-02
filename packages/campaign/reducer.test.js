@@ -37,6 +37,28 @@ describe('reducer', () => {
     expect(reducer(stateBefore, action)).toEqual(stateAfter);
   });
 
+  it('handles getCampaign_FETCH_START action when not first time loading', () => {
+    const stateBefore = {
+      ...initialState,
+      isLoading: false,
+      campaign: {
+        id: 'id1',
+      },
+    };
+    const stateAfter = {
+      ...stateBefore,
+    };
+    const action = {
+      type: 'getCampaign_FETCH_START',
+      args: {
+        campaignId: 'id1',
+      },
+    };
+    deepFreeze(stateBefore);
+    deepFreeze(action);
+    expect(reducer(stateBefore, action)).toEqual(stateAfter);
+  });
+
   it('handles getCampaign_FETCH_FAIL action', () => {
     const stateBefore = {
       ...initialState,

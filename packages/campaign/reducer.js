@@ -49,9 +49,12 @@ const postReducer = ({ campaignPosts, action, newState }) => {
 export default (state = initialState, action) => {
   switch (action.type) {
     case `getCampaign_${dataFetchActionTypes.FETCH_START}`: {
+      const { id } = state.campaign;
+      // Not showing a loader when the campaign stored in the state is the same.
+      const isFirstTimeLoading = id !== action.args?.campaignId;
       return {
         ...state,
-        isLoading: true,
+        isLoading: isFirstTimeLoading,
       };
     }
     case `getCampaign_${dataFetchActionTypes.FETCH_FAIL}`: {

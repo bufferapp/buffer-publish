@@ -11,8 +11,7 @@ import ComposerPopover from '@bufferapp/publish-composer-popover';
 import TabTag from '@bufferapp/publish-tabs/components/TabTag';
 import { getURL } from '@bufferapp/publish-server/formatters/src';
 import Header from './Header';
-import EmptyState from './EmptyState';
-import ExamplePost from './ExamplePost';
+import EmptyStateCampaign from './EmptyState';
 
 /* Styles */
 const Container = styled.div`
@@ -55,12 +54,11 @@ const ViewCampaign = ({
   useEffect(() => {
     actions.fetchCampaigns();
   }, []);
-  
+
   // Conditions
   const selectedtTabId = sentView ? 'sent' : 'scheduled';
-  const campaignHasPosts = campaign?.scheduled > 0 || campaign?.sent > 0;
-  const allPostsSent = campaign?.scheduled === 0 && campaign?.sent > 0;
-  const noPostsSent = campaign?.scheduled > 0 && campaign?.sent === 0;
+  const campaignHasPosts =
+    (!sentView && campaign?.scheduled > 0) || (sentView && campaign?.sent > 0);
 
   if (isLoading) {
     return (
@@ -74,6 +72,7 @@ const ViewCampaign = ({
 
   return (
     <Container>
+      {/* Header */}
       <Header
         campaignDetails={campaign}
         hideAnalyzeReport={hideAnalyzeReport}
@@ -83,6 +82,42 @@ const ViewCampaign = ({
         onEditCampaignClick={actions.onEditCampaignClick}
         goToAnalyzeReport={actions.goToAnalyzeReport}
       />
+      {/* Navigation */}
+      <nav role="navigation">
+        <Tabs
+          selectedTabId={selectedtTabId}
+          onTabClick={tabId => actions.onTabClick({ tabId, campaignId })}
+        >
+          <Tab tabId="scheduled">{translations.scheduled}</Tab>
+          <Tab tabId="sent">
+            {translations.sent}
+            <TabTag type="new" labelName="Coming Soon" />
+          </Tab>
+        </Tabs>
+      </nav>
+      {/* Content */}
+      <EmptyStateCampaign
+        hideAnalyzeReport={hideAnalyzeReport}
+        translations={translations}
+        campaign={campaign}
+        actions={actions}
+        sentView={sentView}
+      />
+      {campaignHasPosts && (
+        <QueueItems
+          items={campaignPosts}
+          onDeleteConfirmClick={postActions.onDeleteConfirmClick}
+          onEditClick={postActions.onEditClick}
+          onShareNowClick={postActions.onShareNowClick}
+          onRequeueClick={postActions.onRequeueClick}
+          onImageClick={postActions.onImageClick}
+          onImageClickNext={postActions.onImageClickNext}
+          onImageClickPrev={postActions.onImageClickPrev}
+          onImageClose={postActions.onImageClose}
+          type="post"
+        />
+      )}
+      {/* Composer */}
       {showComposer && (
         <ComposerPopover
           onSave={actions.onComposerCreateSuccess}
@@ -90,51 +125,6 @@ const ViewCampaign = ({
           onComposerOverlayClick={actions.onComposerOverlayClick}
           editMode={editMode}
         />
-      )}
-      {campaignHasPosts ? (
-        <React.Fragment>
-          <nav role="navigation">
-            <Tabs
-              selectedTabId={selectedtTabId}
-              onTabClick={tabId => actions.onTabClick({ tabId, campaignId })}
-            >
-              <Tab tabId="scheduled">{translations.scheduled}</Tab>
-              <Tab tabId="sent">
-                {translations.sent}
-                <TabTag type="new" labelName="Coming Soon" />
-              </Tab>
-            </Tabs>
-          </nav>
-          {
-            allPostsSent
-            // Coming soon, empty state
-          }
-          {
-            noPostsSent
-            // Coming soon, empty state
-          }
-          <QueueItems
-            items={campaignPosts}
-            onDeleteConfirmClick={postActions.onDeleteConfirmClick}
-            onEditClick={postActions.onEditClick}
-            onShareNowClick={postActions.onShareNowClick}
-            onRequeueClick={postActions.onRequeueClick}
-            onImageClick={postActions.onImageClick}
-            onImageClickNext={postActions.onImageClickNext}
-            onImageClickPrev={postActions.onImageClickPrev}
-            onImageClose={postActions.onImageClose}
-            type="post"
-          />
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          <EmptyState
-            translations={translations}
-            onCreatePostClick={actions.onCreatePostClick}
-          />
-          <ExamplePost />
-          <ExamplePost />
-        </React.Fragment>
       )}
     </Container>
   );

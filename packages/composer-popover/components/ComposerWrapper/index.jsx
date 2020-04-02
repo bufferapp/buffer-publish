@@ -76,6 +76,7 @@ export default connect(
             post: {
               ...state.sent.byProfileId[selectedProfileId].posts[postId],
               scheduled_at: null,
+              pinned: null,
             },
           };
           break;
@@ -83,8 +84,11 @@ export default connect(
           options = {
             editMode: state.pastReminders.editMode,
             sentPost: true,
-            post:
-              state.pastReminders.byProfileId[selectedProfileId].posts[postId],
+            post: {
+              ...state.pastReminders.byProfileId[selectedProfileId].posts[postId],
+              scheduled_at: null,
+              pinned: null,
+            }, 
           };
           break;
         default:

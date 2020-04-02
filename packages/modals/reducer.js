@@ -16,6 +16,7 @@ export const initialState = {
   showCloseComposerConfirmationModal: false,
   modalToShowLater: null,
   showDeleteCampaignModal: false,
+  page: 'queue',
 };
 
 export const actionTypes = keyWrapper('MODALS', {
@@ -170,6 +171,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showCloseComposerConfirmationModal: true,
+        page: action.page,
       };
     case actionTypes.HIDE_DELETE_CAMPAIGN_MODAL:
       return {
@@ -263,8 +265,9 @@ export const actions = {
   hideCloseComposerConfirmationModal: () => ({
     type: actionTypes.HIDE_CLOSE_COMPOSER_CONFIRMATION_MODAL,
   }),
-  showCloseComposerConfirmationModal: () => ({
+  showCloseComposerConfirmationModal: ({ page }) => ({
     type: actionTypes.SHOW_CLOSE_COMPOSER_CONFIRMATION_MODAL,
+    page,
   }),
   hideDeleteCampaignModal: () => ({
     type: actionTypes.HIDE_DELETE_CAMPAIGN_MODAL,

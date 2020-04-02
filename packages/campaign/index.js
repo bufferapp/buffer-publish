@@ -6,6 +6,7 @@ import {
   campaignEdit,
   campaignScheduled,
   campaignSent,
+  campaignCreate,
 } from '@bufferapp/publish-routes';
 import { actions as dataFetchActions } from '@bufferapp/async-data-fetch';
 import { actions } from './reducer';
@@ -41,7 +42,14 @@ export default connect(
         dispatch(actions.handleCloseComposer());
       },
       onComposerOverlayClick: () => {
-        dispatch(modalsActions.showCloseComposerConfirmationModal());
+        dispatch(
+          modalsActions.showCloseComposerConfirmationModal({
+            page: 'campaigns',
+          })
+        );
+      },
+      onCreateCampaignClick: () => {
+        dispatch(campaignCreate.goTo());
       },
       onCreatePostClick: campaignId => {
         dispatch(actions.handleOpenComposer({ campaignId, editMode: false }));

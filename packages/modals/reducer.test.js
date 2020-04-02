@@ -1,6 +1,6 @@
 import reducer, { initialState, actions } from './reducer';
 
-describe('reducer', () => {
+describe('Modals | reducer', () => {
   it('should return initial state', () => {
     const action = { type: 'INIT' };
     expect(reducer(undefined, action)).toEqual(initialState);
@@ -163,7 +163,7 @@ describe('reducer', () => {
     });
     it('should show close composer confirmation modal', () => {
       expect(
-        reducer(initialState, actions.showCloseComposerConfirmationModal())
+        reducer(initialState, actions.showCloseComposerConfirmationModal({ page: 'queue' }))
       ).toEqual(
         Object.assign(initialState, {
           showCloseComposerConfirmationModal: true,

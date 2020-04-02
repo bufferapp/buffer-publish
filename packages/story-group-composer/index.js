@@ -40,9 +40,13 @@ export default connect(
       ...options,
     };
   },
-  dispatch => ({
+  (dispatch, ownProps) => ({
     onOverlayClick: () => {
-      dispatch(modalsActions.showCloseComposerConfirmationModal());
+      dispatch(
+        modalsActions.showCloseComposerConfirmationModal({
+          page: ownProps.type,
+        })
+      );
     },
     onCreateStoryGroup: (scheduledAt, shareNow = false) => {
       dispatch(actions.setScheduleLoading(true));
