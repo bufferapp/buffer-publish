@@ -89,21 +89,6 @@ describe('Modals | reducer', () => {
         Object.assign(initialState, { showInstagramDirectPostingModal: false })
       );
     });
-    it('should show welcome b4b trial modal', () => {
-      expect(reducer(initialState, actions.showWelcomeB4BTrialModal())).toEqual(
-        Object.assign(initialState, { showWelcomeB4BTrialModal: true })
-      );
-    });
-    it('should hide welcome b4b trial modal', () => {
-      const stateWithVisibleModal = Object.assign(initialState, {
-        showWelcomeB4BTrialModal: true,
-      });
-      expect(
-        reducer(stateWithVisibleModal, actions.hideWelcomeB4BTrialModal())
-      ).toEqual(
-        Object.assign(initialState, { showWelcomeB4BTrialModal: false })
-      );
-    });
     it('should show profiles disconnected modal', () => {
       expect(
         reducer(initialState, actions.showProfilesDisconnectedModal())

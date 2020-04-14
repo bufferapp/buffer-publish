@@ -59,7 +59,12 @@ describe('middleware', () => {
   });
   it('tracks view report event and redirects to analyze report', () => {
     const hostname = 'publish.local.buffer.com';
-    const url = 'https://analyze.local.buffer.com/reports';
+    const expectedObj = {
+      campaignId: 'id1',
+      campaignName: 'Awareness Day',
+      organizationId: '123',
+    };
+    const url = `https://analyze.local.buffer.com/campaigns/${expectedObj.campaignId}`;
     window.location.assign = jest.fn();
     window.location.hostname = hostname;
 
@@ -77,11 +82,6 @@ describe('middleware', () => {
     const action = {
       type: actionTypes.GO_TO_ANALYZE_REPORT,
       campaign: { id: 'id1', name: 'Awareness Day' },
-    };
-    const expectedObj = {
-      campaignId: 'id1',
-      campaignName: 'Awareness Day',
-      organizationId: '123',
     };
 
     middleware(store)(next)(action);

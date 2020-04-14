@@ -103,7 +103,7 @@ export default connect(
         draftMode: null,
         selectedProfileId,
         tabId: state.tabs.tabId,
-        campaigns: state[type].campaigns ?? [],
+        campaigns: state.campaignsList.campaigns ?? [],
         ...options,
       };
     }

@@ -8,7 +8,6 @@ import ProfilesDisconnectedModal from '@bufferapp/publish-profiles-disconnected-
 import WelcomePaidModal from '@bufferapp/publish-welcome-paid-modal';
 import InstagramFirstCommentModal from '@bufferapp/publish-ig-first-comment-modal';
 import InstagramDirectPostingModal from '@bufferapp/publish-ig-direct-posting-modal';
-import WelcomeB4BTrialModal from '@bufferapp/publish-welcome-b4b-trial-modal';
 import TrialCompleteModal from '@bufferapp/publish-trial-complete-modal';
 import InstagramFirstCommentProTrialModal from '@bufferapp/publish-ig-first-comment-pro-trial-modal';
 import CloseComposerConfirmationModal from '@bufferapp/publish-close-composer-confirmation-modal';
@@ -21,7 +20,6 @@ const AppModals = ({
   showProfilesDisconnectedModal,
   showStealProfileModal,
   showInstagramDirectPostingModal,
-  showWelcomeB4BTrialModal,
   showInstagramFirstCommentModal,
   showTrialCompleteModal,
   showInstagramFirstCommentProTrialModal,
@@ -34,7 +32,6 @@ const AppModals = ({
     {showWelcomeModal && <WelcomeModal />}
     {showInstagramFirstCommentModal && <InstagramFirstCommentModal />}
     {showWelcomePaidModal && <WelcomePaidModal />}
-    {showWelcomeB4BTrialModal && <WelcomeB4BTrialModal />}
     {showInstagramDirectPostingModal && <InstagramDirectPostingModal />}
     {showStealProfileModal && <StealProfileModal />}
     {showTrialCompleteModal && <TrialCompleteModal />}
@@ -53,7 +50,6 @@ AppModals.propTypes = {
   showProfilesDisconnectedModal: PropTypes.bool.isRequired,
   showStealProfileModal: PropTypes.bool.isRequired,
   showInstagramDirectPostingModal: PropTypes.bool.isRequired,
-  showWelcomeB4BTrialModal: PropTypes.bool.isRequired,
   showInstagramFirstCommentModal: PropTypes.bool.isRequired,
   showTrialCompleteModal: PropTypes.bool.isRequired,
   showInstagramFirstCommentProTrialModal: PropTypes.bool.isRequired,

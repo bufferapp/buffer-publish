@@ -55,6 +55,7 @@ const CardHeader = ({ headerDetails }) => {
     creatorName,
     avatarUrl,
     createdAt,
+    hideCreatorDetails,
     onPreviewClick,
   } = headerDetails;
   const WrapperComponent = onPreviewClick
@@ -92,10 +93,12 @@ const CardHeader = ({ headerDetails }) => {
               />
             </AvatarWrapper>
           )}
-          <TextWithStyles type="p" color="grayDark">
-            {getCreatedText(creatorName)}
-            {createdAt}
-          </TextWithStyles>
+          {!hideCreatorDetails && (
+            <TextWithStyles type="p" color="grayDark">
+              {getCreatedText(creatorName)}
+              {createdAt}
+            </TextWithStyles>
+          )}
         </CreatorWrapper>
       </ContentWrapper>
       {onPreviewClick && (
@@ -115,6 +118,7 @@ CardHeader.propTypes = {
     creatorName: PropTypes.string,
     avatarUrl: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
+    hideCreatorDetails: PropTypes.bool,
     onPreviewClick: PropTypes.func,
     channel: PropTypes.shape({
       avatarUrl: PropTypes.string,

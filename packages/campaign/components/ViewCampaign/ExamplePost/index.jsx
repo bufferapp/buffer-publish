@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import {
   Circle,
   CircleWrapper,
@@ -14,31 +14,39 @@ import {
   Square,
 } from './style';
 
-const ExamplePost = () => {
+const ExamplePost = ({ displaySkeleton }) => {
   return (
     <Container>
       <Header>
         <CircleWrapper>
-          <Circle />
+          <Circle displaySkeleton={displaySkeleton} />
           <SmallCircle />
         </CircleWrapper>
         <LineWrapper>
-          <Line width="87px" />
+          <Line displaySkeleton={displaySkeleton} width="87px" />
         </LineWrapper>
       </Header>
       <Content>
         <LinesWrapper>
-          <Line />
-          <Line width="400px" />
+          <Line displaySkeleton={displaySkeleton} />
+          <Line displaySkeleton={displaySkeleton} width="400px" />
         </LinesWrapper>
-        <Square />
+        <Square displaySkeleton={displaySkeleton} />
       </Content>
       <Footer>
-        <Line width="408px" />
-        <Line height="30px" width="100px" />
+        <Line displaySkeleton={displaySkeleton} width="408px" />
+        <Line displaySkeleton={displaySkeleton} height="30px" width="100px" />
       </Footer>
     </Container>
   );
+};
+
+ExamplePost.propTypes = {
+  displaySkeleton: PropTypes.bool,
+};
+
+ExamplePost.defaultProps = {
+  displaySkeleton: false,
 };
 
 export default ExamplePost;

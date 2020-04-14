@@ -65,4 +65,25 @@ const getSegmentMetadata = ({
   shareType: trackingShareTypeMap.get(queueingType) || null,
 });
 
-export { getComposerSource, getSegmentMetadata, formatShareDate };
+const getSegmentCampaignMetadata = ({
+  post = {},
+  profile = {},
+  composerSource,
+}) => ({
+  itemType: 'post',
+  itemId: post.id || null,
+  campaignId: post.campaign_details.id || null,
+  campaignName: post.campaign_details.name || null,
+  channel: post.profile_service || null,
+  channelId: post.profile_id || null,
+  channelType: profile.serviceType || null,
+  addedFrom: composerSource || null,
+  organizationId: post.organization_id || null,
+});
+
+export {
+  getComposerSource,
+  getSegmentMetadata,
+  formatShareDate,
+  getSegmentCampaignMetadata,
+};

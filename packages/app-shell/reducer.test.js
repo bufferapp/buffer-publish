@@ -58,4 +58,27 @@ describe('reducer', () => {
       name: 'Carlton',
     });
   });
+
+  it('should set feature "enableReply" if user has access to Reply', () => {
+    const action = {
+      type: `globalAccount_${dataFetchActionTypes.FETCH_SUCCESS}`,
+      result: { productlinks: [
+        { productName: 'publish' },
+        { productName: 'analyze' },
+        { productName: 'reply' }
+      ]},
+    };
+    expect(reducer(undefined, action).featureFlips).toEqual(['enableReply']);
+  });
+
+  it('should not set feature "enableReply" if user has no access to Reply', () => {
+    const action = {
+      type: `globalAccount_${dataFetchActionTypes.FETCH_SUCCESS}`,
+      result: { productlinks: [
+        { productName: 'publish' },
+        { productName: 'analyze' }
+      ]},
+    };
+    expect(reducer(undefined, action).featureFlips).toEqual([]);
+  });
 });

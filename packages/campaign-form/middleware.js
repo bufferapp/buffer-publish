@@ -47,8 +47,7 @@ export default ({ dispatch }) => next => action => {
         campaignId: id,
         campaignName: name,
         campaignColor: color,
-        cta: SEGMENT_NAMES.STORIES_PREVIEW_QUEUE_ADD_NOTE,
-        globalOrganizationId,
+        organizationId: globalOrganizationId,
       };
       dispatch(analyticsActions.trackEvent('Campaign Created', metadata));
       dispatch(
@@ -65,12 +64,12 @@ export default ({ dispatch }) => next => action => {
     }
 
     case `updateCampaign_${dataFetchActionTypes.FETCH_SUCCESS}`: {
-      const { id, name, color, organizationId } = action.result || {};
+      const { id, name, color, globalOrganizationId } = action.result || {};
       const metadata = {
         campaignId: id,
         campaignName: name,
         campaignColor: color,
-        organizationId,
+        organizationId: globalOrganizationId,
       };
       dispatch(analyticsActions.trackEvent('Campaign Edited', metadata));
 

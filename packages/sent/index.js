@@ -1,7 +1,6 @@
 // component vs. container https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0
 import { connect } from 'react-redux';
-import { actions as settingsAction } from '@bufferapp/publish-general-settings';
-import { actions as dataFetchActions } from '@bufferapp/async-data-fetch';
+import { actions as campaignListActions } from '@bufferapp/publish-campaigns-list';
 // load the presentational component
 import { actions } from './reducer';
 import SentPosts from './components/SentPosts';
@@ -133,13 +132,8 @@ export default connect(
         })
       );
     },
-    fetchCampaigns: () => {
-      dispatch(
-        dataFetchActions.fetch({
-          name: 'getCampaignsList',
-          args: {},
-        })
-      );
+    fetchCampaignsIfNeeded: () => {
+      dispatch(campaignListActions.fetchCampaignsIfNeeded());
     },
   })
 )(SentPosts);

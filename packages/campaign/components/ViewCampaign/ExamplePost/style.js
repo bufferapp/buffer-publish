@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { gray, grayLighter } from '@bufferapp/ui/style/colors';
+import { skeletonStyles } from '@bufferapp/publish-shared-components';
 
 export const Container = styled.div`
   display: flex;
@@ -15,6 +16,7 @@ export const Circle = styled.div`
   border-radius: 50%;
   background-color: ${grayLighter};
   margin-right: 8px;
+  ${props => props.displaySkeleton && skeletonStyles}
 `;
 
 export const SmallCircle = styled.div`
@@ -28,6 +30,7 @@ export const SmallCircle = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${grayLighter};
+  ${props => props.displaySkeleton && skeletonStyles}
 `;
 
 export const CircleWrapper = styled.div`
@@ -40,6 +43,7 @@ export const Square = styled.div`
   background-color: ${grayLighter};
   margin-left: 10px;
   border-radius: 4px;
+  ${props => props.displaySkeleton && skeletonStyles}
 `;
 
 export const Header = styled.div`
@@ -55,6 +59,7 @@ export const Line = styled.div`
   width: ${props => (props.width ? props.width : '100%')};
   height: ${props => (props.height ? props.height : '10px')};
   background-color: ${grayLighter};
+  ${props => props.displaySkeleton && skeletonStyles}
 `;
 
 export const Content = styled.div`

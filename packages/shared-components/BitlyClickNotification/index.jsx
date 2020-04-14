@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Notification } from '../index';
+import Notification from '../Notification/index';
 
 const SpacedNotification = styled.div`
   margin-bottom: 0.75rem;

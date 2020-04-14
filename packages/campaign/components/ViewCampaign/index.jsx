@@ -1,16 +1,12 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import {
-  QueueItems,
-  Tabs,
-  Tab,
-  BufferLoading,
-} from '@bufferapp/publish-shared-components';
+import { QueueItems, Tabs, Tab } from '@bufferapp/publish-shared-components';
 import ComposerPopover from '@bufferapp/publish-composer-popover';
 import TabTag from '@bufferapp/publish-tabs/components/TabTag';
 import { getURL } from '@bufferapp/publish-server/formatters/src';
 import Header from './Header';
+import SkeletonPosts from './SkeletonPosts';
 import EmptyStateCampaign from './EmptyState';
 
 /* Styles */
@@ -19,18 +15,12 @@ const Container = styled.div`
   max-width: 864px;
 `;
 
-const LoadingContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  padding-top: 5rem;
-`;
-
 /* Component */
 const ViewCampaign = ({
   campaign,
   campaignPosts,
   isLoading,
+  hideSkeletonHeader,
   hideAnalyzeReport,
   translations,
   campaignId,
@@ -39,36 +29,29 @@ const ViewCampaign = ({
   editMode,
   actions,
   postActions,
-  sentView,
+  page,
 }) => {
+  const sentView = page === 'sent';
   if (!hasCampaignsFlip) {
     window.location = getURL.getPublishUrl();
     return null;
   }
+
   // Fetch Data
   useEffect(() => {
-    const params = sentView ? { campaignId, past: true } : { campaignId };
-    actions.fetchCampaign(params);
-  }, [campaignId, sentView]);
+    if (page) {
+      const params = sentView ? { campaignId, past: true } : { campaignId };
+      actions.fetchCampaign(params);
+    }
+  }, [campaignId, page]);
 
   useEffect(() => {
-    actions.fetchCampaigns();
+    actions.fetchCampaignsIfNeeded();
   }, []);
 
   // Conditions
-  const selectedtTabId = sentView ? 'sent' : 'scheduled';
   const campaignHasPosts =
     (!sentView && campaign?.scheduled > 0) || (sentView && campaign?.sent > 0);
-
-  if (isLoading) {
-    return (
-      <Container>
-        <LoadingContainer>
-          <BufferLoading size={64} />
-        </LoadingContainer>
-      </Container>
-    );
-  }
 
   return (
     <Container>
@@ -81,11 +64,12 @@ const ViewCampaign = ({
         onDeleteCampaignClick={actions.onDeleteCampaignClick}
         onEditCampaignClick={actions.onEditCampaignClick}
         goToAnalyzeReport={actions.goToAnalyzeReport}
+        isLoading={isLoading && !hideSkeletonHeader}
       />
       {/* Navigation */}
       <nav role="navigation">
         <Tabs
-          selectedTabId={selectedtTabId}
+          selectedTabId={page}
           onTabClick={tabId => actions.onTabClick({ tabId, campaignId })}
         >
           <Tab tabId="scheduled">{translations.scheduled}</Tab>
@@ -96,17 +80,21 @@ const ViewCampaign = ({
         </Tabs>
       </nav>
       {/* Content */}
-      <EmptyStateCampaign
-        hideAnalyzeReport={hideAnalyzeReport}
-        translations={translations}
-        campaign={campaign}
-        actions={actions}
-        sentView={sentView}
-      />
-      {campaignHasPosts && (
+      {isLoading && <SkeletonPosts />}
+      {!isLoading && (
+        <EmptyStateCampaign
+          hideAnalyzeReport={hideAnalyzeReport}
+          translations={translations}
+          campaign={campaign}
+          actions={actions}
+          sentView={sentView}
+        />
+      )}
+      {!isLoading && campaignHasPosts && (
         <QueueItems
           items={campaignPosts}
           onDeleteConfirmClick={postActions.onDeleteConfirmClick}
+          onSetRemindersClick={postActions.onSetRemindersClick}
           onEditClick={postActions.onEditClick}
           onShareNowClick={postActions.onShareNowClick}
           onRequeueClick={postActions.onRequeueClick}
@@ -136,10 +124,11 @@ ViewCampaign.propTypes = {
   campaignPosts: PropTypes.array, // eslint-disable-line
   hideAnalyzeReport: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  hideSkeletonHeader: PropTypes.bool.isRequired,
   campaignId: PropTypes.string.isRequired,
   showComposer: PropTypes.bool.isRequired,
   editMode: PropTypes.bool.isRequired,
-  sentView: PropTypes.bool,
+  page: PropTypes.oneOf(['scheduled', 'sent', null]).isRequired,
   hasCampaignsFlip: PropTypes.bool.isRequired,
   actions: PropTypes.shape({
     onCreatePostClick: PropTypes.func.isRequired,
@@ -150,11 +139,12 @@ ViewCampaign.propTypes = {
     goToAnalyzeReport: PropTypes.func.isRequired,
     onComposerCreateSuccess: PropTypes.func.isRequired,
     onComposerOverlayClick: PropTypes.func.isRequired,
-    fetchCampaigns: PropTypes.func.isRequired,
+    fetchCampaignsIfNeeded: PropTypes.func.isRequired,
   }).isRequired,
   postActions: PropTypes.shape({
     onEditClick: PropTypes.func.isRequired,
     onDeleteConfirmClick: PropTypes.func.isRequired,
+    onSetRemindersClick: PropTypes.func.isRequired,
     onShareNowClick: PropTypes.func.isRequired,
     onRequeueClick: PropTypes.func.isRequired,
     onImageClick: PropTypes.func.isRequired,
@@ -162,10 +152,6 @@ ViewCampaign.propTypes = {
     onImageClickPrev: PropTypes.func.isRequired,
     onImageClickNext: PropTypes.func.isRequired,
   }).isRequired,
-};
-
-ViewCampaign.defaultProps = {
-  sentView: false,
 };
 
 export default ViewCampaign;

@@ -43,3 +43,4 @@ export QueueHeader from './QueueHeader';
 export Notification from './Notification';
 export BitlyClickNotification from './BitlyClickNotification';
 export Checklist from './Checklist';
+export { ButtonWithSkeleton, TextWithSkeleton, skeletonStyles } from './SkeletonElements';

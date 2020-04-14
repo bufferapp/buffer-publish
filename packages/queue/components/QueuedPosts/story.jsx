@@ -87,6 +87,7 @@ storiesOf('QueuedPosts', module)
       onImageClickNext={action('onImageClickNext')}
       onImageClickPrev={action('onImageClickPrev')}
       onImageClose={action('onImageClose')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
     />
   ))
   .add('loading', () => (
@@ -140,6 +141,7 @@ storiesOf('QueuedPosts', module)
       onImageClickNext={action('onImageClickNext')}
       onImageClickPrev={action('onImageClickPrev')}
       onImageClose={action('onImageClose')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
     />
   ))
   .add('paused if Contributor', () => (
@@ -166,6 +168,7 @@ storiesOf('QueuedPosts', module)
       onImageClickNext={action('onImageClickNext')}
       onImageClickPrev={action('onImageClickPrev')}
       onImageClose={action('onImageClose')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
     />
   ))
   .add('locked profile', () => (

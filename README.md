@@ -17,10 +17,8 @@ Welcome to the Buffer Publish monorepo.
 - [The Publish Server](#the-publish-server)
 - [Yarn Workspaces](#yarn-workspaces)
 - [Publishing Packages](#publishing-packages)
-- [Adding new Packages](#adding-new-packages)
+- [Contributing](#contributing-🚀)
 - [Package Scripts](#package-scripts)
-- [Adding New Dependencies](#adding-new-dependencies)
-- [How Packages Communicate](#how-packages-communicate)
 - [External Packages](#external-packages)
 - [Standalone Mode](#standalone-mode) 🆕
 
@@ -62,6 +60,7 @@ To get started on local development and testing:
     $ cd ../buffer-dev
     $ ./dev up publish
    ```
+   With this command, docker-compose starts up all the necessary containers for Publish.
 
 6. **Start bundling the frontend with webpack**
     ```bash
@@ -106,38 +105,8 @@ Buffer Publish is a _monorepo_. That means it's composed of several separate par
 
 No need to publish local packages anymore for deployments 🎉
 
-## Adding new Packages
-
-🎬 See this video http://hi.buffer.com/5be7a08fc7fc
-
-In a nutshell:
-
-1. **Copy the `packages/example` folder.**
-```bash
-# from buffer-publish
-$ cp packages/example packages/your-new-package
-```
-The name of the folder is up to you, what's more important is the name of package (in it's `package.json`).
-
-2. **Update `package.json`**
-    * Change the name, author, version (always `2.0.0` for local packages), and description.
-    * You can remove all the `"dependencies"` for now, and add them as you need them.
-
-3. **Update `README.md`**
-    * Delete all the text here and just have a heading with your package name and a short description. This is also a great place to document how your package works, and how it can be used/consumed.
-
-4. **Cleanup:** 
-    * Delete the `node_modules` and `coverage` folders that came from copying `/example`.
-
-5. Not all packages have to export a component (see for example the `maintenance-redirect` package.)
-    * This is where you'll start to make changes and add things based on the needs of your package.
-    * Look at other packages for examples!
-
-6. **Connect reducer and/or middleware**
-    * If you have a reducer and/or middleware - don't forget to link those up in `packages/store/index.js` and `packages/store/reducers.js`.
-
-7. **Run `yarn`**
-    * Do this when you're customizing your package, and  whenever you change the dependencies in your package or another.
+## Contributing 🚀
+For usage instructions and how to add, update, and work with the components, see our [CONTRIBUTING.md](/CONTRIBUTING.md) doc!
 
 ## Package Scripts
 
@@ -152,94 +121,6 @@ We have a few helpful commands defined in this project's `package.json`.
 | 🆕 `yarn run test-package <path-to-package>`  | Start watching tests in coverage for a specific package directory. [Learn more](https://github.com/bufferapp/buffer-publish/pull/624). |
 `yarn test:debug <path to test>` | Runs `"node --inspect node_modules/.bin/jest --runInBand"` with the test you specify.
 | `yarn run start`  | Starts up the Publish Express server, [as explained above](#the-publish-server), and is run automatically when you start Publish with `./dev up`. (So in most cases you won't be running this command.) |
-
-## Adding New Dependencies
-
-Adding packages to a monorepo is slightly different than adding to a standard node package. Common `devDependencies` can be added to the top level `package.json` file.
-
-### Adding A Common Dependencies
-
-This is the most likely scenario you'll face.
-
-in the root directory (`buffer-publish/`) run the follwing commands:
-
-  ```bash
-  $ yarn add -DE some-cool-package
-  $ yarn
-  ```
-  Now `some-cool-package` is available to all packages.
-
-### Creating A Dependency To Another Local Package
-
-|⚠️  &nbsp;**Important**|
-|--|
-|Please use 2.0.0 for local package versions moving forward. Using a different version will not break anything (as long as the versions match), but it will be easier to spot local packages in dependencies.|
-
-To create a dependency to the login package from the example package:
-
-In the `example` package add the following entry in the `packages/example/package.json` file under the dependencies key:
-
-```js
-{
-  //...other stuff...
-  dependencies:{
-    //...other dependencies...
-    "@bufferapp/login": "2.0.0", // this version must be exact otherwise it fetches from npm!
-  }
-}
-```
-|⚠️  &nbsp;**Important**|
-|--|
-|The version number must be **exact** to link local packages, otherwise it will (try to) fetch the package from npm.|
-
-
-### Add A Dependency That Runs A Binary
-
-An example of this would be `eslint` or `jest`. These should be added to the individual package:
-
-```sh
-cd packages/example/
-yarn add -DE jest
-```
-
-## How Packages Communicate
-
-At a high level each package communicates using the [Observer Pattern](https://en.wikipedia.org/wiki/Observer_pattern) through the Redux store. This means that each package receives all events and decides whether to modify their own state or ignore the event. An event (or action) flows from the originator to all other packages (including itself):
-
-
-```
-Package-A ---action--->Redux Store--->Package-B
-  ^                             |
-  |-----------------------------|---->Package-C
-```
-
-If you need to listen to another packages events, import the actionTypes into the package you're building:
-
-
-```js
-// handle app initialized
-export default (state, action) => {
-  switch (action.type) {
-    case 'APP_INIT':
-      return {
-        ...state,
-        initialized: true,
-      };
-    default:
-      return state;
-  }
-};
-```
-## Testing
-
-### Debugging
-
-To use the `yarn test:debug` script, follow these instructions:
-1. Add a `debugger` statement near the failing line in your test.
-2. Type `chrome://inspect` in your chrome browser address bar.
-3. Click on "Open dedicated DevTools for Node".
-4. In your terminal run `yarn test:debug <path to test>`
-5. Visit the inspector you opened up, you should see that the debugger has been triggered and the app has paused near the line that is failing.
 
 ## External Packages
 

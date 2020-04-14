@@ -8,35 +8,56 @@ import {
   campaignSent,
   campaignCreate,
 } from '@bufferapp/publish-routes';
-import { actions as dataFetchActions } from '@bufferapp/async-data-fetch';
+import { actions as campaignListActions } from '@bufferapp/publish-campaigns-list';
+import { getURL } from '@bufferapp/publish-server/formatters/src';
 import { actions } from './reducer';
 import ViewCampaign from './components/ViewCampaign';
 
 export default connect(
   (state, ownProps) => {
+    const { profiles } = state.profileSidebar;
+    const { campaignPosts } = state.campaign;
+    const campaignPostsWithProfileData = campaignPosts.map(post => {
+      const filteredProfile = profiles.filter(
+        profile => profile.id === post.content.profileId
+      );
+
+      return {
+        ...post,
+        content: {
+          ...post.content,
+          isBusinessAccount: filteredProfile[0].business,
+          hasPushNotifications: filteredProfile[0].hasPushNotifications,
+          profileService: filteredProfile[0].service,
+          profileServiceType: filteredProfile[0].service_type,
+        },
+      };
+    });
     return {
       campaign: state.campaign.campaign,
-      campaignPosts: state.campaign.campaignPosts
-        ? formatPostLists({
-            posts: state.campaign.campaignPosts,
-            orderBy: 'dueAt',
-          })
-        : [],
+      campaignPosts:
+        campaignPostsWithProfileData.length > 0
+          ? formatPostLists({
+              posts: campaignPostsWithProfileData,
+              orderBy: 'dueAt',
+            })
+          : [],
       showComposer: state.campaign.showComposer,
       editMode: state.campaign.editMode,
       editingPostId: state.campaign.editingPostId,
       translations: state.i18n.translations.campaigns.viewCampaign,
       hideAnalyzeReport: state.appSidebar.user.isUsingPublishAsTeamMember,
       isLoading: state.campaign.isLoading,
+      hideSkeletonHeader: state.campaign.hideSkeletonHeader,
       campaignId: ownProps.match?.params?.id || state.campaign?.campaignId,
-      sentView: ownProps.sentView,
+      page: state.campaign.page,
       hasCampaignsFlip: state.appSidebar.user.features
         ? state.appSidebar.user.features.includes('campaigns')
         : false,
     };
   },
 
-  dispatch => ({
+  (dispatch, ownProps) => ({
     actions: {
       onComposerCreateSuccess: () => {
         dispatch(actions.handleCloseComposer());
@@ -62,7 +83,12 @@ export default connect(
       },
       onEditCampaignClick: campaignId => {
         if (campaignId) {
-          dispatch(campaignEdit.goTo({ campaignId }));
+          dispatch(
+            campaignEdit.goTo({
+              campaignId,
+              from: ownProps.history.location.pathname,
+            })
+          );
         }
       },
       onTabClick: ({ tabId, campaignId }) => {
@@ -76,89 +102,94 @@ export default connect(
       fetchCampaign: ({ campaignId, past }) => {
         dispatch(actions.fetchCampaign({ campaignId, past, fullItems: true }));
       },
-      fetchCampaigns: () => {
-        dispatch(
-          dataFetchActions.fetch({
-            name: 'getCampaignsList',
-            args: {},
-          })
-        );
+      fetchCampaignsIfNeeded: () => {
+        dispatch(campaignListActions.fetchCampaignsIfNeeded());
       },
     },
     postActions: {
-      onEditClick: post => {
+      onSetRemindersClick: ({ post }) => {
+        const nextUrl = campaignScheduled.getRoute({
+          campaignId: post.campaignDetails.id,
+        });
+        const reminderUrl = getURL.getRemindersURL({
+          profileId: post.profileId,
+          nextUrl,
+        });
+        window.location.assign(reminderUrl);
+      },
+      onEditClick: ({ post }) => {
         dispatch(
           actions.handleOpenComposer({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
             editMode: true,
           })
         );
       },
-      onDeleteConfirmClick: post => {
+      onDeleteConfirmClick: ({ post }) => {
         dispatch(
           queueActions.handleDeleteConfirmClick({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
           })
         );
         dispatch(
           actions.handleDeleteConfirmClick({
-            post: post.post,
+            post,
           })
         );
       },
-      onRequeueClick: post => {
+      onRequeueClick: ({ post }) => {
         dispatch(
           queueActions.handleRequeue({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
           })
         );
       },
-      onShareNowClick: post => {
+      onShareNowClick: ({ post }) => {
         dispatch(
           queueActions.handleShareNowClick({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
           })
         );
         dispatch(
           actions.handleShareNowClick({
-            post: post.post,
+            post,
           })
         );
       },
 
-      onImageClick: post => {
+      onImageClick: ({ post }) => {
         dispatch(
           actions.handleImageClick({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
           })
         );
       },
-      onImageClose: post => {
+      onImageClose: ({ post }) => {
         dispatch(
           actions.handleImageClose({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
           })
         );
       },
-      onImageClickNext: post => {
+      onImageClickNext: ({ post }) => {
         dispatch(
           actions.handleImageClickNext({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
           })
         );
       },
-      onImageClickPrev: post => {
+      onImageClickPrev: ({ post }) => {
         dispatch(
           actions.handleImageClickPrev({
-            post: post.post,
-            profileId: post.post.profileId,
+            post,
+            profileId: post.profileId,
           })
         );
       },

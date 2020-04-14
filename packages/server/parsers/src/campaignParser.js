@@ -55,6 +55,7 @@ const parseItem = item => {
         profileTimezone,
         profile_service,
         user,
+        isSent,
       } = itemContent.content;
       // String with the date of the update creation
       const createdAtString =
@@ -75,6 +76,7 @@ const parseItem = item => {
         creatorName: user && user.name,
         avatarUrl: user && user.avatar,
         createdAt: createdAtString,
+        hideCreatorDetails: isSent,
       };
     }
   }

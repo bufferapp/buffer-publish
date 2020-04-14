@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Text, Input, Button, Link } from '@bufferapp/ui';
@@ -18,7 +18,7 @@ import {
   green,
   teal,
   blueDark,
-  grayShadow
+  grayShadow,
 } from '@bufferapp/ui/style/colors';
 
 /* Styles */
@@ -90,7 +90,7 @@ const CampaignForm = ({
   campaign,
   fetchCampaign,
 }) => {
-  // Fetch Data
+  // Fetch the Data
   useEffect(() => {
     if (editMode) {
       fetchCampaign({ campaignId });
@@ -108,6 +108,15 @@ const CampaignForm = ({
       setColor(campaign?.color);
     }
   }, [campaign]);
+
+  // autofocus name input
+  const inputElement = useRef(null);
+
+  useEffect(() => {
+    if (inputElement.current) {
+      inputElement.current.focus();
+    }
+  }, []);
 
   // State modifiers
   const disableCampaignSubmitButton = ({ name, color }) => {
@@ -135,7 +144,7 @@ const CampaignForm = ({
             {editMode ? translations.editTitle : translations.createTitle}
           </Headline>
           <Input
-            type="input"
+            type="text"
             value={campaignName}
             onChange={setCampaignName}
             required
@@ -143,6 +152,8 @@ const CampaignForm = ({
             label={translations.name}
             placeholder={translations.placeholder}
             aria-required="true"
+            aria-label={translations.ariaLabel}
+            ref={inputElement}
           />
           <Text htmlFor="colorPicker" type="label">
             {translations.color}
@@ -182,8 +193,10 @@ const CampaignForm = ({
           <Notice>
             <NoticeText type="p" color={grayDark}>
               {translations.notice1}
-              {/* FAQ link has to be replaced */}
-              <Link href="https://faq.buffer.com/" newTab>
+              <Link
+                href="https://support.buffer.com/hc/en-us/articles/360046266313-creating-and-managing-campaigns"
+                newTab
+              >
                 {translations.notice2}
               </Link>
               {translations.notice3}
@@ -208,6 +221,7 @@ CampaignForm.propTypes = {
     notice3: PropTypes.string.isRequired,
     saveCampaign: PropTypes.string.isRequired,
     cancel: PropTypes.string.isRequired,
+    ariaLabel: PropTypes.string.isRequired,
   }).isRequired,
   campaignId: PropTypes.string,
   fetchCampaign: PropTypes.func.isRequired,

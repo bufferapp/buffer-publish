@@ -94,7 +94,7 @@ const Post = ({
             <PostErrorBanner
               dragging={dragging}
               errorLabel="Set Up Reminders"
-              error="Shoot, looks like we can't publish this until you set up Reminders. Would you be up for setting them now?"
+              error="Shoot, looks like we can't publish this until you set up Reminders. Want to set them up now?"
               errorAction={onSetRemindersClick}
             />
           )}

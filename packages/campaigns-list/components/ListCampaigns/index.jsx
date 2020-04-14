@@ -53,7 +53,7 @@ const ListCampaigns = ({
   onOpenCreateCampaignClick,
   hideAnalyzeReport,
   hasCampaignsFlip,
-  fetchCampaigns,
+  fetchCampaignsIfNeeded,
   isLoading,
 }) => {
   if (!hasCampaignsFlip) {
@@ -62,7 +62,7 @@ const ListCampaigns = ({
   }
   // Fetch Data
   useEffect(() => {
-    fetchCampaigns();
+    fetchCampaignsIfNeeded();
   }, []);
 
   if (isLoading) {
@@ -75,7 +75,7 @@ const ListCampaigns = ({
     );
   }
 
-  if (campaigns.length === 0) {
+  if (!campaigns || campaigns.length === 0) {
     return (
       <EmptyState
         translations={translations.emptyState}
@@ -119,7 +119,7 @@ ListCampaigns.propTypes = {
   goToAnalyzeReport: PropTypes.func,
   hideAnalyzeReport: PropTypes.bool.isRequired,
   hasCampaignsFlip: PropTypes.bool.isRequired,
-  fetchCampaigns: PropTypes.func.isRequired,
+  fetchCampaignsIfNeeded: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 

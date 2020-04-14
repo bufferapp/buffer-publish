@@ -75,7 +75,7 @@ const QueuedPosts = ({
   onSetRemindersClick,
   onCampaignTagClick,
   hasCampaignsFeature,
-  fetchCampaigns,
+  fetchCampaignsIfNeeded,
 }) => {
   if (loading) {
     return (
@@ -98,9 +98,7 @@ const QueuedPosts = ({
   }
 
   useEffect(() => {
-    if (hasCampaignsFeature) {
-      fetchCampaigns();
-    }
+    fetchCampaignsIfNeeded();
   }, []);
 
   return (
@@ -235,7 +233,7 @@ QueuedPosts.propTypes = {
   onCalendarClick: PropTypes.func.isRequired,
   isBusinessAccount: PropTypes.bool,
   hasCampaignsFeature: PropTypes.bool.isRequired,
-  fetchCampaigns: PropTypes.func.isRequired,
+  fetchCampaignsIfNeeded: PropTypes.func.isRequired,
 };
 
 QueuedPosts.defaultProps = {

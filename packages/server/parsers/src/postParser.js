@@ -196,7 +196,7 @@ module.exports = post => {
     retweetComment,
     retweetCommentLinks,
     retweetProfile: getRetweetProfileInfo(post),
-    sent: post.status === 'sent',
+    isSent: post.status === 'sent',
     source_url: post.source_url,
     text,
     type: getPostType({ post }),

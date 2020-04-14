@@ -67,7 +67,10 @@ export default ({ dispatch, getState }) => next => action => {
       );
       // When the page has just loaded or is refreshed,
       // we want to be able to update the actual selected tab
-      if ((action.tabId && getState().tabs.tabId !== action.tabId) || !profileFound) {
+      if (
+        (action.tabId && getState().tabs.tabId !== action.tabId) ||
+        !profileFound
+      ) {
         dispatch(
           tabsActions.selectTab({
             tabId: action.tabId,

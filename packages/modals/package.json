@@ -14,7 +14,6 @@
     "@bufferapp/publish-welcome-modal": "2.0.0",
     "@bufferapp/publish-ig-direct-posting-modal": "2.0.0",
     "@bufferapp/publish-welcome-paid-modal": "2.0.0",
-    "@bufferapp/publish-welcome-b4b-trial-modal": "2.0.0",
     "@bufferapp/publish-profiles-disconnected-modal": "2.0.0",
     "@bufferapp/publish-close-composer-confirmation-modal": "2.0.0"
   },

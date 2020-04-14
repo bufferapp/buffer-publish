@@ -37,7 +37,7 @@ export default ({ dispatch, getState }) => next => action => {
         organizationId,
       };
       dispatch(analyticsActions.trackEvent('Campaign Report Viewed', metadata));
-      window.location.assign(`${getURL.getAnalyzeReportUrl()}`);
+      window.location.assign(`${getURL.getAnalyzeReportUrl(id)}`);
       break;
     }
 

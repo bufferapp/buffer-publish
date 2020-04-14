@@ -44,6 +44,7 @@ storiesOf('SentPosts', module)
       onClickUpgrade={action('onClickUpgrade')}
       onShareAgainClick={action('onShareAgainClick')}
       fetchSentPosts={action('fetchSentPosts')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
       linkShortening={{}}
     />
   ))
@@ -58,6 +59,7 @@ storiesOf('SentPosts', module)
       onClickUpgrade={action('onClickUpgrade')}
       onShareAgainClick={action('onShareAgainClick')}
       fetchSentPosts={action('fetchSentPosts')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
       linkShortening={{}}
     />
   ));

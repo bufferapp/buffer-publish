@@ -17,6 +17,8 @@ const channel = {
   type: 'instagram',
 };
 
+const hideCreatorDetails = true;
+
 const preview = action('preview-click');
 
 storiesOf('Cards|Basic Elements/CardHeader', module)
@@ -41,6 +43,15 @@ storiesOf('Cards|Basic Elements/CardHeader', module)
       headerDetails={{
         ...details,
         channel,
+      }}
+    />
+  ))
+  .add('with channel details and no creator', () => (
+    <CardHeader
+      headerDetails={{
+        ...details,
+        channel,
+        hideCreatorDetails,
       }}
     />
   ));

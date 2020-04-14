@@ -22,6 +22,7 @@ export default connect(
       state.onboarding.canSeeOnboardingPage &&
       state.router.location.pathname === newBusinessTrialistsRoute,
     hideMenuItems: state.appShell.hideMenuItems,
+    featureFlips: state.appShell.featureFlips
   }),
 
   dispatch => ({

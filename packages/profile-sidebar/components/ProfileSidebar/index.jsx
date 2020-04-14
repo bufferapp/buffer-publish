@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Divider } from '@bufferapp/components';
 import { Button, SidebarListItem } from '@bufferapp/ui';
+import TabTag from '@bufferapp/publish-tabs/components/TabTag';
 import { offWhite, mystic } from '@bufferapp/components/style/color';
 import { borderWidth } from '@bufferapp/components/style/border';
 import styled from 'styled-components';
@@ -66,7 +67,7 @@ const ProfileListTitle = styled.div`
 `;
 
 const ButtonWrapper = styled.div`
-  margin-bottom: 5px;
+  margin-bottom: 1.5rem;
 `;
 
 const Wrapper = styled.div``;
@@ -114,6 +115,7 @@ const ProfileSidebar = ({
                 title="Campaigns"
                 onItemClick={onCampaignsButtonClick}
                 selected={isCampaignsSelected}
+                badges={<TabTag type="new" labelName="New" />}
               />
             </ButtonWrapper>
             <ProfileListTitle>Social accounts</ProfileListTitle>

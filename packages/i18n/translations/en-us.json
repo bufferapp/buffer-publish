@@ -39,7 +39,8 @@
       "notice2": "Find out more",
       "notice3": " in our FAQ.",
       "saveCampaign": "Save Campaign",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "ariaLabel": "Name input for campaign form"
     },
     "viewCampaign": {
       "viewCampaign": "View Campaign",
@@ -49,13 +50,15 @@
       "createPost": "Create Post",
       "scheduled": "Scheduled",
       "sent": "Sent",
+      "loadingCampaignName": "Loading campaign name, please hold on",
+      "loadingCampaignDetails": "Loading campaign details such as date and counters, please hold on",
       "emptySentPosts": {
         "title": "Standing by for sent posts...",
         "subtitle": "Once your scheduled posts are published, you’ll see them here with some basic post analytics."
       },
       "allPostsSent": {
         "title": "Woohoo — everything sent!",
-        "subtitle": "All the content scheduled for this Campaign has been sent.",
+        "subtitle": "All the content scheduled for this campaign has been sent.",
         "createPost": "Create Post",
         "createCampaign": "Create New Campaign",
         "viewReport": "View Report"
@@ -63,8 +66,8 @@
       "emptyCampaignBanner": {
         "createPosts": "Create Posts",
         "learnMore": "Learn More",
-        "subtext": "Create posts for this Campaign and they’ll be grouped together, so that you can keep better track of them in one place.",
-        "title": "Let’s build your Campaign!"
+        "subtext": "Eep, this campaign is empty! Create some posts and they’ll be organized here for you to review.",
+        "title": "Let’s build your campaign"
       }
     },
     "deleteCampaignModal": {
@@ -240,13 +243,6 @@
     "body1": "We've tidied up the look of your Buffer dashboard!",
     "body2": "We've kept all your posts and content just as it was but with a cleaner and faster experience.",
     "cta": "Let's Go!"
-  },
-  "welcome-b4b-trial-modal": {
-    "trialLabel": "14-day Free trial",
-    "header": "Welcome to Buffer for Business",
-    "subHeader": "Get the most out of Buffer for Business with our getting started guide.",
-    "cta": "Go to Our Getting Started Guide",
-    "cancelCta": "Maybe Later"
   },
   "welcome-paid-modal": {
     "step1": {

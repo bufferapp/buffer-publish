@@ -92,7 +92,6 @@ class TabNavigation extends React.Component {
           {this.isValidTab('stories') && (
             <Tab tabId="stories">
               Stories
-              <TabTag type="new" labelName="New" />
             </Tab>
           )}
           {this.isValidTab('pastReminders') && (

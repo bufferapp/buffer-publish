@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router';
+import { matchPath } from 'react-router-dom';
 
 const profileRouteRegex = /profile\/(\w+)\/tab\/(\w+)(?:\/(\w+))?/;
 export const getProfilePageParams = ({ path }) => {
@@ -57,6 +58,16 @@ export const getPreferencePageParams = ({ path }) => {
   };
 };
 
+export const getMatch = ({ pathname, route }) =>
+  matchPath(pathname, {
+    path: route,
+  });
+
+export const getParams = ({ pathname, route }) => {
+  const match = getMatch({ pathname, route });
+  return match?.params || null;
+};
+
 export const campaignsPage = {
   route: '/campaigns',
   goTo: () => push('/campaigns'),
@@ -69,7 +80,8 @@ export const campaignCreate = {
 
 export const campaignEdit = {
   route: '/campaigns/:id/edit/',
-  goTo: ({ campaignId }) => push(`/campaigns/${campaignId}/edit`),
+  goTo: ({ campaignId, from }) =>
+    push(`/campaigns/${campaignId}/edit`, { from }),
 };
 
 export const campaignScheduled = {
@@ -82,4 +94,5 @@ export const campaignSent = {
   route: '/campaigns/:id/sent/',
   goTo: ({ campaignId }) => push(`/campaigns/${campaignId}/sent`),
 };
-export const isCampaignsRoute = ({ path }) => path === campaignsPage.route;
+
+export const goTo = path => push(path);

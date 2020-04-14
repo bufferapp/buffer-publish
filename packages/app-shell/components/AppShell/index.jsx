@@ -128,6 +128,7 @@ const AppShell = ({
   bannerKey,
   hideAppShell,
   hideMenuItems,
+  featureFlips
 }) => {
   if (hideAppShell) {
     return children;
@@ -136,6 +137,7 @@ const AppShell = ({
   return (
     <BDSAppShell
       content={children}
+      featureFlips={featureFlips}
       activeProduct="publish"
       user={{
         ...user,
@@ -186,6 +188,7 @@ AppShell.propTypes = {
     }),
   }),
   hideAppShell: PropTypes.bool.isRequired,
+  featureFlips: PropTypes.arrayOf(PropTypes.string)
 };
 
 AppShell.defaultProps = {
@@ -198,7 +201,7 @@ AppShell.defaultProps = {
   showSwitchPlan: false,
   showManageTeam: false,
   bannerOptions: null,
-  showStartProTrial: false,
+  showStartProTrial: false
 };
 
 export default AppShell;

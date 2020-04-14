@@ -47,4 +47,16 @@ storiesOf('Campaigns|ViewCampaignHeader', module)
       goToAnalyzeReport={action('go to analyze report')}
       hideAnalyzeReport
     />
+  ))
+  .add('Campaign loading', () => (
+    <Header
+      campaignDetails={campaignDetails}
+      translations={translations.campaigns.viewCampaign}
+      onCreatePostClick={action('create post')}
+      onDeleteCampaignClick={action('delete campaign')}
+      onEditCampaignClick={action('edit campaign')}
+      goToAnalyzeReport={action('go to analyze report')}
+      hideAnalyzeReport={false}
+      isLoading
+    />
   ));

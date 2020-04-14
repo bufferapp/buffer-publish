@@ -99,7 +99,7 @@ const CampaignHeader = ({ campaigns = [], campaignId = null }) => {
     <React.Fragment>
       <Container>
         <Text type="label">Campaign</Text>
-        <Tooltip label="Manage related content across social accounts with a campaign.">
+        <Tooltip label="Categorize your content by themes or topics.">
           <Icon>
             <QuestionIcon />
           </Icon>

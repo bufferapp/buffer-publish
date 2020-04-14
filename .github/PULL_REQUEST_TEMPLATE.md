@@ -24,6 +24,7 @@
 -   [ ] I have tested my changes/additions in the latest Chrome, Firefox, and Safari.
 -   [ ] I have commented my code, particularly in hard-to-understand areas.
 -   [ ] I kept accessibility in mind by following the [a11y checklist.](https://www.notion.so/buffer/Workflow-Checklist-e64d86eb795140bcbfdc16d1c72e573f)
+-   [ ] I have considered [security, abuse & compliance](https://www.notion.so/buffer/Engineering-Wiki-f34142d290304c35bebadf76cc9cc89e#cc6dcc7617184227b77da2e1b262a563) implications of my changes.
 
 #### Staging Deployment
 

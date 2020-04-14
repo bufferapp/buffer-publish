@@ -68,6 +68,7 @@ const controller = require('./lib/controller');
 const makeRPCHandler = require('./rpc');
 const checkToken = require('./rpc/checkToken');
 const PublishAPI = require('./publishAPI');
+const userParser = require('./parsers/src/userParser');
 const userMethod = require('./rpc/user/index');
 const profilesMethod = require('./rpc/profiles/index');
 const pusher = require('./lib/pusher');
@@ -430,10 +431,12 @@ app.get('*', (req, res) => {
   const modalValue = req.query.mv ? req.query.mv : null;
 
   Promise.all([
-    userMethod.fn(null, req, res, { PublishAPI }).catch(() => {
-      // added catch incase we don't have any data in the object
-      return undefined;
-    }),
+    userMethod
+      .fn(null, req, res, { PublishAPI, parsers: { userParser } })
+      .catch(() => {
+        // added catch incase we don't have any data in the object
+        return undefined;
+      }),
     profilesMethod.fn(null, req, res).catch(() => {
       // added catch incase we don't have any data in the object
       return undefined;

@@ -9,7 +9,6 @@ export const initialState = {
   showStealProfileModal: false,
   stealProfileUsername: null,
   showInstagramDirectPostingModal: false,
-  showWelcomeB4BTrialModal: false,
   showInstagramFirstCommentModal: false,
   showTrialCompleteModal: false,
   showInstagramFirstCommentProTrialModal: false,
@@ -32,8 +31,6 @@ export const actionTypes = keyWrapper('MODALS', {
   HIDE_STEAL_PROFILE_MODAL: 0,
   SHOW_IG_DIRECT_POSTING_MODAL: 0,
   HIDE_IG_DIRECT_POSTING_MODAL: 0,
-  SHOW_WELCOME_B4B_TRIAL_MODAL: 0,
-  HIDE_WELCOME_B4B_TRIAL_MODAL: 0,
   SHOW_TRIAL_COMPLETE_MODAL: 0,
   HIDE_TRIAL_COMPLETE_MODAL: 0,
   SHOW_INSTAGRAM_FIRST_COMMENT_MODAL: 0,
@@ -142,16 +139,6 @@ export default (state = initialState, action) => {
           params: action.params,
         },
       };
-    case actionTypes.SHOW_WELCOME_B4B_TRIAL_MODAL:
-      return {
-        ...state,
-        showWelcomeB4BTrialModal: true,
-      };
-    case actionTypes.HIDE_WELCOME_B4B_TRIAL_MODAL:
-      return {
-        ...state,
-        showWelcomeB4BTrialModal: false,
-      };
     case actionTypes.HIDE_INSTAGRAM_FIRST_COMMENT_PRO_TRIAL_MODAL:
       return {
         ...state,
@@ -256,12 +243,6 @@ export const actions = {
       profileId,
     },
   }),
-  showWelcomeB4BTrialModal: () => ({
-    type: actionTypes.SHOW_WELCOME_B4B_TRIAL_MODAL,
-  }),
-  hideWelcomeB4BTrialModal: () => ({
-    type: actionTypes.HIDE_WELCOME_B4B_TRIAL_MODAL,
-  }),
   hideCloseComposerConfirmationModal: () => ({
     type: actionTypes.HIDE_CLOSE_COMPOSER_CONFIRMATION_MODAL,
   }),
@@ -284,7 +265,6 @@ export const actions = {
         modals.showWelcomeModal ||
         modals.showInstagramFirstCommentModal ||
         modals.showWelcomePaidModal ||
-        modals.showWelcomeB4BTrialModal ||
         modals.showInstagramDirectPostingModal ||
         modals.showStealProfileModal ||
         modals.showTrialCompleteModal ||

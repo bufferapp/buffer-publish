@@ -22,14 +22,17 @@ export const Color = styled.div`
 // using grid layout to align the campaign list details
 export const Container = styled.li`
   display: grid;
+  padding: 16px;
   grid-template-columns: 2fr 1.2fr 1fr 0.7fr 1fr;
   grid-column-gap: 24px;
-  padding: 16px;
   border-top: 1px solid ${grayLight};
   align-items: center;
   transition: background-color 250ms ease-in-out;
   :hover {
     background-color: ${grayLighter};
+  }
+  :last-of-type {
+    border-radius: 0 0 4px 4px;
   }
 `;
 

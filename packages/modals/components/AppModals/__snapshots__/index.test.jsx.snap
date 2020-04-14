@@ -20,12 +20,6 @@ exports[`Modals renders upgrade modal 1`] = `
 </React.Fragment>
 `;
 
-exports[`Modals renders welcome b4b trial modal 1`] = `
-<React.Fragment>
-  <Connect(WelcomeB4BTrialModal) />
-</React.Fragment>
-`;
-
 exports[`Modals renders welcome modal 1`] = `
 <React.Fragment>
   <Connect(WelcomeModal) />

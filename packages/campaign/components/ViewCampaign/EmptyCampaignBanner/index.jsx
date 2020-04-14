@@ -43,7 +43,7 @@ const EmptyCampaignBanner = ({ translations, onCreatePostClick }) => (
       label={translations.emptyCampaignBanner.createPosts}
     />
     <LinkWithStyles
-      href="https://faq.buffer.com/" // Update FAQ link when it's ready
+      href="https://support.buffer.com/hc/en-us/articles/360046266313-creating-and-managing-campaigns"
       newTab
     >
       {translations.emptyCampaignBanner.learnMore}

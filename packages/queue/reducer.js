@@ -35,7 +35,6 @@ export const initialState = {
   editingPostId: '',
   isBusinessOnInstagram: null,
   isInstagramLoading: false,
-  campaigns: [],
 };
 
 const profileInitialState = {
@@ -440,13 +439,6 @@ export default (state = initialState, action) => {
         editMode: false,
         emptySlotMode: false,
       };
-
-    case `getCampaignsList_${dataFetchActionTypes.FETCH_SUCCESS}`:
-      return {
-        ...state,
-        campaigns: sortCampaignsByUpdatedAt(action.result),
-      };
-
     default:
       return state;
   }

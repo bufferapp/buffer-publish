@@ -47,6 +47,7 @@ storiesOf('PastRemindersPosts', module)
       onRequeueClick={action('onRequeueClick')}
       onComposerCreateSuccess={action('onComposerCreateSuccess')}
       onClickUpgrade={action('onClickUpgrade')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
     />
   ))
   .add('loading', () => (
@@ -78,6 +79,7 @@ storiesOf('PastRemindersPosts', module)
       onClickSwitchPlan={action('onClickSwitchPlan')}
       onComposerCreateSuccess={action('onComposerCreateSuccess')}
       onClickUpgrade={action('onClickUpgrade')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
       isBusinessAccount
       isManager
     />
@@ -96,6 +98,7 @@ storiesOf('PastRemindersPosts', module)
       onClickSwitchPlan={action('onClickSwitchPlan')}
       onComposerCreateSuccess={action('onComposerCreateSuccess')}
       onClickUpgrade={action('onClickUpgrade')}
+      fetchCampaignsIfNeeded={action('fetchCampaignsIfNeeded')}
       isBusinessAccount
       isManager={false}
     />

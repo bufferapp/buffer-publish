@@ -1,7 +1,10 @@
 import styled from 'styled-components';
 import { grayDark } from '@bufferapp/ui/style/colors';
-import { Text } from '@bufferapp/ui';
 import { fontWeightMedium } from '@bufferapp/ui/style/fonts';
+import {
+  TextWithSkeleton,
+  skeletonStyles,
+} from '@bufferapp/publish-shared-components';
 
 export const Container = styled.header`
   display: flex;
@@ -9,7 +12,7 @@ export const Container = styled.header`
   margin: 14px 0px 30px;
 `;
 
-export const Name = styled(Text)`
+export const Name = styled(TextWithSkeleton)`
   flex: 1;
   margin: 0;
 `;
@@ -20,6 +23,7 @@ export const Color = styled.div`
   border-radius: 50%;
   background-color: ${props => props.color};
   margin-right: 10px;
+  ${props => props.displaySkeleton && skeletonStyles}
 `;
 
 export const LastUpdated = styled.span`

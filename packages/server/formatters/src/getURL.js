@@ -97,10 +97,10 @@ module.exports = {
     }
     return 'https://publish.buffer.com';
   },
-  getAnalyzeReportUrl: () => {
+  getAnalyzeReportUrl: campaignId => {
     if (window.location.hostname === 'publish.local.buffer.com') {
-      return 'https://analyze.local.buffer.com/reports';
+      return `https://analyze.local.buffer.com/campaigns/${campaignId}`;
     }
-    return 'https://analyze.buffer.com/reports';
+    return `https://analyze.buffer.com/campaigns/${campaignId}`;
   },
 };

@@ -10,17 +10,61 @@ describe('middleware', () => {
     expect(middleware).toBeDefined();
   });
 
-  it('fetches getCampaignsList when FETCH_CAMPAIGNS', () => {
+  it('fetches getCampaignsList if campaign list state is null', () => {
     const store = {
       dispatch: jest.fn(),
-      getState: () => ({ campaignsList: initialState }),
+      getState: () => ({
+        campaignsList: initialState,
+        appSidebar: { user: { features: ['campaigns'] } },
+      }),
     };
     const action = {
-      type: actionTypes.FETCH_CAMPAIGNS,
+      type: actionTypes.FETCH_CAMPAIGNS_IF_NEEDED,
     };
     middleware(store)(next)(action);
     expect(next).toBeCalledWith(action);
     expect(store.dispatch).toBeCalledWith(
+      dataFetchActions.fetch({
+        name: 'getCampaignsList',
+        args: {},
+      })
+    );
+  });
+
+  it('does not fetch campaigns if user has no campaign feature', () => {
+    const store = {
+      dispatch: jest.fn(),
+      getState: () => ({
+        campaignsList: { initialState },
+        appSidebar: { user: { features: [] } },
+      }),
+    };
+    const action = {
+      type: actionTypes.FETCH_CAMPAIGNS_IF_NEEDED,
+    };
+    middleware(store)(next)(action);
+    expect(next).toBeCalledWith(action);
+    expect(store.dispatch).not.toBeCalledWith(
+      dataFetchActions.fetch({
+        name: 'getCampaignsList',
+        args: {},
+      })
+    );
+  });
+  it('does not fetch campaigns if campaigns is already in campaignsList state', () => {
+    const store = {
+      dispatch: jest.fn(),
+      getState: () => ({
+        campaignsList: { ...initialState, campaigns: [] },
+        appSidebar: { user: { features: ['campaigns'] } },
+      }),
+    };
+    const action = {
+      type: actionTypes.FETCH_CAMPAIGNS_IF_NEEDED,
+    };
+    middleware(store)(next)(action);
+    expect(next).toBeCalledWith(action);
+    expect(store.dispatch).not.toBeCalledWith(
       dataFetchActions.fetch({
         name: 'getCampaignsList',
         args: {},

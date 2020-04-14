@@ -32,10 +32,7 @@ const PagesWithSidebar = () => {
             render={props => <CampaignForm {...props} editMode />}
           />
           <Route path={campaignScheduled.route} component={ViewCampaign} />
-          <Route
-            path={campaignSent.route}
-            render={props => <ViewCampaign {...props} sentView />}
-          />
+          <Route path={campaignSent.route} component={ViewCampaign} />
           <Route path={campaignsPage.route} component={ListCampaigns} />
         </Switch>
       </ScrollableContainer>

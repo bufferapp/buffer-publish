@@ -1,9 +1,6 @@
 import { actionTypes as dataFetchActionTypes } from '@bufferapp/async-data-fetch';
 import { actionTypes as profileSidebarActionTypes } from '@bufferapp/publish-profile-sidebar/reducer';
-import {
-  actionTypes as queueActionTypes,
-  sortCampaignsByUpdatedAt,
-} from '@bufferapp/publish-queue/reducer';
+import { actionTypes as queueActionTypes } from '@bufferapp/publish-queue/reducer';
 import keyWrapper from '@bufferapp/keywrapper';
 import { header, subHeader } from './components/PastRemindersPosts/postData';
 
@@ -32,7 +29,6 @@ export const initialState = {
   environment: 'production',
   viewType: 'posts',
   showStoryPreview: false,
-  campaigns: [],
 };
 
 export const profileInitialState = {
@@ -258,11 +254,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         showStoryPreview: false,
-      };
-    case `getCampaignsList_${dataFetchActionTypes.FETCH_SUCCESS}`:
-      return {
-        ...state,
-        campaigns: sortCampaignsByUpdatedAt(action.result),
       };
     default:
       return state;

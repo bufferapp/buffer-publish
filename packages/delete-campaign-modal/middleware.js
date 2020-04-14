@@ -2,7 +2,7 @@ import {
   actions as dataFetchActions,
   actionTypes as dataFetchActionTypes,
 } from '@bufferapp/async-data-fetch';
-import { isCampaignsRoute, campaignsPage } from '@bufferapp/publish-routes';
+import { getMatch, campaignsPage } from '@bufferapp/publish-routes';
 import { actions as analyticsActions } from '@bufferapp/publish-analytics-middleware';
 import { actions as notificationActions } from '@bufferapp/notifications';
 import { actions as modalActions } from '@bufferapp/publish-modals/reducer';
@@ -41,7 +41,12 @@ export default ({ dispatch, getState }) => next => action => {
         organizationId,
       };
       dispatch(analyticsActions.trackEvent('Campaign Deleted', metadata));
-      if (!isCampaignsRoute({ path: state.router.location.pathname })) {
+      const inCampaignsPage =
+        getMatch({
+          pathname: state.router?.location?.pathname,
+          route: campaignsPage.route,
+        })?.isExact === true;
+      if (!inCampaignsPage) {
         dispatch(campaignsPage.goTo());
       }
       break;

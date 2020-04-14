@@ -1,9 +1,6 @@
 import { actionTypes as dataFetchActionTypes } from '@bufferapp/async-data-fetch';
 import { actionTypes as profileSidebarActionTypes } from '@bufferapp/publish-profile-sidebar/reducer';
-import {
-  actionTypes as queueActionTypes,
-  sortCampaignsByUpdatedAt,
-} from '@bufferapp/publish-queue/reducer';
+import { actionTypes as queueActionTypes } from '@bufferapp/publish-queue/reducer';
 import keyWrapper from '@bufferapp/keywrapper';
 
 export const actionTypes = keyWrapper('SENT', {
@@ -23,7 +20,6 @@ export const initialState = {
   editMode: false,
   editingPostId: '',
   environment: 'production',
-  campaigns: [],
 };
 
 export const profileInitialState = {
@@ -221,11 +217,6 @@ export default (state = initialState, action) => {
         ...state,
         showComposer: false,
         editMode: false,
-      };
-    case `getCampaignsList_${dataFetchActionTypes.FETCH_SUCCESS}`:
-      return {
-        ...state,
-        campaigns: sortCampaignsByUpdatedAt(action.result),
       };
     default:
       return state;

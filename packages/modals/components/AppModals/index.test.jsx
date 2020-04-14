@@ -76,12 +76,4 @@ describe('Modals', () => {
     );
     expect(rendered).toMatchSnapshot();
   });
-  it('renders welcome b4b trial modal', () => {
-    const visibleModals = { ...initialState, showWelcomeB4BTrialModal: true };
-    const renderer = new ShallowRenderer();
-    const rendered = renderer.render(
-      <AppModals {...visibleModals} />,
-    );
-    expect(rendered).toMatchSnapshot();
-  });
 });

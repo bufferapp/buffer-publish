@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import { Text, Button } from '@bufferapp/ui';
+import { Text } from '@bufferapp/ui';
 import ArrowRightIcon from '@bufferapp/ui/Icon/Icons/ArrowRight';
 import ClockIcon from '@bufferapp/ui/Icon/Icons/Clock';
 import ListIcon from '@bufferapp/ui/Icon/Icons/List';
 import CalendarIcon from '@bufferapp/ui/Icon/Icons/Calendar';
+import {
+  ButtonWithSkeleton,
+  TextWithSkeleton,
+} from '@bufferapp/publish-shared-components';
 
 import {
   ButtonWrapper,
@@ -28,51 +32,77 @@ const Header = ({
   onDeleteCampaignClick,
   onEditCampaignClick,
   goToAnalyzeReport,
+  isLoading,
 }) => (
-  <Container>
+  <Container aria-label="Campaign Details">
     <CampaignDetails>
       <Title>
-        <Color color={campaignDetails.color} />
-        <Name type="h2">{campaignDetails.name}</Name>
+        <Color color={campaignDetails.color} displaySkeleton={isLoading} />
+        <Name
+          type="h2"
+          displaySkeleton={isLoading}
+          aria-label={isLoading ? 'Loading' : null}
+          aria-live="polite"
+          aria-busy={isLoading}
+        >
+          {campaignDetails.name || translations.loadingCampaignName}
+        </Name>
       </Title>
       <SubText>
-        <Details>
-          {campaignDetails.dateRange && (
-            <Group>
-              <Icon>
-                <CalendarIcon size="medium" />
-              </Icon>
-              <Text type="p">{campaignDetails.dateRange}</Text>
-            </Group>
-          )}
-          <Group>
-            <Icon>
-              <ClockIcon size="medium" />
-            </Icon>
+        {isLoading && (
+          <TextWithSkeleton
+            type="p"
+            displaySkeleton={isLoading}
+            aria-label={isLoading ? 'Loading' : null}
+            aria-live="polite"
+            aria-busy={isLoading}
+          >
+            {translations.loadingCampaignDetails}
+          </TextWithSkeleton>
+        )}
+        {!isLoading && (
+          <Fragment>
+            <Details>
+              {campaignDetails.dateRange && (
+                <Group>
+                  <Icon>
+                    <CalendarIcon size="medium" />
+                  </Icon>
+                  <Text type="p">{campaignDetails.dateRange}</Text>
+                </Group>
+              )}
+              <Group>
+                <Icon>
+                  <ClockIcon size="medium" />
+                </Icon>
+                <Text type="p">
+                  {campaignDetails.scheduled} {translations.scheduled}
+                </Text>
+              </Group>
+              <Group>
+                <Icon>
+                  <ListIcon size="medium" />
+                </Icon>
+                <Text type="p">
+                  {campaignDetails.sent} {translations.sent}
+                </Text>
+              </Group>
+            </Details>
             <Text type="p">
-              {campaignDetails.scheduled} {translations.scheduled}
+              <LastUpdated>{campaignDetails.lastUpdated}</LastUpdated>
             </Text>
-          </Group>
-          <Group>
-            <Icon>
-              <ListIcon size="medium" />
-            </Icon>
-            <Text type="p">
-              {campaignDetails.sent} {translations.sent}
-            </Text>
-          </Group>
-        </Details>
-        <Text type="p">
-          <LastUpdated>{campaignDetails.lastUpdated}</LastUpdated>
-        </Text>
+          </Fragment>
+        )}
       </SubText>
     </CampaignDetails>
     <ButtonWrapper>
-      <Button
+      <ButtonWithSkeleton
         onClick={onCreatePostClick}
         type="secondary"
         isSplit
         label={translations.createPost}
+        disabled={isLoading}
+        displaySkeleton={isLoading}
         onSelectClick={selectedItem => {
           if (typeof selectedItem.selectedItemClick !== 'undefined') {
             selectedItem.selectedItemClick();
@@ -97,14 +127,15 @@ const Header = ({
         ]}
       />
       {!hideAnalyzeReport && (
-        <Button
+        <ButtonWithSkeleton
           type="primary"
           icon={<ArrowRightIcon />}
           iconEnd
           onClick={() => {
-            goToAnalyzeReport();
+            goToAnalyzeReport(campaignDetails);
           }}
-          disabled={!campaignDetails.dateRange}
+          displaySkeleton={isLoading}
+          disabled={!campaignDetails.dateRange || isLoading}
           label={translations.viewReport}
         />
       )}
@@ -120,6 +151,8 @@ Header.propTypes = {
     deleteCampaign: PropTypes.string,
     sent: PropTypes.string,
     scheduled: PropTypes.string,
+    loadingCampaignName: PropTypes.string,
+    loadingCampaignDetails: PropTypes.string,
   }).isRequired,
   campaignDetails: PropTypes.shape({
     id: PropTypes.string,
@@ -135,6 +168,11 @@ Header.propTypes = {
   onDeleteCampaignClick: PropTypes.func.isRequired,
   onEditCampaignClick: PropTypes.func.isRequired,
   goToAnalyzeReport: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool,
+};
+
+Header.defaultProps = {
+  isLoading: false,
 };
 
 export default Header;
