@@ -36,7 +36,7 @@ export default (state = initialState, action) => {
     }
     case campaignActionTypes.PUSHER_CAMPAIGN_CREATED: {
       const parsedCampaign = campaignParser(action.campaign);
-      const updatedCampaigns = [...state.campaigns, parsedCampaign];
+      const updatedCampaigns = [...(state.campaigns || []), parsedCampaign];
       return {
         ...state,
         campaigns: sortCampaignsByUpdatedAt(updatedCampaigns),

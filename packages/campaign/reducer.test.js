@@ -193,13 +193,11 @@ describe('reducer', () => {
   it('handles POST_IMAGE_CLICKED action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
-      campaignPosts: [
-        { id: 'id1', content: { isLightboxOpen: true, currentImage: 0 } },
-      ],
+      campaignPosts: [{ id: 'id1', isLightboxOpen: true, currentImage: 0 }],
     };
     const action = {
       type: actionTypes.POST_IMAGE_CLICKED,
@@ -213,11 +211,11 @@ describe('reducer', () => {
   it('handles POST_IMAGE_CLOSED action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: { isLightboxOpen: false } }],
+      campaignPosts: [{ id: 'id1', isLightboxOpen: false }],
     };
     const action = {
       type: actionTypes.POST_IMAGE_CLOSED,
@@ -231,11 +229,11 @@ describe('reducer', () => {
   it('handles POST_IMAGE_CLICKED_NEXT action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: { currentImage: 2 } }],
+      campaignPosts: [{ id: 'id1', currentImage: 2 }],
     };
     const action = {
       type: actionTypes.POST_IMAGE_CLICKED_NEXT,
@@ -250,11 +248,11 @@ describe('reducer', () => {
   it('handles POST_IMAGE_CLICKED_PREV action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: { currentImage: 1 } }],
+      campaignPosts: [{ id: 'id1', currentImage: 1 }],
     };
     const action = {
       type: actionTypes.POST_IMAGE_CLICKED_PREV,
@@ -269,12 +267,12 @@ describe('reducer', () => {
   it('handles POST_CONFIRMED_DELETE action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
       campaignPosts: [
-        { id: 'id1', content: { isConfirmingDelete: false, isDeleting: true } },
+        { id: 'id1', isConfirmingDelete: false, isDeleting: true },
       ],
     };
     const action = {
@@ -289,11 +287,11 @@ describe('reducer', () => {
   it('handles deletePost failed action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: { isDeleting: false } }],
+      campaignPosts: [{ id: 'id1', isDeleting: false }],
     };
     const action = {
       type: `deletePost_${dataFetchActionTypes.FETCH_FAIL}`,
@@ -307,11 +305,11 @@ describe('reducer', () => {
   it('handles POST_SHARE_NOW action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: { isWorking: true } }],
+      campaignPosts: [{ id: 'id1', isWorking: true }],
     };
     const action = {
       type: actionTypes.POST_SHARE_NOW,
@@ -325,11 +323,11 @@ describe('reducer', () => {
   it('handles sharePostNow failed action', () => {
     const stateBefore = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: {} }],
+      campaignPosts: [{ id: 'id1' }],
     };
     const stateAfter = {
       ...initialState,
-      campaignPosts: [{ id: 'id1', content: { isWorking: false } }],
+      campaignPosts: [{ id: 'id1', isWorking: false }],
     };
     const action = {
       type: `sharePostNow_${dataFetchActionTypes.FETCH_FAIL}`,
@@ -343,30 +341,57 @@ describe('reducer', () => {
   it('handles POST_CREATED action if post created belongs to the current campaign', () => {
     const stateBefore = {
       ...initialState,
-      campaign: { id: 'campaignId', scheduled: 0, sent: 0 },
-      campaignPosts: [
-        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
-      ],
+      campaign: {
+        id: 'campaignId',
+        scheduled: 0,
+        sent: 0,
+        channels: [{ channelId: 'profileId1', isManager: true }],
+      },
+      campaignPosts: [{ id: 'id1', campaignDetails: { id: 'campaignId' } }],
       page: 'scheduled',
     };
     const stateAfter = {
       ...initialState,
-      campaign: { id: 'campaignId', scheduled: 1, sent: 0 },
+      campaign: {
+        id: 'campaignId',
+        scheduled: 1,
+        sent: 0,
+        channels: [{ channelId: 'profileId1', isManager: true }],
+      },
       campaignPosts: [
-        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
+        { id: 'id1', campaignDetails: { id: 'campaignId' } },
         {
           id: 'id2',
-          _id: 'id2',
           dueAt: undefined,
-          type: undefined,
-          content: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+          campaignDetails: { id: 'campaignId' },
+          profileId: 'profileId1',
+          headerDetails: {
+            channel: {
+              avatarUrl: undefined,
+              handle: undefined,
+              type: undefined,
+            },
+            avatarUrl: undefined,
+            createdAt: undefined,
+            creatorName: undefined,
+            hideCreatorDetails: undefined,
+          },
+          isBusinessAccount: undefined,
+          isManager: true,
+          profileService: undefined,
+          profileServiceType: undefined,
+          hasPushNotifications: undefined,
         },
       ],
       page: 'scheduled',
     };
     const action = {
       type: queueActionTypes.POST_CREATED,
-      post: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+      post: {
+        id: 'id2',
+        campaignDetails: { id: 'campaignId' },
+        profileId: 'profileId1',
+      },
     };
     deepFreeze(stateBefore);
     deepFreeze(action);
@@ -377,17 +402,13 @@ describe('reducer', () => {
     const stateBefore = {
       ...initialState,
       campaign: { id: 'campaignId', scheduled: 0, sent: 0 },
-      campaignPosts: [
-        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
-      ],
+      campaignPosts: [{ id: 'id1', campaignDetails: { id: 'campaignId' } }],
       page: 'scheduled',
     };
     const stateAfter = {
       ...initialState,
       campaign: { id: 'campaignId', scheduled: 0, sent: 0 },
-      campaignPosts: [
-        { id: 'id1', content: { campaignDetails: { id: 'campaignId' } } },
-      ],
+      campaignPosts: [{ id: 'id1', campaignDetails: { id: 'campaignId' } }],
       page: 'scheduled',
     };
     const action = {
@@ -402,33 +423,60 @@ describe('reducer', () => {
   it('handles POST_UPDATED action if on scheduled tab', () => {
     const stateBefore = {
       ...initialState,
-      campaign: { id: 'campaignId' },
+      campaign: {
+        id: 'campaignId',
+        channels: [{ channelId: 'profileId1', isManager: true }],
+      },
       campaignPosts: [
         {
           id: 'id1',
-          content: { text: 'Old Post', campaignDetails: { id: 'campaignId' } },
+          text: 'Old Post',
+          campaignDetails: { id: 'campaignId' },
         },
       ],
       page: 'scheduled',
     };
     const stateAfter = {
       ...initialState,
-      campaign: { id: 'campaignId' },
+      campaign: {
+        id: 'campaignId',
+        channels: [{ channelId: 'profileId1', isManager: true }],
+      },
       campaignPosts: [
         {
           id: 'id1',
-          content: {
-            id: 'id1',
-            text: 'Post',
-            campaignDetails: { id: 'campaignId' },
+          text: 'Post',
+          dueAt: undefined,
+          campaignDetails: { id: 'campaignId' },
+          profileId: 'profileId1',
+          headerDetails: {
+            channel: {
+              avatarUrl: undefined,
+              handle: undefined,
+              type: undefined,
+            },
+            avatarUrl: undefined,
+            createdAt: undefined,
+            creatorName: undefined,
+            hideCreatorDetails: undefined,
           },
+          isBusinessAccount: undefined,
+          isManager: true,
+          profileService: undefined,
+          profileServiceType: undefined,
+          hasPushNotifications: undefined,
         },
       ],
       page: 'scheduled',
     };
     const action = {
       type: queueActionTypes.POST_UPDATED,
-      post: { id: 'id1', text: 'Post', campaignDetails: { id: 'campaignId' } },
+      post: {
+        id: 'id1',
+        text: 'Post',
+        campaignDetails: { id: 'campaignId' },
+        profileId: 'profileId1',
+      },
     };
     deepFreeze(stateBefore);
     deepFreeze(action);
@@ -488,28 +536,57 @@ describe('reducer', () => {
   it('handles POST_SENT action if on sent tab', () => {
     const stateBefore = {
       ...initialState,
-      campaign: { id: 'campaignId', scheduled: 1, sent: 0 },
+      campaign: {
+        id: 'campaignId',
+        scheduled: 1,
+        sent: 0,
+        channels: [{ channelId: 'profileId1', isManager: true }],
+      },
       campaignPosts: [{ id: 'id1', campaignDetails: { id: 'campaignId' } }],
       page: 'sent',
     };
     const stateAfter = {
       ...initialState,
-      campaign: { id: 'campaignId', scheduled: 0, sent: 1 },
+      campaign: {
+        id: 'campaignId',
+        scheduled: 0,
+        sent: 1,
+        channels: [{ channelId: 'profileId1', isManager: true }],
+      },
       campaignPosts: [
         { id: 'id1', campaignDetails: { id: 'campaignId' } },
         {
           id: 'id2',
-          _id: 'id2',
           dueAt: undefined,
-          type: undefined,
-          content: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+          campaignDetails: { id: 'campaignId' },
+          profileId: 'profileId1',
+          headerDetails: {
+            channel: {
+              avatarUrl: undefined,
+              handle: undefined,
+              type: undefined,
+            },
+            avatarUrl: undefined,
+            createdAt: undefined,
+            creatorName: undefined,
+            hideCreatorDetails: undefined,
+          },
+          isBusinessAccount: undefined,
+          isManager: true,
+          profileService: undefined,
+          profileServiceType: undefined,
+          hasPushNotifications: undefined,
         },
       ],
       page: 'sent',
     };
     const action = {
       type: queueActionTypes.POST_SENT,
-      post: { id: 'id2', campaignDetails: { id: 'campaignId' } },
+      post: {
+        id: 'id2',
+        campaignDetails: { id: 'campaignId' },
+        profileId: 'profileId1',
+      },
     };
     deepFreeze(stateBefore);
     deepFreeze(action);

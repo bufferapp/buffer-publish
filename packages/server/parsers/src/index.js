@@ -4,7 +4,7 @@ const featureParser = require('./featureParser');
 const userParser = require('./userParser');
 const linkParsing = require('./linkParsing');
 const storyGroupParser = require('./storyGroupParser');
-const campaignParser = require('./campaignParser');
+const { campaignParser, campaignItemParser } = require('./campaignParser');
 
 module.exports = {
   postParser,
@@ -14,4 +14,5 @@ module.exports = {
   linkParsing,
   storyGroupParser,
   campaignParser,
+  campaignItemParser,
 };

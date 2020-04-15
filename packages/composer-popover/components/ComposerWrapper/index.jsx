@@ -64,7 +64,7 @@ export default connect(
 
           options = {
             editMode: state.campaign.editMode,
-            post: post?.content || {},
+            post: post || {},
             initialCampaignId: state.campaign.campaign?.id || null,
           };
           break;
@@ -85,10 +85,12 @@ export default connect(
             editMode: state.pastReminders.editMode,
             sentPost: true,
             post: {
-              ...state.pastReminders.byProfileId[selectedProfileId].posts[postId],
+              ...state.pastReminders.byProfileId[selectedProfileId].posts[
+                postId
+              ],
               scheduled_at: null,
               pinned: null,
-            }, 
+            },
           };
           break;
         default:

@@ -2,7 +2,11 @@ import keyWrapper from '@bufferapp/keywrapper';
 import { LOCATION_CHANGE } from 'connected-react-router';
 import { actionTypes as dataFetchActionTypes } from '@bufferapp/async-data-fetch';
 import { actionTypes as queueActionTypes } from '@bufferapp/publish-queue/reducer';
-import { campaignParser } from '@bufferapp/publish-server/parsers/src';
+import { actionTypes as draftActionTypes } from '@bufferapp/publish-drafts/reducer';
+import {
+  campaignParser,
+  campaignItemParser,
+} from '@bufferapp/publish-server/parsers/src';
 import {
   getParams,
   campaignScheduled,
@@ -41,13 +45,9 @@ export const initialState = {
 const postReducer = ({ campaignPosts, action, newState }) => {
   return campaignPosts.map(campaign => {
     if (campaign.id === action.updateId) {
-      const { content, ...rest } = campaign;
       return {
-        ...rest,
-        content: {
-          ...content,
-          ...newState,
-        },
+        ...campaign,
+        ...newState,
       };
     }
     return campaign;
@@ -135,13 +135,15 @@ export default (state = initialState, action) => {
       ) {
         const newCampaignPosts = state.campaignPosts.map(post => {
           if (post.id === action.post.id) {
-            const campaignPost = {
-              ...post,
-              dueAt: action.post.due_at || post.dueAt,
-              type: action.post.type || post.type,
-              content: action.post,
-            };
-            return campaignPost;
+            const parsedItem = campaignItemParser(
+              {
+                content: action.post,
+                type: 'update',
+              },
+              state.campaign.channels,
+              true
+            );
+            return parsedItem;
           }
           return post;
         });
@@ -152,7 +154,8 @@ export default (state = initialState, action) => {
       }
       return state;
     }
-    case queueActionTypes.POST_CREATED: {
+    case queueActionTypes.POST_CREATED:
+    case draftActionTypes.DRAFT_APPROVED: {
       const inScheduledPage = state.page === 'scheduled';
       const postCampaignId = action?.post?.campaignDetails?.id;
       if (
@@ -160,20 +163,21 @@ export default (state = initialState, action) => {
         typeof postCampaignId === 'string' &&
         inScheduledPage
       ) {
-        const campaignPost = {
-          _id: action.post.id,
-          id: action.post.id,
-          dueAt: action.post.due_at,
-          type: action.post.type,
-          content: action.post,
-        };
+        const parsedItem = campaignItemParser(
+          {
+            content: action.post || action.draft,
+            type: 'update',
+          },
+          state.campaign.channels,
+          true
+        );
         return {
           ...state,
           campaign: {
             ...state.campaign,
             scheduled: state.campaign.scheduled + 1,
           },
-          campaignPosts: [...state.campaignPosts, campaignPost],
+          campaignPosts: [...state.campaignPosts, parsedItem],
         };
       }
       return state;
@@ -212,16 +216,17 @@ export default (state = initialState, action) => {
         const campaignPostsFiltered = state.campaignPosts.filter(
           post => post.id !== action.post.id
         );
-        const campaignPost = {
-          _id: action.post.id,
-          id: action.post.id,
-          dueAt: action.post.due_at,
-          type: action.post.type,
-          content: action.post,
-        };
+        const parsedItem = campaignItemParser(
+          {
+            content: action.post,
+            type: 'update',
+          },
+          state.campaign.channels,
+          true
+        );
         const newCampaignPosts = () => {
           if (inScheduledPage) return campaignPostsFiltered;
-          if (inSentPage) return [...state.campaignPosts, campaignPost];
+          if (inSentPage) return [...state.campaignPosts, parsedItem];
         };
         return {
           ...state,

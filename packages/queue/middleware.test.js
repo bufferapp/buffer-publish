@@ -315,25 +315,16 @@ describe('middleware', () => {
         },
       },
     };
-    const sent = {
-      byProfileId: {
-        profileId1: {
-          total: 0,
-        },
-      },
-    };
     const store = {
       dispatch: jest.fn(),
       getState: () => ({
         queue,
-        sent,
       }),
     };
 
     it('should update count when a post was created', () => {
       const newCounts = {
         pending: 10,
-        sent: 0,
       };
       const action = {
         type: actionTypes.POST_CREATED,
@@ -349,7 +340,6 @@ describe('middleware', () => {
     it('should update count when a post was deleted', () => {
       const newCounts = {
         pending: 8,
-        sent: 0,
       };
       const action = {
         type: actionTypes.POST_DELETED,
@@ -365,7 +355,6 @@ describe('middleware', () => {
     it('should update count when a post was sent', () => {
       const newCounts = {
         pending: 8,
-        sent: 1,
       };
       const action = {
         type: actionTypes.POST_SENT,

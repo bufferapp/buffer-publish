@@ -126,12 +126,13 @@ const postsReducer = (state, action) => {
   }
 };
 
-const hasBitlyPosts = posts => Object.values(posts).some(
-  post =>
-    post.text.indexOf('https://buff.ly/') >= 0 ||
-    post.text.indexOf('https://bit.ly/') >= 0 ||
-    post.text.indexOf('https://j.mp/') >= 0
-);
+const hasBitlyPosts = posts =>
+  Object.values(posts).some(
+    post =>
+      post.text.indexOf('https://buff.ly/') >= 0 ||
+      post.text.indexOf('https://bit.ly/') >= 0 ||
+      post.text.indexOf('https://j.mp/') >= 0
+  );
 
 const profileReducer = (state = profileInitialState, action) => {
   switch (action.type) {
@@ -162,20 +163,18 @@ const profileReducer = (state = profileInitialState, action) => {
         ...state,
         loading: false,
       };
-    case queueActionTypes.POST_COUNT_UPDATED:
-      return {
-        ...state,
-        total: action.counts.sent,
-      };
     case queueActionTypes.POST_SENT:
     case actionTypes.POST_IMAGE_CLICKED:
     case actionTypes.POST_IMAGE_CLOSED:
     case actionTypes.POST_IMAGE_CLICKED_NEXT:
-    case actionTypes.POST_IMAGE_CLICKED_PREV:
+    case actionTypes.POST_IMAGE_CLICKED_PREV: {
+      const updateTotal = action.type === queueActionTypes.POST_SENT;
       return {
         ...state,
+        total: updateTotal ? state.total + 1 : state.total,
         posts: postsReducer(state.posts, action),
       };
+    }
     default:
       return state;
   }

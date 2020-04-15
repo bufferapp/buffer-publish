@@ -508,7 +508,6 @@ export const formatPostLists = ({
    */
   let lastHeader = null;
   return orderedPosts.reduce((finalList, post, index) => {
-    if (post.content) post = post.content;
     const hasCommentEnabled = postHasCommentEnabled(post);
     if (lastHeader !== post.day) {
       // post.day is coming as a string of dayOfWeek, day and Month (e.g Tomorrow 3rd March)

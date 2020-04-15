@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { QueueItems, Tabs, Tab } from '@bufferapp/publish-shared-components';
 import ComposerPopover from '@bufferapp/publish-composer-popover';
-import TabTag from '@bufferapp/publish-tabs/components/TabTag';
 import { getURL } from '@bufferapp/publish-server/formatters/src';
 import Header from './Header';
 import SkeletonPosts from './SkeletonPosts';
@@ -75,7 +74,6 @@ const ViewCampaign = ({
           <Tab tabId="scheduled">{translations.scheduled}</Tab>
           <Tab tabId="sent">
             {translations.sent}
-            <TabTag type="new" labelName="Coming Soon" />
           </Tab>
         </Tabs>
       </nav>

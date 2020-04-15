@@ -171,8 +171,7 @@ describe('RPC | Get campaign', () => {
       expect(response.dateRange).not.toBeUndefined();
       expect(response.items).not.toBeNull();
       response.items.forEach(item => {
-        expect(item.content).not.toBeUndefined();
-        expect(item.content.text).not.toBeUndefined();
+        expect(item.text).not.toBeUndefined();
       });
     });
   });
@@ -187,13 +186,6 @@ describe('RPC | Get campaign', () => {
       expect(response.dateRange).not.toBeUndefined();
       expect(response.lastUpdated).toContain('Updated ');
       expect(response.items.length).toBe(2);
-      response.items.forEach(item => {
-        itemParams.forEach(p => {
-          const itemDetail = item[p];
-          expect(itemDetail).not.toBeUndefined();
-        });
-        expect(item.content).toBeUndefined();
-      });
     });
   });
 
@@ -228,14 +220,6 @@ describe('RPC | Get campaign', () => {
       expect(response.dateRange).not.toBeUndefined();
       expect(response.lastUpdated).toContain('Updated ');
       expect(response.items.length).toBe(1);
-      response.items.forEach(item => {
-        const sentItemParams = [...itemParams, 'sentAt', 'servicePostId'];
-        sentItemParams.forEach(p => {
-          const itemDetail = item[p];
-          expect(itemDetail).not.toBeUndefined();
-          expect(item.content).toBeUndefined();
-        });
-      });
     });
   });
 

@@ -44,74 +44,63 @@ const parseDateRange = (startDate, endDate) => {
   return formatDateRange({ momentStart, startFormat, momentEnd, endFormat });
 };
 
-const parseItem = item => {
-  const itemContent = {};
-  if (item.content) {
-    // We'd need to add the other parsers here (storyGroups)
-    if (item.type === 'update') {
-      itemContent.content = postParser(item.content);
-      const {
+const campaignItemParser = (item, channels, alreadyParsed) => {
+  let itemContent = null;
+  let headerDetails = null;
+  let filteredChannel = null;
+
+  if (item.content && item.type === 'update') {
+    itemContent = alreadyParsed ? item.content : postParser(item.content);
+    // Get channel for item
+    filteredChannel =
+      channels &&
+      itemContent &&
+      channels.filter(
+        channel => channel.channelId === itemContent.profileId
+      )[0];
+
+    const { createdAt, profileTimezone, user, isSent } = itemContent;
+    // String with the date of the update creation
+    const createdAtString =
+      createdAt &&
+      getDateString(createdAt, profileTimezone, {
         createdAt,
-        profileTimezone,
-        profile_service,
-        user,
-        isSent,
-      } = itemContent.content;
-      // String with the date of the update creation
-      const createdAtString =
-        createdAt &&
-        getDateString(createdAt, profileTimezone, {
-          createdAt,
-          twentyFourHourTime: false,
-        });
-      // Add isManager to each element
-      itemContent.content.isManager = item.is_manager;
-      // Header details to be used in the CardHeader
-      itemContent.content.headerDetails = {
-        channel: {
-          avatarUrl: item.service_avatar,
-          handle: item.service_username,
-          type: profile_service,
-        },
-        creatorName: user && user.name,
-        avatarUrl: user && user.avatar,
-        createdAt: createdAtString,
-        hideCreatorDetails: isSent,
-      };
-    }
-  }
-
-  let sentAt = null;
-  if (item.sent_at) {
-    sentAt = { sentAt: item.sent_at };
-  }
-
-  let servicePostId = null;
-  if (item.service_post_id) {
-    servicePostId = { servicePostId: item.service_post_id };
+        twentyFourHourTime: false,
+      });
+    // Header details to be used in the CardHeader
+    headerDetails = {
+      channel: {
+        avatarUrl: filteredChannel && filteredChannel.serviceAvatar,
+        handle: filteredChannel && filteredChannel.serviceUsername,
+        type: filteredChannel && filteredChannel.serviceType,
+      },
+      creatorName: user && user.name,
+      avatarUrl: user && user.avatar,
+      createdAt: createdAtString,
+      hideCreatorDetails: isSent,
+    };
   }
 
   const result = {
-    id: item.id,
-    _id: item.id,
-    dueAt: item.due_at,
-    type: item.type,
-    serviceType: item.service_type,
-    serviceId: item.service_id,
-    channelType: item.channel_type,
-    ...sentAt,
-    ...servicePostId,
     ...itemContent,
+    isBusinessAccount: filteredChannel && filteredChannel.business,
+    hasPushNotifications:
+      filteredChannel && filteredChannel.hasPushNotifications,
+    profileService: filteredChannel && filteredChannel.serviceType,
+    profileServiceType: filteredChannel && filteredChannel.channelType,
+    isManager: filteredChannel && filteredChannel.isManager,
+    dueAt: itemContent && itemContent.due_at,
+    headerDetails,
   };
 
   return result;
 };
 
-const parseCampaignItems = items => {
+const parseCampaignItems = (items, channels) => {
   if (!items) return null;
 
   return items.map(item => {
-    return parseItem(item);
+    return campaignItemParser(item, channels);
   });
 };
 
@@ -123,11 +112,18 @@ const parseChannels = channels => {
       serviceId: channel.service_id,
       serviceType: channel.service_type,
       channelType: channel.channel_type,
+      channelId: channel.channel_id,
+      serviceAvatar: channel.service_avatar,
+      serviceUsername: channel.service_username,
+      isManager: channel.is_manager,
+      business: channel.business,
+      hasPushNotifications: channel.has_push_notifications,
     };
   });
 };
 
-module.exports = campaign => {
+const campaignParser = campaign => {
+  const parsedChannels = parseChannels(campaign.channels);
   return {
     _id: campaign._id,
     id: campaign._id,
@@ -142,7 +138,9 @@ module.exports = campaign => {
     dateRange: parseDateRange(campaign.start_date, campaign.end_date),
     sent: campaign.sent,
     scheduled: campaign.scheduled,
-    channels: parseChannels(campaign.channels),
-    items: parseCampaignItems(campaign.items),
+    channels: parsedChannels,
+    items: parseCampaignItems(campaign.items, parsedChannels),
   };
 };
+
+module.exports = { campaignParser, campaignItemParser };

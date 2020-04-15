@@ -213,18 +213,16 @@ export default ({ dispatch, getState }) => next => action => {
       const state = getState();
       const { profileId } = action;
       const currentCounts = {
-        pending: state.queue.byProfileId[profileId].total,
-        sent: state.sent.byProfileId[profileId].total,
+        pending: state.queue.byProfileId[profileId]?.total || 0,
       };
       const changeMap = {
-        [actionTypes.POST_CREATED]: { pending: 1, sent: 0 },
-        [actionTypes.POST_DELETED]: { pending: -1, sent: 0 },
-        [actionTypes.POST_SENT]: { pending: -1, sent: 1 },
+        [actionTypes.POST_CREATED]: { pending: 1 },
+        [actionTypes.POST_DELETED]: { pending: -1 },
+        [actionTypes.POST_SENT]: { pending: -1 },
       };
       const countChanges = changeMap[action.type];
       const newCounts = {
         pending: currentCounts.pending + countChanges.pending,
-        sent: currentCounts.sent + countChanges.sent,
       };
       dispatch(actions.postCountUpdated(profileId, newCounts));
       /**

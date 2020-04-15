@@ -109,12 +109,7 @@ const ListItem = ({
               ? translations.viewCampaign
               : translations.viewReport
           }
-          onSelectClick={selectedItem => {
-            if (typeof selectedItem.selectedItemClick !== 'undefined') {
-              selectedItem.selectedItemClick();
-            }
-            return false;
-          }}
+          onSelectClick={selectedItem => selectedItem.selectedItemClick()}
           items={
             hideAnalyzeReport
               ? selectItems
