@@ -2,7 +2,8 @@
   "extends": [
     "airbnb",
     "prettier",
-    "prettier/react"
+    "prettier/react",
+    "plugin:cypress/recommended"
   ],
   "parser": "babel-eslint",
   "plugins": [
