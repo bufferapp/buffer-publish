@@ -23,7 +23,7 @@ jobs:
 
       - name: update /etc/hosts
         run: |
-          sudo echo "127.0.0.1 publish.local.buffer.com\n127.0.0.1 local.buffer.com" | sudo tee -a /etc/hosts
+          printf '%s\n' '127.0.0.1 publish.local.buffer.com' '127.0.0.1 local.buffer.com' | sudo tee -a /etc/hosts
 
       - name: cypress
         uses: cypress-io/github-action@v1
