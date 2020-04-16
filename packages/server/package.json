@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node index.js",
     "start:standalone": "NODE_ENV=production STANDALONE=true nodemon -V -L --ignore 'index.html' --watch ./ -e html,js,json index.js",
-    "start:cypress": "NODE_ENV=production STANDALONE=true USE_STATIC_BUNDLES=true node index.js",
+    "start:standalone-ci": "NODE_ENV=production STANDALONE=true USE_STATIC_BUNDLES=true node index.js",
     "lint": "eslint . --ignore-pattern coverage node_modules"
   },
   "author": "hharnisc@gmail.com",

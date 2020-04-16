@@ -9,7 +9,7 @@ jobs:
       - name: checkout branch
         uses: actions/checkout@v2
 
-      - name: load secrets
+      - name: load secrets and keys
         env:
           PUSHER_APP_SECRET: ${{ secrets.PUSHER_APP_SECRET }}
           LOCAL_BUFFER_KEY: ${{ secrets.LOCAL_BUFFER_KEY }}
@@ -25,11 +25,12 @@ jobs:
         run: |
           printf '%s\n' '127.0.0.1 publish.local.buffer.com' '127.0.0.1 local.buffer.com' | sudo tee -a /etc/hosts
 
-      - name: cypress
+      - name: run cypress
         uses: cypress-io/github-action@v1
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_STANDALONE: "true"
         with:
           record: "true"
-          build: yarn run build:cypress
-          start: sudo yarn run start:cypress
+          build: yarn run build:ci
+          start: sudo yarn run start:standalone-ci

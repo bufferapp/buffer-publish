@@ -1,15 +1,12 @@
 const email = Cypress.env('PUBLISH_LOGIN_EMAIL') || 'admin@bufferapp.com';
 const password = Cypress.env('PUBLISH_LOGIN_PASSWORD') || 'password';
 
-const getLoginUrl = () =>
-  Cypress.env('GITHUB_ACTIONS')
-    ? 'https://login.buffer.com/login'
-    : 'https://login.local.buffer.com/login';
+const LOCAL_LOGIN_URL = 'https://login.local.buffer.com/login';
 
 Cypress.Commands.add('loginWithCSRF', csrfToken => {
   cy.request({
     method: 'POST',
-    url: getLoginUrl(),
+    url: LOCAL_LOGIN_URL,
     failOnStatusCode: false, // dont fail so we can make assertions
     form: true, // we are submitting a regular form body
     body: {
@@ -21,7 +18,11 @@ Cypress.Commands.add('loginWithCSRF', csrfToken => {
 });
 
 Cypress.Commands.add('login', () => {
-  cy.request(getLoginUrl())
+  if (Cypress.env('STANDALONE') === true) {
+    /** Skip logging if Publish is running in standalone mode (i.e., already has a preloaded session) */
+    return true;
+  }
+  cy.request(LOCAL_LOGIN_URL)
     .its('body')
     .then(body => {
       const $html = Cypress.$(body);

@@ -13,14 +13,15 @@
     "init": "yarn",
     "start": "cd ./packages/server/ && yarn run start",
     "start:standalone": "cd ./packages/server/ && yarn run start:standalone",
-    "start:cypress": "cd ./packages/server/ && yarn run start:cypress",
+    "start:standalone-ci": "cd ./packages/server/ && yarn run start:standalone-ci",
     "storybook": "start-storybook -p 9001",
     "watch": "webpack-dev-server --config ./packages/server/webpack.config.dev.js --colors --display-error-details --progress",
     "build": "webpack --config ./packages/server/webpack.config.prod.js --output-path=`pwd`",
-    "build:cypress": "USE_LOCAL_BUNDLES=true webpack --config ./packages/server/webpack.config.prod.js --output-path=dist",
+    "build:ci": "USE_LOCAL_BUNDLES=true webpack --config ./packages/server/webpack.config.prod.js --output-path=dist",
     "build:analyze": "ANALYZE_BUNDLE=true webpack --config ./packages/server/webpack.config.prod.js --output-path=dist --progress",
     "bugsnag:release": "node ./packages/server/scripts/bugsnag-release.js",
-    "rebuild-grpc": "docker exec -it bufferdev_publish_1 sh -c 'cd /usr/src/app && npm rebuild grpc --target_arch=x64 --target_platform=linux --target_libc=musl --update-binary --verbose'"
+    "cypress:standalone": "yarn run cypress open --env STANDALONE=true",
+    "cypress:docker": "yarn run cypress open"
   },
   "repository": {
     "type": "git",
