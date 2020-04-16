@@ -29,7 +29,7 @@ const {
   setRequestSessionMiddleware,
   validateSessionMiddleware,
 } = require('@bufferapp/session-manager');
-const { errorMiddleware } = require('@bufferapp/buffer-rpc');
+// const { errorMiddleware } = require('@bufferapp/buffer-rpc');
 const serialize = require('serialize-javascript');
 const helmet = require('helmet');
 const standalone = require('./lib/standalone');
@@ -47,6 +47,7 @@ if (!isStandalone) {
 const { apiError } = require('./middleware');
 const controller = require('./lib/controller');
 const makeRPCHandler = require('./rpc');
+const errorMiddleware = require('./rpc/errorMiddleware');
 const checkToken = require('./rpc/checkToken');
 const PublishAPI = require('./publishAPI');
 const userParser = require('./parsers/src/userParser');

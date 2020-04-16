@@ -129,10 +129,6 @@ function setStandaloneSessionMiddleware(req, res, next) {
     process.exit();
   }
   req.session = standaloneSessionData;
-  console.log(
-    'Standalone session pub id:',
-    standaloneSessionData.publish.foreignKey
-  );
   return next();
 }
 
