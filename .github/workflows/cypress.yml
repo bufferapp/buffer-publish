@@ -16,7 +16,7 @@ jobs:
           LOCAL_BUFFER_CRT: ${{ secrets.LOCAL_BUFFER_CRT }}
           STANDALONE_SESSION: ${{ secrets.STANDALONE_SESSION }}
         run: |
-          printf '\n%s' 'PUSHER_APP_SECRET=$PUSHER_APP_SECRET' | tee -a packages/server/standalone.env
+          printf "\n%s" "PUSHER_APP_SECRET=$PUSHER_APP_SECRET" | tee -a packages/server/standalone.env
           echo "$LOCAL_BUFFER_KEY" > packages/server/local.buffer.com-wildcard.key
           echo "$LOCAL_BUFFER_CRT" > packages/server/local.buffer.com-wildcard.crt
           echo "$STANDALONE_SESSION" > packages/server/standalone-session.json
