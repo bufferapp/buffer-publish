@@ -33,4 +33,3 @@ jobs:
           record: "true"
           build: yarn run build:cypress
           start: sudo yarn run start:cypress
-          wait-on: "http://publish.local.buffer.com"
