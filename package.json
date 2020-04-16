@@ -78,8 +78,10 @@
     "bugsnag-build-reporter": "^1.0.0",
     "connected-react-router": "^5.0.1",
     "core-js": "3.2.1",
+    "cors": "^2.8.5",
     "css-loader": "^0.28.11",
     "cypress": "^4.4.0",
+    "cypress-terminal-report": "^1.2.1",
     "decorate-component-with-props": "1.0.2",
     "deep-freeze": "0.0.1",
     "dotenv": "8.2.0",
@@ -164,8 +166,7 @@
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge": "4.2.2",
     "xss": "1.0.6",
-    "yaml": "1.8.2",
-    "cors": "^2.8.5"
+    "yaml": "1.8.2"
   },
   "workspaces": [
     "packages/*"
