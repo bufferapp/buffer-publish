@@ -53,14 +53,6 @@ const PublishAPI = require('./publishAPI');
 const userParser = require('./parsers/src/userParser');
 const userMethod = require('./rpc/user/index');
 const profilesMethod = require('./rpc/profiles/index');
-console.log({
-  appId: process.env.PUSHER_APP_ID,
-  appKey: process.env.PUSHER_APP_KEY,
-  cluster: process.env.PUSHER_CLUSTER,
-  appSecret: process.env.PUSHER_APP_SECRET
-    ? process.env.PUSHER_APP_SECRET.substring(0, 3)
-    : 'no secret',
-});
 const pusher = require('./lib/pusher');
 const maintenanceHandler = require('./maintenanceHandler');
 const { getFaviconCode, setupFaviconRoutes } = require('./lib/favicon');
