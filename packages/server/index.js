@@ -1,9 +1,9 @@
-/**
- * Add Datadog APM in production
- */
 const isProduction = process.env.NODE_ENV === 'production';
 const isStandalone = process.env.STANDALONE === 'true';
 
+/**
+ * Add Datadog APM in production
+ */
 if (isProduction && !isStandalone) {
   // This line must come before importing any instrumented module.
   // eslint-disable-next-line
@@ -15,7 +15,9 @@ if (isProduction && !isStandalone) {
   });
 }
 
-const http = isStandalone ? require('https') : require('http');
+// No nginx reverseproxy in standalone mode, so we need to do SSL
+const PORT = isStandalone ? 443 : 80;
+const http = require('http');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -29,32 +31,10 @@ const {
 const { errorMiddleware } = require('@bufferapp/buffer-rpc');
 const serialize = require('serialize-javascript');
 const helmet = require('helmet');
+const standalone = require('./lib/standalone');
 
 if (isStandalone) {
-  // Read ENV vars from the buffer-dev config
-  const YAML = require('yaml'); // eslint-disable-line global-require
-  const dotenv = require('dotenv'); // eslint-disable-line global-require
-
-  const config = YAML.parse(
-    fs.readFileSync(
-      join(__dirname, '../../../buffer-dev-config/config.yaml'),
-      'utf8'
-    )
-  );
-  const envVars = config.services.publish.composeConfig.environment.join('\n');
-
-  // Read any overrides
-  const envOverrides = fs.readFileSync(
-    join(__dirname, 'standalone.env'),
-    'utf8'
-  );
-
-  // Write the combined env vars
-  const pathToEnv = '/tmp/buffer-publish-standalone.env';
-  fs.writeFileSync(pathToEnv, `${envVars}\n${envOverrides}`);
-
-  // Load env
-  dotenv.config({ path: pathToEnv });
+  standalone.loadEnv();
 }
 
 let logMiddleware;
@@ -80,23 +60,7 @@ const verifyAccessToken = require('./middlewares/verifyAccessToken');
 const app = express();
 
 const server = isStandalone
-  ? http.createServer(
-      {
-        key: fs.readFileSync(
-          join(
-            __dirname,
-            '../../../reverseproxy/certs/local.buffer.com-wildcard.key'
-          )
-        ),
-        cert: fs.readFileSync(
-          join(
-            __dirname,
-            '../../../reverseproxy/certs/local.buffer.com-wildcard.crt'
-          )
-        ),
-      },
-      app
-    )
+  ? standalone.createServer(app)
   : http.createServer(app);
 
 if (logMiddleware) {
@@ -350,24 +314,7 @@ app.use(bodyParser.json());
 
 // All routes after this have access to the user session
 if (isStandalone) {
-  let standaloneSessionData;
-  try {
-    standaloneSessionData = JSON.parse(
-      fs.readFileSync(join(__dirname, 'standalone-session.json'))
-    );
-  } catch (error) {
-    console.log(
-      `
-🚧 Please ensure you have created a \`standalone-session.json\` file in the packages/server directory.
-`,
-      error
-    );
-    process.exit();
-  }
-  app.use((req, res, next) => {
-    req.session = standaloneSessionData;
-    return next();
-  });
+  app.use(standalone.setStandaloneSessionMiddleware);
 } else {
   app.use(
     setRequestSessionMiddleware({
@@ -458,8 +405,10 @@ app.get('*', (req, res) => {
 
 app.use(apiError);
 
-server.listen(isStandalone ? 443 : 80, () =>
-  console.log('listening on port 80')
+server.listen(PORT, () =>
+  console.log(
+    isStandalone ? standalone.bootMessage : `listening on port ${PORT}`
+  )
 ); // eslint-disable-line
 
 server.keepAliveTimeout = 61 * 1000;
