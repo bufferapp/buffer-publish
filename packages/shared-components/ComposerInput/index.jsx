@@ -34,9 +34,11 @@ const composerInputIcoCameraStyle = {
 
 const ComposerInput = ({ onPlaceholderClick, placeholder, isDisabled }) => (
   <button
+    type="button"
     style={calculateStyles(composerInputStyle, { isDisabled })}
     onClick={onPlaceholderClick}
     disabled={isDisabled}
+    data-cy="open-composer-button"
   >
     {placeholder}
     <div style={composerInputIcoCameraStyle}>

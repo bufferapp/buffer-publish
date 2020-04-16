@@ -1,10 +1,12 @@
 const fs = require('fs');
 const { join } = require('path');
 const https = require('https');
+const express = require('express');
+const cors = require('cors');
 
 const basePath = join(__dirname, '..');
+
 const paths = {
-  bufferDevConfig: join(basePath, '../../../buffer-dev-config/config.yaml'),
   standaloneEnv: join(basePath, 'standalone.env'),
   tempEnv: '/tmp/buffer-publish-standalone.env',
   certKey: join(
@@ -15,28 +17,82 @@ const paths = {
     basePath,
     '../../../reverseproxy/certs/local.buffer.com-wildcard.crt'
   ),
+  certKeyGHActions: join(basePath, 'local.buffer.com-wildcard.key'),
+  certCrtGHActions: join(basePath, 'local.buffer.com-wildcard.crt'),
   standaloneSession: join(basePath, 'standalone-session.json'),
+  webpackAssets: join(basePath, '..', '..', 'dist'),
+  webpackAssetsJson: join(basePath, '..', '..', 'dist', 'webpackAssets.json'),
 };
+
+function getBufferDevConfig() {
+  try {
+    const YAML = require('yaml'); // eslint-disable-line global-require
+    return YAML.parse(
+      fs.readFileSync(
+        join(basePath, '../../../buffer-dev-config/config.yaml'),
+        'utf8'
+      )
+    );
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Returns config that is passed to `https.createServer`
+ * This ensures that our HTTPS server can accept connections at:
+ *   https://publish.buffer.com
+ *
+ * Checks for the certificates stored in buffer-dev-config first,
+ * and if that fails (i.e., in CI/GitHub Action where that folder
+ * won't exist) it looks for files of the same name in the server
+ * folder. (Check the GitHub action workflow file:
+ *  .github/actions/cypress.yml to see how we put those files there
+ * at build time.)
+ */
+function getServerHttpsConfig() {
+  try {
+    return {
+      key: fs.readFileSync(paths.certKey),
+      cert: fs.readFileSync(paths.certCrt),
+    };
+  } catch (e) {
+    return {
+      key: fs.readFileSync(paths.certKeyGHActions),
+      cert: fs.readFileSync(paths.certCrtGHActions),
+    };
+  }
+}
 
 /**
  * Read ENV vars from the `buffer-dev` config and combine
  * them with user defined env vars.
  */
 function loadEnv() {
-  const YAML = require('yaml'); // eslint-disable-line global-require
   const dotenv = require('dotenv'); // eslint-disable-line global-require
 
-  const config = YAML.parse(fs.readFileSync(paths.bufferDevConfig, 'utf8'));
-  const envVars = config.services.publish.composeConfig.environment.join('\n');
+  // This only works locally and grabs any env vars we don't have
+  // from the buffer-dev-config YAML file. In CI / GitHub Actions
+  // we will prepopulate the environment vars and so this doesn't
+  // need to run
+  const config = getBufferDevConfig();
+  if (config) {
+    const envVars = config.services.publish.composeConfig.environment.join(
+      '\n'
+    );
 
-  // Read any overrides
-  const envOverrides = fs.readFileSync(paths.standaloneEnv, 'utf8');
+    // Read any overrides
+    const envOverrides = fs.readFileSync(paths.standaloneEnv, 'utf8');
 
-  // Write the combined env vars
-  fs.writeFileSync(paths.tempEnv, `${envVars}\n${envOverrides}`);
+    // Write the combined env vars
+    fs.writeFileSync(paths.tempEnv, `${envVars}\n${envOverrides}`);
 
-  // Load env
-  dotenv.config({ path: paths.tempEnv });
+    // Load env
+    dotenv.config({ path: paths.tempEnv });
+  } else {
+    // Just load the overrides, we're probably in GH actions and the env will be populated
+    dotenv.config({ path: paths.standaloneEnv });
+  }
 }
 
 /**
@@ -46,13 +102,7 @@ function loadEnv() {
  * @param {Express} app
  */
 function createServer(app) {
-  return https.createServer(
-    {
-      key: fs.readFileSync(paths.certKey),
-      cert: fs.readFileSync(paths.certCrt),
-    },
-    app
-  );
+  return https.createServer(getServerHttpsConfig(), app);
 }
 
 /**
@@ -83,15 +133,32 @@ function setStandaloneSessionMiddleware(req, res, next) {
 }
 
 const bootMessage = `
-🚀  Publish is now running in Standalone Mode (https://publish.local.buffer.com)
-     
-Don't forget to do: 
-  yarn run watch
-`;
+🚀  Publish is now running in Standalone Mode → https://publish.local.buffer.com`;
+
+/**
+ * Used for static assets mode, where JS / assets are loaded from a statically built
+ * folder instead of webpack-dev-server. (Used in Cypress / Github Actions)
+ */
+function getStaticAssets() {
+  // Load and return the `webpackAssets.json` which will be present after running `yarn run build:cypress`
+  return JSON.parse(fs.readFileSync(paths.webpackAssetsJson, 'utf8'));
+}
+
+function serveStaticAssets() {
+  const app = express();
+  app.use(cors());
+  app.use('/static', express.static(paths.webpackAssets));
+  const staticAssetServer = createServer(app);
+  staticAssetServer.listen(8080, () => {
+    console.log('Static asset server listening on port 8080');
+  });
+}
 
 module.exports = {
   loadEnv,
   createServer,
   setStandaloneSessionMiddleware,
   bootMessage,
+  getStaticAssets,
+  serveStaticAssets,
 };

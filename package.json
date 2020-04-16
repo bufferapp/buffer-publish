@@ -13,9 +13,11 @@
     "init": "yarn",
     "start": "cd ./packages/server/ && yarn run start",
     "start:standalone": "cd ./packages/server/ && yarn run start:standalone",
+    "start:cypress": "cd ./packages/server/ && yarn run start:cypress",
     "storybook": "start-storybook -p 9001",
     "watch": "webpack-dev-server --config ./packages/server/webpack.config.dev.js --colors --display-error-details --progress",
     "build": "webpack --config ./packages/server/webpack.config.prod.js --output-path=`pwd`",
+    "build:cypress": "USE_LOCAL_BUNDLES=true webpack --config ./packages/server/webpack.config.prod.js --output-path=dist",
     "build:analyze": "ANALYZE_BUNDLE=true webpack --config ./packages/server/webpack.config.prod.js --output-path=dist --progress",
     "bugsnag:release": "node ./packages/server/scripts/bugsnag-release.js",
     "rebuild-grpc": "docker exec -it bufferdev_publish_1 sh -c 'cd /usr/src/app && npm rebuild grpc --target_arch=x64 --target_platform=linux --target_libc=musl --update-binary --verbose'"
@@ -162,7 +164,8 @@
     "webpack-manifest-plugin": "^2.2.0",
     "webpack-merge": "4.2.2",
     "xss": "1.0.6",
-    "yaml": "1.8.2"
+    "yaml": "1.8.2",
+    "cors": "^2.8.5"
   },
   "workspaces": [
     "packages/*"

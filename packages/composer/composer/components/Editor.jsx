@@ -701,6 +701,7 @@ class Editor extends React.Component {
           onDrop={this.onDrop}
           onClick={this.onClick}
           onFocus={this.onFocus}
+          data-cy="composer-text-zone"
         >
           <DraftjsEditor
             editorState={draft.editorState}

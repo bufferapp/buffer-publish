@@ -1,7 +1,10 @@
 describe('App', function() {
-  it('loads the dashboard', function() {
-    cy.login();
+  it('creates a new post', function() {
     cy.visit('/');
-    cy.contains();
+    cy.get('[data-cy=open-composer-button]').click();
+    cy.get('[data-cy=composer-text-zone').type(
+      'This is my first post!{cmd}{enter}'
+    );
+    cy.get('[data-cy=post]').should('contain', 'This is my first post!');
   });
 });

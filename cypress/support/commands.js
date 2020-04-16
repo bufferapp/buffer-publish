@@ -20,7 +20,7 @@ Cypress.Commands.add('loginWithCSRF', csrfToken => {
   });
 });
 
-Cypress.Commands.add("login", () => {
+Cypress.Commands.add('login', () => {
   cy.request(getLoginUrl())
     .its('body')
     .then(body => {

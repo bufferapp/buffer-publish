@@ -1,0 +1,36 @@
+name: Cypress E2E Tests
+
+on: [push]
+
+jobs:
+  run-cypress:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout branch
+        uses: actions/checkout@v2
+
+      - name: load secrets
+        env:
+          PUSHER_APP_SECRET: ${{ secrets.PUSHER_APP_SECRET }}
+          LOCAL_BUFFER_KEY: ${{ secrets.LOCAL_BUFFER_KEY }}
+          LOCAL_BUFFER_CRT: ${{ secrets.LOCAL_BUFFER_CRT }}
+          STANDALONE_SESSION: ${{ secrets.STANDALONE_SESSION }}
+        run: |
+          echo "\nPUSHER_APP_SECRET=$PUSHER_APP_SECRET" >> packages/server/standalone.env
+          echo $LOCAL_BUFFER_KEY > packages/server/local.buffer.com-wildcard.key
+          echo $LOCAL_BUFFER_CRT > packages/server/local.buffer.com-wildcard.crt
+          echo $STANDALONE_SESSION > packages/server/standalone-session.json
+
+      - name: update /etc/hosts
+        run: |
+          sudo echo "127.0.0.1 publish.local.buffer.com\n127.0.0.1 local.buffer.com" | sudo tee -a /etc/hosts
+
+      - name: cypress
+        uses: cypress-io/github-action@v1
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+        with:
+          record: "true"
+          build: yarn run build:cypress
+          start: yarn run start:cypress
+          wait-on: "http://publish.local.buffer.com"

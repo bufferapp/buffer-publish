@@ -1,5 +1,6 @@
 const isProduction = process.env.NODE_ENV === 'production';
 const isStandalone = process.env.STANDALONE === 'true';
+const useStaticBundles = process.env.USE_STATIC_BUNDLES === 'true';
 
 /**
  * Add Datadog APM in production
@@ -97,6 +98,16 @@ if (isProduction && !isStandalone) {
    * Add Bugsnag to app (see `middleware.js` for where this is used)
    */
   app.set('bugsnag', getBugsnagClient());
+}
+
+// If `USE_STATIC_BUNDLES` is 'true' in the env, then we're probably running in CI / GitHub Actions.
+// In that case the app will have been pre-bundled with webpack and we just need to ensure that we
+// create a simple server to serve up those static files. (Taking the place of `webpack-dev-server`)
+if (useStaticBundles) {
+  // First get the paths to use so the app knows this later
+  staticAssets = standalone.getStaticAssets();
+  // Now start the static assets server on port 8080
+  standalone.serveStaticAssets();
 }
 
 const stripePublishableKey = process.env.STRIPE_PUBLISHABLE;
@@ -342,7 +353,9 @@ if (!isStandalone) {
   );
 }
 
-app.use(verifyAccessToken);
+if (!isStandalone) {
+  app.use(verifyAccessToken);
+}
 
 // Pusher Auth
 app.post(
@@ -405,11 +418,13 @@ app.get('*', (req, res) => {
 
 app.use(apiError);
 
-server.listen(PORT, () =>
-  console.log(
-    isStandalone ? standalone.bootMessage : `listening on port ${PORT}`
-  )
-); // eslint-disable-line
+server.listen(PORT, () => {
+  if (isStandalone) {
+    console.log(standalone.bootMessage);
+  } else {
+    console.log(`listening on port ${PORT}`);
+  }
+});
 
 server.keepAliveTimeout = 61 * 1000;
 server.headersTimeout = 65 * 1000;
