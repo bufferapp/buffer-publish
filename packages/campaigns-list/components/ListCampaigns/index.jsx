@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Text, Button } from '@bufferapp/ui';
-import { BufferLoading } from '@bufferapp/publish-shared-components';
+import {
+  ButtonWithSkeleton,
+  TextWithSkeleton,
+} from '@bufferapp/publish-shared-components';
 import { getURL } from '@bufferapp/publish-server/formatters/src';
 import { borderRadius } from '@bufferapp/ui/style/borders';
 import { gray, white, grayShadow } from '@bufferapp/ui/style/colors';
 import styled from 'styled-components';
 import EmptyState from './EmptyState';
 import List from './List';
+import SkeletonList from './SkeletonList';
 
 /* Styles */
 const Wrapper = styled.div`
@@ -38,11 +41,6 @@ const Container = styled.div`
   }
 `;
 
-const LoadingContainer = styled.div`
-  text-align: center;
-  padding: 5rem 0px;
-`;
-
 const ListCampaigns = ({
   translations,
   campaigns,
@@ -51,7 +49,7 @@ const ListCampaigns = ({
   onViewCampaignClick,
   goToAnalyzeReport,
   onOpenCreateCampaignClick,
-  hideAnalyzeReport,
+  showCampaignActions,
   hasCampaignsFlip,
   fetchCampaignsIfNeeded,
   isLoading,
@@ -65,17 +63,7 @@ const ListCampaigns = ({
     fetchCampaignsIfNeeded();
   }, []);
 
-  if (isLoading) {
-    return (
-      <Container>
-        <LoadingContainer>
-          <BufferLoading size={64} />
-        </LoadingContainer>
-      </Container>
-    );
-  }
-
-  if (!campaigns || campaigns.length === 0) {
+  if (!isLoading && (!campaigns || campaigns.length === 0)) {
     return (
       <EmptyState
         translations={translations.emptyState}
@@ -88,22 +76,40 @@ const ListCampaigns = ({
     <Wrapper>
       <Container>
         <Header>
-          <Text type="h2">Campaigns</Text>
-          <Button
-            type="primary"
-            label="Create Campaign"
-            onClick={onOpenCreateCampaignClick}
-          />
+          <TextWithSkeleton
+            type="h2"
+            displaySkeleton={isLoading}
+            aria-label={isLoading ? 'Loading' : null}
+          >
+            Campaigns
+          </TextWithSkeleton>
+          {showCampaignActions && (
+            <ButtonWithSkeleton
+              type="primary"
+              label="Create Campaign"
+              onClick={onOpenCreateCampaignClick}
+              disabled={isLoading}
+              displaySkeleton={isLoading}
+            />
+          )}
         </Header>
-        <List
-          campaigns={campaigns}
-          onEditCampaignClick={onEditCampaignClick}
-          onDeleteCampaignClick={onDeleteCampaignClick}
-          onViewCampaignClick={onViewCampaignClick}
-          goToAnalyzeReport={goToAnalyzeReport}
-          translations={translations.viewCampaign}
-          hideAnalyzeReport={hideAnalyzeReport}
-        />
+        {!isLoading && (
+          <List
+            campaigns={campaigns}
+            onEditCampaignClick={onEditCampaignClick}
+            onDeleteCampaignClick={onDeleteCampaignClick}
+            onViewCampaignClick={onViewCampaignClick}
+            goToAnalyzeReport={goToAnalyzeReport}
+            translations={translations.viewCampaign}
+            showCampaignActions={showCampaignActions}
+          />
+        )}
+        {isLoading && (
+          <SkeletonList
+            translations={translations.viewCampaign}
+            showCampaignActions={showCampaignActions}
+          />
+        )}
       </Container>
     </Wrapper>
   );
@@ -117,7 +123,7 @@ ListCampaigns.propTypes = {
   onDeleteCampaignClick: PropTypes.func,
   onViewCampaignClick: PropTypes.func,
   goToAnalyzeReport: PropTypes.func,
-  hideAnalyzeReport: PropTypes.bool.isRequired,
+  showCampaignActions: PropTypes.bool.isRequired,
   hasCampaignsFlip: PropTypes.bool.isRequired,
   fetchCampaignsIfNeeded: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,

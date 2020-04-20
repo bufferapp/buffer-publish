@@ -21,6 +21,7 @@ const ViewCampaign = ({
   isLoading,
   hideSkeletonHeader,
   hideAnalyzeReport,
+  showCampaignActions,
   translations,
   campaignId,
   hasCampaignsFlip,
@@ -58,6 +59,7 @@ const ViewCampaign = ({
       <Header
         campaignDetails={campaign}
         hideAnalyzeReport={hideAnalyzeReport}
+        showCampaignActions={showCampaignActions}
         translations={translations}
         onCreatePostClick={actions.onCreatePostClick}
         onDeleteCampaignClick={actions.onDeleteCampaignClick}
@@ -121,6 +123,7 @@ ViewCampaign.propTypes = {
   campaign: PropTypes.object.isRequired, // eslint-disable-line
   campaignPosts: PropTypes.array, // eslint-disable-line
   hideAnalyzeReport: PropTypes.bool.isRequired,
+  showCampaignActions: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   hideSkeletonHeader: PropTypes.bool.isRequired,
   campaignId: PropTypes.string.isRequired,

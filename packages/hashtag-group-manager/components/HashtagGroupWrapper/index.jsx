@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import HashtagGroupCreator from './../HashtagGroupCreator';
-import HashtagGroupManager from './../HashtagGroupManager';
+import HashtagGroupCreator from '../HashtagGroupCreator';
+import HashtagGroupManager from '../HashtagGroupManager';
 
 const boxStyle = {
   height: 'calc(100% - 16px)',
@@ -29,16 +29,19 @@ class HashtagGroupWrapper extends React.Component {
   }
 
   componentDidMount() {
-    this.onSwitchMode(this.props.viewMode);
+    const { viewMode } = this.props;
+    this.onSwitchMode(viewMode);
   }
 
   onSwitchMode(viewMode) {
     this.setState({ viewMode });
-    this.props.onCancelHashtagGroup();
+    const { onCancelHashtagGroup } = this.props;
+    onCancelHashtagGroup();
   }
 
   onDeleteHashtagGroupClick(name, text, groupId) {
-    this.props.onDeleteHashtagGroup(name, text, groupId);
+    const { onDeleteHashtagGroup } = this.props;
+    onDeleteHashtagGroup(name, text, groupId);
   }
 
   render() {
@@ -82,7 +85,6 @@ HashtagGroupWrapper.propTypes = {
   viewMode: PropTypes.string,
   name: PropTypes.string,
   text: PropTypes.string,
-  onInsertHashtagGroupClick: PropTypes.func,
   onHandleInsertHashtagGroupClick: PropTypes.func,
   onDeleteHashtagGroup: PropTypes.func,
   onSaveHashtagGroup: PropTypes.func,
@@ -96,22 +98,12 @@ HashtagGroupWrapper.propTypes = {
       id: PropTypes.string,
     })
   ).isRequired,
-  profiles: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string,
-      canPostComment: PropTypes.bool,
-      isSelected: PropTypes.bool,
-    })
-  ),
 };
 
 HashtagGroupWrapper.defaultProps = {
   viewMode: 'createHashtag',
   name: null,
   text: null,
-  hashtagGroups: [],
-  profiles: null,
-  onInsertHashtagGroupClick: () => {},
   onHandleInsertHashtagGroupClick: () => {},
   onDeleteHashtagGroup: () => {},
   onSaveHashtagGroup: () => {},

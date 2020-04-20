@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Text, Button } from '@bufferapp/ui';
 import { fontSize, fontWeightBold } from '@bufferapp/ui/style/fonts';
 import { gray, grayDark } from '@bufferapp/ui/style/colors';
-import HashtagGroupList from './../HashtagGroupList';
+import HashtagGroupList from '../HashtagGroupList';
 
 const wrapperStyle = {
   margin: '0 16px',
@@ -80,10 +80,6 @@ HashtagGroupManager.propTypes = {
   ).isRequired,
   onInsertHashtagGroupClick: PropTypes.func.isRequired,
   onDeleteHashtagGroupClick: PropTypes.func.isRequired,
-};
-
-HashtagGroupManager.defaultProps = {
-  hashtagGroups: [],
 };
 
 export default HashtagGroupManager;

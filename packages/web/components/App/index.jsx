@@ -35,7 +35,7 @@ const contentStyle = {
 class App extends Component {
   render() {
     return (
-      <div style={appStyle}>
+      <div style={appStyle} className="notranslate">
         <AppShell>
           <div style={contentStyle}>
             <CTABanner />

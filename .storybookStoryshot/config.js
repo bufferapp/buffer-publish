@@ -6,7 +6,7 @@ const { configure } = require('@storybook/react');
 
 function loadStories() {
   // Add all story.jsx files inside components directories except for the ones in node_modules
-  const req = require.context(__PACKAGES__, true, /^((?![\\/]node_modules[\\/]).)*components\/.*\/*story\.jsx$/)
+  const req = require.context(__PACKAGES__, true, /^((?![\\/]node_modules[\\/]).)*components\/.*\/*story_test\.jsx$/)
   req.keys().forEach(filename => req(filename));
 }
 configure(loadStories, module);

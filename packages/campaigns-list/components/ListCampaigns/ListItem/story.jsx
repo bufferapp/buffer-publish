@@ -39,7 +39,7 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      hideAnalyzeReport={false}
+      showCampaignActions
     />
   ))
   .add('Team member view of campaign list item', () => (
@@ -51,7 +51,7 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      hideAnalyzeReport
+      showCampaignActions={false}
     />
   ))
   .add('Campaign list item with gray background', () => (
@@ -63,7 +63,7 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      hideAnalyzeReport={false}
+      showCampaignActions
     />
   ))
   .add('Campaign list item without any posts', () => (
@@ -75,6 +75,19 @@ storiesOf('Campaigns|ListItem', module)
       onDeleteCampaignClick={action('delete campaign')}
       onEditCampaignClick={action('edit campaign')}
       goToAnalyzeReport={action('go to analyze report')}
-      hideAnalyzeReport={false}
+      showCampaignActions
+    />
+  ))
+  .add('Campaign list item skeleton', () => (
+    <ListItem
+      campaign={campaign}
+      isEvenItem={false}
+      translations={translations.campaigns.viewCampaign}
+      onViewCampaignClick={action('view campaign')}
+      onDeleteCampaignClick={action('delete campaign')}
+      onEditCampaignClick={action('edit campaign')}
+      goToAnalyzeReport={action('go to analyze report')}
+      showCampaignActions
+      displaySkeleton
     />
   ));

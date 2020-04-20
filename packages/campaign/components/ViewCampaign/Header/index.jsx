@@ -28,6 +28,7 @@ const Header = ({
   translations,
   campaignDetails,
   hideAnalyzeReport,
+  showCampaignActions,
   onCreatePostClick,
   onDeleteCampaignClick,
   onEditCampaignClick,
@@ -99,7 +100,7 @@ const Header = ({
       <ButtonWithSkeleton
         onClick={onCreatePostClick}
         type="secondary"
-        isSplit
+        isSplit={showCampaignActions}
         label={translations.createPost}
         disabled={isLoading}
         displaySkeleton={isLoading}
@@ -159,6 +160,7 @@ Header.propTypes = {
     lastUpdated: PropTypes.string,
   }).isRequired,
   hideAnalyzeReport: PropTypes.bool.isRequired,
+  showCampaignActions: PropTypes.bool.isRequired,
   onCreatePostClick: PropTypes.func.isRequired,
   onDeleteCampaignClick: PropTypes.func.isRequired,
   onEditCampaignClick: PropTypes.func.isRequired,

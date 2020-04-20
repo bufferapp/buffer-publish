@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import HashtagGroupItem from './../HashtagGroupItem';
+import HashtagGroupItem from '../HashtagGroupItem';
 import countHashtagsInText from '../../utils/HashtagCounter';
 
 const contentStyle = {

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {
-  grayDark,
+  transparent,
   grayDarker,
   grayLight,
   grayLighter,
@@ -15,7 +15,8 @@ export const Color = styled.div`
   width: 100%;
   border-radius: 50%;
   position: absolute;
-  background-color: ${props => props.color};
+  background-color: ${props =>
+    props.displaySkeleton ? grayLighter : props.color};
   margin: 7px 10px 0px 0px;
 `;
 
@@ -36,22 +37,26 @@ export const Container = styled.li`
   }
 `;
 
-export const LastUpdated = styled.span`
-  color: ${grayDark};
+export const NameContainer = styled.span`
+  display: inline-flex;
+  position: relative;
+  h3 {
+    margin: 0px 0px 0px 20px;
+  }
 `;
 
 export const StyledLink = styled(Link)`
   display: inline-flex;
   text-decoration: none;
-  color: ${grayDarker};
   position: relative;
+  color: ${grayDarker};
   :hover {
     transition: color 150ms ease-in;
     color: ${blue};
   }
   h3 {
-    color: inherit;
     margin: 0px 0px 0px 20px;
+    color: inherit;
   }
 `;
 
@@ -69,13 +74,13 @@ export const Icon = styled.span`
   svg {
     align-items: center;
     display: flex;
-    color: ${grayDarker};
+    color: ${props => (props.displaySkeleton ? transparent : grayDarker)};
   }
 `;
 
 export const LeftWrapper = styled.div`
   p {
-    margin: 4px 0px 0px 22px;
+    margin: 4px 0px 0px 20px;
   }
 `;
 
