@@ -4,7 +4,7 @@ const getRandomPostText = () => {
     .substring(7)}`;
 };
 
-describe('App', function() {
+describe('Publish', function() {
   it('creates a new post', function() {
     cy.login();
     cy.visit('/');
