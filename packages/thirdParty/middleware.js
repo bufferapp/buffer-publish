@@ -261,6 +261,7 @@ export default ({ dispatch, getState }) => next => action => {
           channel: getChannelIfNeeded({ path, getState }),
         };
         dispatch(analyticsActions.trackEvent('Page Viewed', metadata));
+        dispatch(analyticsActions.pageChange());
       }
       break;
     }
