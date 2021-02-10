@@ -42,6 +42,8 @@ export default ({ dispatch, getState }) => next => action => {
           })
         );
       });
+
+      eventQueue = [];
       break;
     }
     case actionTypes.PAGE_CHANGE:
