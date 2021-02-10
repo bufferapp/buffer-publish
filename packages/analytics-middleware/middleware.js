@@ -19,24 +19,16 @@ export default ({ dispatch, getState }) => next => action => {
         eventQueue.push(action);
       }
       if (orgId && window.analytics) {
-        console.log('Track Event: ', {
-          event: action.eventName,
-          payload: action.payload,
-          orgId
-        });
-
         window.analytics.track(action.eventName, {
           product: window.PRODUCT_TRACKING_KEY,
           clientName: window.CLIENT_NAME,
           organizationId: orgId,
-          ...action.payload,
+          ...action.payload
         });
       }
       break;
     }
     case orgActionTypes.ORGANIZATION_SELECTED: {
-      console.log('Organization selected -> Process queue: ', eventQueue);
-
       eventQueue.forEach(event => {
         dispatch(
           actions.trackEvent(event.eventName, {
