@@ -245,7 +245,7 @@ export default ({ dispatch, getState }) => next => action => {
 
     case LOCATION_CHANGE: {
       const path = action.payload.location.pathname;
-      /* when a user first hits publish.buffer.com, we select a profile for them and the routes changes	      const orgId = getState().organizations.selected?.globalOrgId;
+      /* when a user first hits publish.buffer.com, we select a profile for them and the routes changes
        We don't want to track the initial load before the profile is selected */
       if (path !== '/') {
         const metadata = {

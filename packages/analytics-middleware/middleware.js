@@ -15,16 +15,16 @@ export default ({ dispatch, getState }) => next => action => {
     case actionTypes.TRACK_EVENT: {
       const orgId = getState().organizations.selected?.globalOrgId;
 
-      console.log('Track Event: ', {
-        event: action.eventName,
-        payload: action.payload,
-        orgId
-      });
-
       if (!orgId) {
         eventQueue.push(action);
       }
       if (orgId && window.analytics) {
+        console.log('Track Event: ', {
+          event: action.eventName,
+          payload: action.payload,
+          orgId
+        });
+
         window.analytics.track(action.eventName, {
           product: window.PRODUCT_TRACKING_KEY,
           clientName: window.CLIENT_NAME,
@@ -35,6 +35,8 @@ export default ({ dispatch, getState }) => next => action => {
       break;
     }
     case orgActionTypes.ORGANIZATION_SELECTED: {
+      console.log('Organization selected -> Process queue: ', eventQueue);
+
       eventQueue.forEach(event => {
         dispatch(
           actions.trackEvent(event.eventName, {
