@@ -245,9 +245,15 @@ export default ({ dispatch, getState }) => next => action => {
 
     case LOCATION_CHANGE: {
       const path = action.payload.location.pathname;
-      /* when a user first hits publish.buffer.com, we select a profile for them and the routes changes
-       We don't want to track the initial load before the profile is selected */
-      if (path !== '/') {
+      const orgId = getState().organizations.selected?.globalOrgId;
+      // when a user first hits publish.buffer.com, we select a profile for them and the routes changes
+      // We don't want to track the initial load before the profile is selected.
+      // Similar to this, when a user tries to go directly to any of the pages
+      // (Ex: /profile/<profile>/tab/stories) this action will be triggered twice: Once
+      // before an organization is selected and then again once that situation changes.
+      // Both times the path will be the same. We need to avoid sending an event
+      // the first time.
+      if (path !== '/' && orgId) {
         const metadata = {
           platform: 'new_publish',
           product: 'publish',
@@ -260,6 +266,7 @@ export default ({ dispatch, getState }) => next => action => {
           // don't need channel if route isnt associated with profileId
           channel: getChannelIfNeeded({ path, getState }),
         };
+
         dispatch(analyticsActions.trackEvent('Page Viewed', metadata));
       }
       break;
