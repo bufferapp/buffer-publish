@@ -24,11 +24,6 @@ describe('middleware', () => {
           color: 'blue',
         },
       },
-      profileSidebar: {
-        selectedProfile: {
-          organizationId: '123',
-        },
-      },
       router: {
         location: {
           pathname: '/campaigns',
@@ -44,8 +39,7 @@ describe('middleware', () => {
     const expectedObj = {
       campaignId: '1234',
       campaignName: 'Awareness Day',
-      campaignColor: 'blue',
-      organizationId: '123',
+      campaignColor: 'blue'
     };
 
     middleware(store)(next)(action);

@@ -61,8 +61,7 @@ describe('middleware', () => {
     const hostname = 'publish.local.buffer.com';
     const expectedObj = {
       campaignId: 'id1',
-      campaignName: 'Awareness Day',
-      organizationId: '123',
+      campaignName: 'Awareness Day'
     };
     const url = `https://analyze.local.buffer.com/campaigns/${expectedObj.campaignId}`;
     window.location.assign = jest.fn();
@@ -71,12 +70,7 @@ describe('middleware', () => {
     const store = {
       dispatch: jest.fn(),
       getState: () => ({
-        campaignView: initialState,
-        profileSidebar: {
-          selectedProfile: {
-            organizationId: '123',
-          },
-        },
+        campaignView: initialState
       }),
     };
     const action = {

@@ -253,6 +253,8 @@ export default ({ dispatch, getState }) => next => action => {
       // before an organization is selected and then again once that situation changes.
       // Both times the path will be the same. We need to avoid sending an event
       // the first time.
+      console.log('Location Change: ', { path, orgId });
+
       if (path !== '/' && orgId) {
         const metadata = {
           platform: 'new_publish',

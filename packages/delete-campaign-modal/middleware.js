@@ -26,7 +26,6 @@ export default ({ dispatch, getState }) => next => action => {
     }
     case `deleteCampaign_${dataFetchActionTypes.FETCH_SUCCESS}`: {
       const { id, name, color } = state.deleteCampaignModal.campaign;
-      const { organizationId } = state.profileSidebar.selectedProfile;
       dispatch(modalActions.hideDeleteCampaignModal());
       dispatch(
         notificationActions.createNotification({
@@ -37,8 +36,7 @@ export default ({ dispatch, getState }) => next => action => {
       const metadata = {
         campaignId: id,
         campaignName: name,
-        campaignColor: color,
-        organizationId,
+        campaignColor: color
       };
       dispatch(analyticsActions.trackEvent('Campaign Deleted', metadata));
       const inCampaignsPage =

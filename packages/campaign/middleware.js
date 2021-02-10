@@ -30,11 +30,9 @@ export default ({ dispatch, getState }) => next => action => {
 
     case actionTypes.GO_TO_ANALYZE_REPORT: {
       const { id, name } = action.campaign;
-      const { organizationId } = state.profileSidebar.selectedProfile;
       const metadata = {
         campaignId: id,
-        campaignName: name,
-        organizationId,
+        campaignName: name
       };
       dispatch(analyticsActions.trackEvent('Campaign Report Viewed', metadata));
       window.location.assign(`${getURL.getAnalyzeReportUrl(id)}`);
