@@ -14,6 +14,13 @@ export default ({ dispatch, getState }) => next => action => {
       break;
     case actionTypes.TRACK_EVENT: {
       const orgId = getState().organizations.selected?.globalOrgId;
+
+      console.log('Track Event: ', {
+        event: action.eventName,
+        payload: action.payload,
+        orgId
+      });
+
       if (!orgId) {
         eventQueue.push(action);
       }
