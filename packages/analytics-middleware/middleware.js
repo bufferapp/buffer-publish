@@ -1,7 +1,7 @@
 import { actionTypes as orgActionTypes } from '@bufferapp/publish-data-organizations';
 import { actions, actionTypes } from './actions';
 
-const eventQueue = [];
+let eventQueue = [];
 
 export default ({ dispatch, getState }) => next => action => {
   // eslint-disable-line no-unused-vars
@@ -35,11 +35,10 @@ export default ({ dispatch, getState }) => next => action => {
       break;
     }
     case orgActionTypes.ORGANIZATION_SELECTED: {
-      const orgId = getState().organizations.selected?.globalOrgId;
       eventQueue.forEach(event => {
         dispatch(
           actions.trackEvent(event.eventName, {
-            ...event.payload,
+            ...event.payload
           })
         );
       });
