@@ -19,11 +19,17 @@ export default ({ dispatch, getState }) => next => action => {
         eventQueue.push(action);
       }
       if (orgId && window.analytics) {
+        console.log('Track Event: ', {
+          event: action.eventName,
+          payload: action.payload,
+          selectedOrg: getState().organizations.selected
+        });
+
         window.analytics.track(action.eventName, {
+          ...action.payload,
           product: window.PRODUCT_TRACKING_KEY,
           clientName: window.CLIENT_NAME,
-          organizationId: orgId,
-          ...action.payload
+          organizationId: orgId
         });
       }
       break;
